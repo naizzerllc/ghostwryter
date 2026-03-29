@@ -1,0 +1,31 @@
+{
+  "version": "2.3",
+  "tiers": {
+    "hard_ban": [
+      "suddenly", "realized", "realised", "noticed", "felt", "seemed",
+      "just", "very", "really", "actually", "nodded", "shrugged", "sighed",
+      "smiled", "frowned", "gasped", "stomach dropped", "heart raced",
+      "in that moment", "little did she know", "time seemed to slow",
+      "perhaps", "maybe", "somehow", "beautiful", "wonderful", "amazing",
+      "perfect", "literally"
+    ],
+    "dialogue_exempt": [
+      "authentic", "genuine", "nuanced", "balance", "resonate",
+      "compelling", "remarkable", "seamless", "pivotal", "transformative",
+      "meaningful", "profound", "dynamic", "robust"
+    ],
+    "soft_ban": {
+      "words": ["amid", "amidst", "and yet"],
+      "threshold": 2
+    },
+    "context_flag": [
+      "ambiguity", "somehow", "something", "certain", "strange", "odd", "weird"
+    ]
+  },
+  "notes": {
+    "processing_order": "hard_ban → dialogue_exempt → soft_ban → context_flag",
+    "matching": "word-boundary regex, case-insensitive",
+    "injection_rule": "NEVER inject into LLM calls. Code-enforced post-generation only.",
+    "tier_exclusivity": "No word appears in more than one tier. dialogue_exempt clearance in dialogue prevents context_flag re-evaluation."
+  }
+}
