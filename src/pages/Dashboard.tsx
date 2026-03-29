@@ -111,6 +111,8 @@ const MemoryCorePanel = () => {
         )}
       </div>
 
+
+
       {/* Three profiles */}
       <div className="space-y-2">
         {Object.entries(profiles).map(([key, profile]) => {
