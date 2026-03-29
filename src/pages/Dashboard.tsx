@@ -9,6 +9,7 @@ import MICPanel from "@/components/dashboard/MICPanel";
 import CharacterDBPanel from "@/components/dashboard/CharacterDBPanel";
 import VoiceCorpusGatePanel from "@/components/dashboard/VoiceCorpusGatePanel";
 import StoryBibleImportPanel from "@/components/dashboard/StoryBibleImportPanel";
+import AntagonistPromptPanel from "@/components/dashboard/AntagonistPromptPanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
