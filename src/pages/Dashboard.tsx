@@ -1,8 +1,17 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore, useCallback } from "react";
 import { getSecurityLog, type SecurityEvent } from "@/security/sanitizer";
 import { getSessionSummary, subscribe, type SessionCostSummary } from "@/api/sessionCostTracker";
 import STYLE_PROFILES from "@/constants/STYLE_PROFILES.json";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  subscribe as memoryCoreSubscribe,
+  getSnapshot as memoryCoreSnapshot,
+  proposeUpdate,
+  confirmUpdate,
+  rejectUpdate,
+  type MemoryCoreSnapshot,
+} from "@/modules/memoryCore/memoryCore";
+import { MEMORY_CORE_CONFIG } from "@/constants/MEMORY_CORE_CONFIG";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -61,6 +70,100 @@ const useSessionCost = (): SessionCostSummary => {
     subscribe,
     getSessionSummary,
     getSessionSummary
+  );
+};
+
+const useMemoryCore = (): MemoryCoreSnapshot => {
+  return useSyncExternalStore(memoryCoreSubscribe, memoryCoreSnapshot, memoryCoreSnapshot);
+};
+
+const MemoryCorePanel = () => {
+  const snap = useMemoryCore();
+  const profiles = MEMORY_CORE_CONFIG.profiles;
+  const [confirming, setConfirming] = useState(false);
+
+  const handleConfirm = useCallback(async () => {
+    if (!snap.staged) return;
+    setConfirming(true);
+    await confirmUpdate(snap.staged.projectId);
+    setConfirming(false);
+  }, [snap.staged]);
+
+  const handleReject = useCallback(() => {
+    if (!snap.staged) return;
+    rejectUpdate(snap.staged.projectId);
+  }, [snap.staged]);
+
+  const statusColor =
+    snap.status === "READY" ? "text-success" :
+    snap.status === "PENDING_CONFIRMATION" ? "text-warning" :
+    "text-muted-foreground";
+
+  return (
+    <div className="space-y-3">
+      {/* Status */}
+      <div className="flex justify-between items-baseline">
+        <span className={`text-sm font-mono ${statusColor}`}>{snap.status}</span>
+        {snap.lastUpdated && (
+          <span className="text-[10px] font-mono text-muted-foreground">
+            Last: {new Date(snap.lastUpdated).toLocaleTimeString()}
+          </span>
+        )}
+      </div>
+
+      {/* Three profiles */}
+      <div className="space-y-2">
+        {Object.entries(profiles).map(([key, profile]) => {
+          const p = profile as { hard_ceiling: number; label: string; target_budget?: number; tiers?: Record<string, { budget: number; label: string }> };
+          return (
+            <div key={key} className="border border-border p-2">
+              <div className="flex justify-between items-baseline">
+                <span className="text-xs font-mono font-semibold">{key}</span>
+                <span className="text-[10px] font-mono text-muted-foreground">{p.hard_ceiling.toLocaleString()}T ceiling</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1">{p.label}</p>
+              {p.tiers && (
+                <div className="mt-2 space-y-1">
+                  {Object.entries(p.tiers).map(([tierKey, tier]) => (
+                    <div key={tierKey} className="flex justify-between text-[10px] font-mono">
+                      <span className="text-muted-foreground">{tierKey}: {tier.label}</span>
+                      <span className="text-foreground">{tier.budget}T</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Confirm / Reject buttons */}
+      {snap.status === "PENDING_CONFIRMATION" && snap.staged && (
+        <div className="border border-warning/50 bg-warning/5 p-3 space-y-2">
+          <p className="text-xs font-mono text-warning">
+            Staged update for: {snap.staged.projectId}
+          </p>
+          <p className="text-[10px] font-mono text-muted-foreground">
+            Staged at: {new Date(snap.staged.stagedAt).toLocaleTimeString()}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={handleConfirm}
+              disabled={confirming}
+              className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-success text-success hover:bg-success/10 transition-colors disabled:opacity-50"
+            >
+              {confirming ? "Committing…" : "Confirm"}
+            </button>
+            <button
+              onClick={handleReject}
+              className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-destructive text-destructive hover:bg-destructive/10 transition-colors"
+            >
+              Reject
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -234,10 +337,16 @@ const Dashboard = () => {
         </Panel>
       </div>
 
-      {/* TOKEN ECONOMY */}
-      <Panel title="Token Economy">
-        <TokenEconomyPanel />
-      </Panel>
+      {/* MEMORY CORE + TOKEN ECONOMY */}
+      <div className="grid grid-cols-2 gap-4">
+        <Panel title="Memory Core">
+          <MemoryCorePanel />
+        </Panel>
+
+        <Panel title="Token Economy">
+          <TokenEconomyPanel />
+        </Panel>
+      </div>
 
       {/* SECURITY LOG */}
       <Panel title="Security Log">
