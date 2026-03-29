@@ -126,7 +126,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Build</p>
-                <p className="text-sm font-mono">2 / 28</p>
+                <p className="text-sm font-mono">3 / 28</p>
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Status</p>
@@ -139,9 +139,9 @@ const Dashboard = () => {
         {/* BUILD NOTES */}
         <Panel title="Build Notes">
           <div className="space-y-2">
-            <p className="text-sm text-foreground">Session 2 complete. GitHub storage + security layer.</p>
+            <p className="text-sm text-foreground">Session 3 complete. LLM Router + Prompt Caching.</p>
             <p className="text-xs text-muted-foreground">
-              GitHub Storage · Security Sanitizer · Disconnection Detection
+              LLM Router · callAnthropic · Prompt Caching · Token Economy · Session Cost Tracker
             </p>
           </div>
         </Panel>

@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     1 (foundation — ready to build)
-Last completed:    0
-Prompts pending:   2–15
+Active prompt:     4 (next to build)
+Last completed:    3
+Prompts pending:   4–15
 MIC version:       2.1
 Schema version:    2.8 (outline format)
 Prose DNA version: v2.3 (17 rules)
@@ -20,8 +20,10 @@ Prose DNA version: v2.3 (17 rules)
 
 | Prompt | Status | Key files produced |
 |--------|--------|--------------------|
-| 01 | ⏳ Ready to build | PROSE_DNA.md · PROSE_DNA_RUNTIME.js · PLATFORM_CONFIG.json · STYLE_PROFILES.json · FORBIDDEN_WORDS.json · MEMORY_CORE_CONFIG.js · MODULE_INTERFACE_CONTRACT.json · llmRouter.js · githubStorage.js · sanitizer.js · memoryCore.js · forbiddenWordsChecker.js · tokenCounter.js · UI shell components |
-| 02–15 | ⏳ Pending | — |
+| 01 | ✅ Complete | UI shell · Settings · Sidebar · StatusBar · AppLayout · Dashboard |
+| 02 | ✅ Complete | githubStorage.ts · sanitizer.ts · DisconnectionBanner |
+| 03 | ✅ Complete | llmRouter.ts · sessionCostTracker.ts · callAnthropic · TOKEN ECONOMY panel |
+| 04–15 | ⏳ Pending | — |
 
 ---
 
