@@ -6,7 +6,7 @@
  * human confirmation before being committed to GitHub.
  */
 
-import githubStorage from "@/storage/githubStorage";
+import { githubStorage } from "@/storage/githubStorage";
 import { MEMORY_CORE_CONFIG } from "@/constants/MEMORY_CORE_CONFIG";
 
 // ---------------------------------------------------------------------------
@@ -191,7 +191,7 @@ export function getConfig() {
 // Window registration for console testing
 // ---------------------------------------------------------------------------
 if (typeof window !== "undefined") {
-  (window as Record<string, unknown>).__ghostly_memoryCore = {
+  (window as unknown as Record<string, unknown>).__ghostly_memoryCore = {
     proposeUpdate,
     confirmUpdate,
     rejectUpdate,
