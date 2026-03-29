@@ -134,8 +134,7 @@ export async function confirmUpdate(
   // Persist to GitHub (falls back to localStorage internally)
   const result = await githubStorage.saveFile(
     `memory/${projectId}.json`,
-    JSON.stringify({ projectId, data: mergedData, lastUpdated: now }, null, 2),
-    `Memory Core update — ${projectId}`
+    JSON.stringify({ projectId, data: mergedData, lastUpdated: now }, null, 2)
   );
 
   state.committed.set(projectId, {
