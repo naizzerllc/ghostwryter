@@ -1,8 +1,17 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore, useCallback } from "react";
 import { getSecurityLog, type SecurityEvent } from "@/security/sanitizer";
 import { getSessionSummary, subscribe, type SessionCostSummary } from "@/api/sessionCostTracker";
 import STYLE_PROFILES from "@/constants/STYLE_PROFILES.json";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  subscribe as memoryCoreSubscribe,
+  getSnapshot as memoryCoreSnapshot,
+  proposeUpdate,
+  confirmUpdate,
+  rejectUpdate,
+  type MemoryCoreSnapshot,
+} from "@/modules/memoryCore/memoryCore";
+import { MEMORY_CORE_CONFIG } from "@/constants/MEMORY_CORE_CONFIG";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
