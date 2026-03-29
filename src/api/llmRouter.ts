@@ -3,10 +3,11 @@
  * GHOSTLY v2.2 · Session 3
  */
 
+import { logCost } from "./sessionCostTracker";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-
 export type Provider = "anthropic" | "gemini_pro" | "gemini_flash" | "openai";
 
 export type TaskType =
