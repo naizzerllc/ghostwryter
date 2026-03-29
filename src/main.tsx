@@ -6,6 +6,7 @@ import "./security/sanitizer"; // registers window.__ghostly_sanitizer
 import "./api/llmRouter"; // registers window.__ghostly_llmRouter
 import "./utils/forbiddenWordsChecker"; // registers window.__ghostly_forbiddenWords
 import "./modules/antagonistPromptBuilder/antagonistPromptBuilder"; // registers window.__ghostly_antagonistPrompt
+import "./modules/outlineImportDiagnostic/outlineImportDiagnostic"; // registers window.__ghostly_outlineDiagnostic
 
 // Initialize storage and expose for console testing
 githubStorage.init();
