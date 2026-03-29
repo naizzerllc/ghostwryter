@@ -8,7 +8,7 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     5 (next to build)
+Active prompt:     5 (in progress — MSG-3 complete)
 Last completed:    4
 Prompts pending:   5–15
 MIC version:       2.1
@@ -24,7 +24,8 @@ Prose DNA version: v2.3 (17 rules)
 | 02 | ✅ Complete | githubStorage.ts · sanitizer.ts · DisconnectionBanner |
 | 03 | ✅ Complete | llmRouter.ts · sessionCostTracker.ts · callAnthropic · TOKEN ECONOMY panel |
 | 04 | ✅ Complete | PROSE_DNA.md · PROSE_DNA_RUNTIME.js · STYLE_PROFILES.json · FORBIDDEN_WORDS.json · forbiddenWordsChecker.ts |
-| 05–15 | ⏳ Pending | — |
+| 05 | 🔧 In Progress (MSG-3) | memoryCore.ts · MEMORY_CORE_CONFIG.js · MODULE_INTERFACE_CONTRACT.json · MIC validator · Dashboard panels |
+| 06–15 | ⏳ Pending | — |
 
 ---
 
