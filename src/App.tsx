@@ -11,6 +11,7 @@ import Archive from "./pages/Archive";
 import Editorial from "./pages/Editorial";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
+import DnaIntake from "./pages/DnaIntake";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/editorial" element={<Editorial />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/dna-intake" element={<DnaIntake />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

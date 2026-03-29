@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     5 (in progress — MSG-5 complete)
-Last completed:    Prompt 01 ✅ (all deliverables verified)
-Prompts pending:   5–15
+Active prompt:     S06–S07 (in progress)
+Last completed:    Prompt 02 ✅ (all deliverables verified)
+Prompts pending:   S08–S28
 MIC version:       2.1
 Schema version:    2.8 (outline format)
 Prose DNA version: v2.3 (17 rules)
@@ -21,11 +21,12 @@ Prose DNA version: v2.3 (17 rules)
 | Prompt | Status | Key files produced |
 |--------|--------|--------------------|
 | 01 | ✅ Complete | UI shell · Settings · Sidebar · StatusBar · AppLayout · Dashboard · Prose DNA (PROSE_DNA.md + PROSE_DNA_RUNTIME.js) · STYLE_PROFILES.json · FORBIDDEN_WORDS.json · forbiddenWordsChecker.ts · sanitizer.ts · llmRouter.ts (callAnthropic + prompt caching) · sessionCostTracker.ts · githubStorage.ts · memoryCore.ts · MEMORY_CORE_CONFIG.js · MODULE_INTERFACE_CONTRACT.json · startupValidator.ts · StartupValidatorPanel.tsx · Dashboard panels (Panel/Security/MemoryCore/TokenEconomy/MIC) |
-| 02 | ✅ Complete | githubStorage.ts · sanitizer.ts · DisconnectionBanner |
+| 02 | ✅ Complete | characterDB.ts · storyBibleImporter.ts · voiceCorpusGate.ts · corpusExchangeStore.ts · antagonistPromptBuilder.ts · outlineImportDiagnostic.ts · catalogueRegistry.ts · VOICE_CORPUS_BENCHMARKS.json · BRAND_DNA_CONFIG.json · CharacterDBPanel · StoryBibleImportPanel · VoiceCorpusGatePanel · CorpusExchangePanel · AntagonistPromptPanel · OutlineDiagnosticPanel · CatalogueRegistryPanel · DisconnectionBanner |
 | 03 | ✅ Complete | llmRouter.ts · sessionCostTracker.ts · callAnthropic · TOKEN ECONOMY panel |
 | 04 | ✅ Complete | PROSE_DNA.md · PROSE_DNA_RUNTIME.js · STYLE_PROFILES.json · FORBIDDEN_WORDS.json · forbiddenWordsChecker.ts |
-| 05 | 🔧 In Progress (MSG-5) | memoryCore.ts · MEMORY_CORE_CONFIG.js · MODULE_INTERFACE_CONTRACT.json · MIC validator · startupValidator.ts · StartupValidatorPanel.tsx · Dashboard refactored → Panel.tsx · SecurityLogPanel.tsx · MemoryCorePanel.tsx · TokenEconomyPanel.tsx · MICPanel.tsx |
-| 06–15 | ⏳ Pending | — |
+| 05 | ✅ Complete | memoryCore.ts · MEMORY_CORE_CONFIG.js · MODULE_INTERFACE_CONTRACT.json · MIC validator · startupValidator.ts · StartupValidatorPanel.tsx · Dashboard refactored → Panel.tsx · SecurityLogPanel.tsx · MemoryCorePanel.tsx · TokenEconomyPanel.tsx · MICPanel.tsx |
+| S06–S07 | 🔧 In Progress | BRAND_DNA_CONFIG.json · dna.ts types · dnaConfigStorage.ts · dnaExtraction.ts · dnaGapFiller.ts · dnaBriefExporter.ts · ideaBankStorage.ts · DnaIntake.tsx |
+| S08–S28 | ⏳ Pending | — |
 
 ---
 
