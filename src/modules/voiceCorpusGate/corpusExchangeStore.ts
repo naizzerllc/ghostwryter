@@ -174,8 +174,12 @@ export function subscribe(listener: () => void): () => void {
   return () => { listeners.delete(listener); };
 }
 
+let cachedSnapshot: CorpusSnapshot | null = null;
+
 export function getSnapshot(): CorpusSnapshot {
-  return { corpora, _v: snapshotVersion };
+  if (cachedSnapshot && cachedSnapshot._v === snapshotVersion) return cachedSnapshot;
+  cachedSnapshot = { corpora, _v: snapshotVersion };
+  return cachedSnapshot;
 }
 
 // ── Window registration ─────────────────────────────────────────────────
