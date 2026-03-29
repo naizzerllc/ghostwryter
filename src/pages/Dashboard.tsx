@@ -8,6 +8,7 @@ import TokenEconomyPanel from "@/components/dashboard/TokenEconomyPanel";
 import MICPanel from "@/components/dashboard/MICPanel";
 import CharacterDBPanel from "@/components/dashboard/CharacterDBPanel";
 import VoiceCorpusGatePanel from "@/components/dashboard/VoiceCorpusGatePanel";
+import StoryBibleImportPanel from "@/components/dashboard/StoryBibleImportPanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -166,6 +167,11 @@ const Dashboard = () => {
           <MICPanel />
         </Panel>
       </div>
+
+      {/* STORY BIBLE IMPORT */}
+      <Panel title="Story Bible Import">
+        <StoryBibleImportPanel />
+      </Panel>
 
       {/* VOICE CORPUS GATE + SECURITY LOG */}
       <div className="grid grid-cols-2 gap-4">
