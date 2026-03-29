@@ -236,7 +236,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Build</p>
-                <p className="text-sm font-mono">4 / 28</p>
+                <p className="text-sm font-mono">5 / 28</p>
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Status</p>
