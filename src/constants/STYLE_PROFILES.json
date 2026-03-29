@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "active_profile": "leila_rex_default",
+  "profiles": {
+    "leila_rex_default": {
+      "brand_lock": true,
+      "tone_register": "clinical_dissociative",
+      "pov": "first_person",
+      "tense": "present",
+      "narrator_type": "unreliable",
+      "narrator_gender": "female",
+      "interiority_method": "observation_and_physical_response",
+      "hook_types": ["REVELATION", "THREAT", "DECISION", "THE_LIE", "NEW_QUESTION"],
+      "sympathy_architecture": "active",
+      "protagonist_approach": "complicit_before_victimised",
+      "narrative_structure": "mcfadden_compulsion_floor",
+      "reader_persona": "leila_rex_default",
+      "genre_mode": "psychological_thriller",
+      "note": "brand_lock: true — this profile cannot be changed, duplicated, or switched via UI. All titles use this profile."
+    }
+  }
+}

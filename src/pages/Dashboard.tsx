@@ -1,6 +1,8 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { getSecurityLog, type SecurityEvent } from "@/security/sanitizer";
 import { getSessionSummary, subscribe, type SessionCostSummary } from "@/api/sessionCostTracker";
+import STYLE_PROFILES from "@/constants/STYLE_PROFILES.json";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -107,6 +109,8 @@ const TokenEconomyPanel = () => {
 };
 
 const Dashboard = () => {
+  const activeProfile = STYLE_PROFILES.profiles[STYLE_PROFILES.active_profile as keyof typeof STYLE_PROFILES.profiles];
+
   return (
     <div className="space-y-6 max-w-5xl">
       <h1 className="text-xl font-semibold tracking-wide">Dashboard</h1>
@@ -173,6 +177,62 @@ const Dashboard = () => {
           ))}
         </div>
       </Panel>
+
+      {/* STYLE LAYER + PROSE DNA */}
+      <div className="grid grid-cols-2 gap-4">
+        <Panel title="Style Layer">
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Profile</p>
+                <p className="text-sm font-mono">{STYLE_PROFILES.active_profile}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Tone</p>
+                <p className="text-sm font-mono">{activeProfile.tone_register}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">POV / Tense</p>
+                <p className="text-sm font-mono">{activeProfile.pov} · {activeProfile.tense}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Brand Lock</p>
+                <p className="text-sm font-mono text-primary">{activeProfile.brand_lock ? "LOCKED" : "UNLOCKED"}</p>
+              </div>
+            </div>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-border text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors">
+                  View Profile
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="font-mono text-sm uppercase tracking-widest">Style Profile — {STYLE_PROFILES.active_profile}</DialogTitle>
+                </DialogHeader>
+                <pre className="text-xs font-mono text-foreground bg-muted/30 p-4 overflow-x-auto whitespace-pre-wrap">
+                  {JSON.stringify(activeProfile, null, 2)}
+                </pre>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </Panel>
+
+        <Panel title="Prose DNA">
+          <div className="space-y-2">
+            <div className="flex justify-between items-baseline">
+              <span className="text-sm font-mono">v2.3 — 17 rules</span>
+              <span className="text-[10px] font-mono text-primary uppercase tracking-widest">Hardcoded Active</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Injection scope: generation_protagonist · anti_ai_detection_secondary
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Never injected into quality analysis calls
+            </p>
+          </div>
+        </Panel>
+      </div>
 
       {/* TOKEN ECONOMY */}
       <Panel title="Token Economy">
