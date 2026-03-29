@@ -26,12 +26,13 @@ const ApiKeyField = ({
 }) => {
   const [value, setValue] = useState("");
   const [saved, setSaved] = useState(false);
-  const hasStored = !!localStorage.getItem(storageKey);
+  const [hasStored, setHasStored] = useState(!!localStorage.getItem(storageKey));
 
   const handleSave = () => {
     if (value.trim()) {
       localStorage.setItem(storageKey, value.trim());
       setValue("");
+      setHasStored(true);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     }
@@ -40,6 +41,7 @@ const ApiKeyField = ({
   const handleClear = () => {
     localStorage.removeItem(storageKey);
     setValue("");
+    setHasStored(false);
     setSaved(false);
   };
 
