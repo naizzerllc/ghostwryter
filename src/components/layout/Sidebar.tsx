@@ -7,10 +7,12 @@ import {
   FileEdit,
   BarChart3,
   Settings,
+  Dna,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/dna-intake", label: "DNA Intake", icon: Dna },
   { to: "/generate", label: "Generate", icon: PenTool },
   { to: "/review", label: "Review", icon: CheckCircle },
   { to: "/archive", label: "Archive", icon: Archive },
