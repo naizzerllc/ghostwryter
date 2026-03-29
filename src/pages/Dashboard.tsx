@@ -167,7 +167,7 @@ const MemoryCorePanel = () => {
   );
 };
 
-
+const TokenEconomyPanel = () => {
   const summary = useSessionCost();
 
   return (
