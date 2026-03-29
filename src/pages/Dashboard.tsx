@@ -174,6 +174,11 @@ const Dashboard = () => {
         </div>
       </Panel>
 
+      {/* TOKEN ECONOMY */}
+      <Panel title="Token Economy">
+        <TokenEconomyPanel />
+      </Panel>
+
       {/* SECURITY LOG */}
       <Panel title="Security Log">
         <SecurityLogPanel />
