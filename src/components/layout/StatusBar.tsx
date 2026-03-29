@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Circle } from "lucide-react";
 
 interface StatusItem {
@@ -6,15 +7,6 @@ interface StatusItem {
   status: "connected" | "disconnected" | "pending";
 }
 
-const STATUS_ITEMS: StatusItem[] = [
-  { label: "PROSE DNA", value: "v2.3", status: "connected" },
-  { label: "STYLE", value: "leila_rex_default", status: "connected" },
-  { label: "PROJECT", value: "None", status: "disconnected" },
-  { label: "MEMORY CORE", value: "Idle", status: "pending" },
-  { label: "GITHUB", value: "Not connected", status: "disconnected" },
-  { label: "LAST LLM", value: "—", status: "pending" },
-];
-
 const statusColorMap: Record<StatusItem["status"], string> = {
   connected: "text-success",
   disconnected: "text-destructive",
@@ -22,9 +14,33 @@ const statusColorMap: Record<StatusItem["status"], string> = {
 };
 
 const StatusBar = () => {
+  const [githubConnected, setGithubConnected] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ connected: boolean }>).detail;
+      setGithubConnected(detail.connected);
+    };
+    window.addEventListener("ghostly:github-status", handler);
+    return () => window.removeEventListener("ghostly:github-status", handler);
+  }, []);
+
+  const items: StatusItem[] = [
+    { label: "PROSE DNA", value: "v2.3", status: "connected" },
+    { label: "STYLE", value: "leila_rex_default", status: "connected" },
+    { label: "PROJECT", value: "None", status: "disconnected" },
+    { label: "MEMORY CORE", value: "Idle", status: "pending" },
+    {
+      label: "GITHUB",
+      value: githubConnected ? "Connected" : "Not connected",
+      status: githubConnected ? "connected" : "disconnected",
+    },
+    { label: "LAST LLM", value: "—", status: "pending" },
+  ];
+
   return (
     <footer className="h-8 min-h-[32px] bg-sidebar border-t border-sidebar-border flex items-center px-4 gap-6 overflow-x-auto">
-      {STATUS_ITEMS.map((item) => (
+      {items.map((item) => (
         <div key={item.label} className="flex items-center gap-1.5 shrink-0">
           <Circle className={`w-2 h-2 fill-current ${statusColorMap[item.status]}`} />
           <span className="text-[10px] font-mono text-muted-foreground uppercase">
