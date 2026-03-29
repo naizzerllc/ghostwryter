@@ -109,6 +109,8 @@ const TokenEconomyPanel = () => {
 };
 
 const Dashboard = () => {
+  const activeProfile = STYLE_PROFILES.profiles[STYLE_PROFILES.active_profile as keyof typeof STYLE_PROFILES.profiles];
+
   return (
     <div className="space-y-6 max-w-5xl">
       <h1 className="text-xl font-semibold tracking-wide">Dashboard</h1>
