@@ -4,6 +4,7 @@ import "./index.css";
 import { githubStorage } from "./storage/githubStorage";
 import "./security/sanitizer"; // registers window.__ghostly_sanitizer
 import "./api/llmRouter"; // registers window.__ghostly_llmRouter
+import "./utils/forbiddenWordsChecker"; // registers window.__ghostly_forbiddenWords
 
 // Initialize storage and expose for console testing
 githubStorage.init();
