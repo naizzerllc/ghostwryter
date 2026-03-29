@@ -9,7 +9,7 @@
 ```
 Platform:          Ghostly v2.2
 Active prompt:     5 (in progress — MSG-5 complete)
-Last completed:    4
+Last completed:    Prompt 01 ✅ (all deliverables verified)
 Prompts pending:   5–15
 MIC version:       2.1
 Schema version:    2.8 (outline format)
@@ -20,7 +20,7 @@ Prose DNA version: v2.3 (17 rules)
 
 | Prompt | Status | Key files produced |
 |--------|--------|--------------------|
-| 01 | ✅ Complete | UI shell · Settings · Sidebar · StatusBar · AppLayout · Dashboard |
+| 01 | ✅ Complete | UI shell · Settings · Sidebar · StatusBar · AppLayout · Dashboard · Prose DNA (PROSE_DNA.md + PROSE_DNA_RUNTIME.js) · STYLE_PROFILES.json · FORBIDDEN_WORDS.json · forbiddenWordsChecker.ts · sanitizer.ts · llmRouter.ts (callAnthropic + prompt caching) · sessionCostTracker.ts · githubStorage.ts · memoryCore.ts · MEMORY_CORE_CONFIG.js · MODULE_INTERFACE_CONTRACT.json · startupValidator.ts · StartupValidatorPanel.tsx · Dashboard panels (Panel/Security/MemoryCore/TokenEconomy/MIC) |
 | 02 | ✅ Complete | githubStorage.ts · sanitizer.ts · DisconnectionBanner |
 | 03 | ✅ Complete | llmRouter.ts · sessionCostTracker.ts · callAnthropic · TOKEN ECONOMY panel |
 | 04 | ✅ Complete | PROSE_DNA.md · PROSE_DNA_RUNTIME.js · STYLE_PROFILES.json · FORBIDDEN_WORDS.json · forbiddenWordsChecker.ts |
@@ -227,7 +227,7 @@ suddenly, realize, realise
 
 | Prompt | Scope | Status |
 |--------|-------|--------|
-| 01 | Foundation · Prose DNA v2.3 · Style Layer · Forbidden Words v2.3 · Security · LLM Router · Memory Core · Module Interface Contract v2.1 · GitHub Storage · UI Shell · Prompt Caching | ⏳ Ready |
+| 01 | Foundation · Prose DNA v2.3 · Style Layer · Forbidden Words v2.3 · Security · LLM Router · Memory Core · Module Interface Contract v2.1 · GitHub Storage · UI Shell · Prompt Caching | ✅ Complete |
 | 02 | Story Bible Import · Character DB · Voice DNA · Voice Corpus Quality Gate · Antagonist System Prompt · Outline Import Diagnostic · Breadcrumb Integrity · Catalogue Fit Check | ⏳ Pending |
 | 03 | Canonical Facts DB · Knowledge Boundary Map · Spoiler Protection · Series Memory | ⏳ Pending |
 | 04 | Dramatic Architecture Engine · Clock Registry · Tension Curve · Rollercoaster Enforcer · Warmth Spacing Validator | ⏳ Pending |
