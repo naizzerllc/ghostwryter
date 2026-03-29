@@ -261,6 +261,105 @@ async function callProvider(
 }
 
 // ---------------------------------------------------------------------------
+// callAnthropic — Two-block prompt caching
+// ---------------------------------------------------------------------------
+
+export async function callAnthropic(
+  taskType: TaskType,
+  staticContent: string,
+  dynamicContent: string,
+  options: CallOptions = {}
+): Promise<AnthropicCachedResponse> {
+  const apiKey = getApiKey("anthropic");
+  if (!apiKey) {
+    throw new Error("No API key configured for anthropic");
+  }
+
+  const model = resolveModelString("anthropic");
+  const timeout = options.timeout_ms ?? 60_000;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const res = await fetch(getEndpoint("anthropic"), {
+      method: "POST",
+      headers: {
+        "x-api-key": apiKey,
+        "content-type": "application/json",
+        "anthropic-version": "2023-06-01",
+        "anthropic-beta": "extended-cache-ttl-2025-04-11",
+      },
+      body: JSON.stringify({
+        model,
+        max_tokens: options.max_tokens ?? 4096,
+        temperature: options.temperature ?? 0.7,
+        system: [
+          {
+            type: "text",
+            text: staticContent,
+            cache_control: { type: "ephemeral" },
+          },
+          {
+            type: "text",
+            text: dynamicContent,
+          },
+        ],
+        messages: [{ role: "user", content: "Generate based on the system prompt above." }],
+      }),
+      signal: controller.signal,
+    });
+
+    if (!res.ok) {
+      throw new Error(`Anthropic API error: ${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    const content = data.content?.[0]?.text ?? "";
+    const inputTokens = data.usage?.input_tokens ?? 0;
+    const outputTokens = data.usage?.output_tokens ?? 0;
+    const cacheRead = data.usage?.cache_read_input_tokens ?? 0;
+    const cacheWrite = data.usage?.cache_creation_input_tokens ?? 0;
+    const stopReason = data.stop_reason ?? "";
+
+    const refusal_detected = stopReason === "refusal" || content.length < 200;
+    const truncation_suspected = stopReason === "end_turn" && outputTokens < 300;
+
+    const tokens_used = inputTokens + outputTokens;
+    const saved_tokens = cacheRead; // tokens read from cache = tokens saved
+
+    // Log to session cost tracker
+    logCost({
+      call_type: taskType,
+      provider: "anthropic",
+      tokens_used,
+      cache_read_tokens: cacheRead,
+      cache_write_tokens: cacheWrite,
+      saved_tokens,
+    });
+
+    if (refusal_detected) {
+      console.warn(`[LLM Router] CONTENT_REFUSAL detected for ${taskType}`);
+    }
+    if (truncation_suspected) {
+      console.warn(`[LLM Router] TRUNCATION_SUSPECTED for ${taskType} — output tokens: ${outputTokens}`);
+    }
+
+    return {
+      content,
+      model_used: model,
+      provider: "anthropic",
+      tokens_used,
+      cache_read_tokens: cacheRead,
+      cache_write_tokens: cacheWrite,
+      refusal_detected,
+      truncation_suspected,
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // callWithFallback
 // ---------------------------------------------------------------------------
 
@@ -277,6 +376,17 @@ export async function callWithFallback(
   // Try primary provider
   try {
     const result = await callProvider(route.provider, prompt, options);
+
+    // Log to session cost tracker
+    logCost({
+      call_type: taskType,
+      provider: route.provider,
+      tokens_used: result.tokens_used,
+      cache_read_tokens: 0,
+      cache_write_tokens: 0,
+      saved_tokens: 0,
+    });
+
     return {
       content: result.content,
       model_used: resolveModelString(route.provider),
@@ -300,7 +410,6 @@ export async function callWithFallback(
   }
 
   for (const fallbackProvider of fallbacks) {
-    // Log specific warnings per task type
     if (taskType === "generation_antagonist" || taskType === "generation_supporting") {
       console.warn(
         `[LLM Router] Falling back to non-primary provider for ${taskType} — voice differentiation risk`
@@ -314,6 +423,16 @@ export async function callWithFallback(
 
     try {
       const result = await callProvider(fallbackProvider, prompt, options);
+
+      logCost({
+        call_type: taskType,
+        provider: fallbackProvider,
+        tokens_used: result.tokens_used,
+        cache_read_tokens: 0,
+        cache_write_tokens: 0,
+        saved_tokens: 0,
+      });
+
       return {
         content: result.content,
         model_used: resolveModelString(fallbackProvider),
@@ -345,6 +464,7 @@ if (typeof window !== "undefined") {
     TASK_ROUTING,
     TASK_FALLBACK_OVERRIDES,
     callWithFallback,
+    callAnthropic,
     setPlatformConfig,
   };
 }
