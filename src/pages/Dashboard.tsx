@@ -13,6 +13,7 @@ import {
 } from "@/modules/memoryCore/memoryCore";
 import { MEMORY_CORE_CONFIG } from "@/constants/MEMORY_CORE_CONFIG";
 import MIC from "@/constants/MODULE_INTERFACE_CONTRACT.json";
+import StartupValidatorPanel from "@/components/dashboard/StartupValidatorPanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -242,6 +243,10 @@ const Dashboard = () => {
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Status</p>
                 <p className="text-sm font-mono text-warning">Foundation</p>
               </div>
+            </div>
+            <div className="border-t border-border pt-3">
+              <h3 className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2">Startup Validation</h3>
+              <StartupValidatorPanel />
             </div>
           </div>
         </Panel>
