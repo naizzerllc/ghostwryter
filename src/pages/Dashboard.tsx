@@ -11,6 +11,8 @@ import VoiceCorpusGatePanel from "@/components/dashboard/VoiceCorpusGatePanel";
 import StoryBibleImportPanel from "@/components/dashboard/StoryBibleImportPanel";
 import AntagonistPromptPanel from "@/components/dashboard/AntagonistPromptPanel";
 import OutlineDiagnosticPanel from "@/components/dashboard/OutlineDiagnosticPanel";
+import CorpusExchangePanel from "@/components/dashboard/CorpusExchangePanel";
+import CatalogueRegistryPanel from "@/components/dashboard/CatalogueRegistryPanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -57,9 +59,9 @@ const Dashboard = () => {
         {/* BUILD NOTES */}
         <Panel title="Build Notes">
           <div className="space-y-2">
-            <p className="text-sm text-foreground">Session 4 complete. Prose DNA + Style + Forbidden Words.</p>
+            <p className="text-sm text-foreground">Session 5 complete. Voice Corpus Gate + Catalogue Registry + Corpus Exchanges.</p>
             <p className="text-xs text-muted-foreground">
-              PROSE_DNA.md · PROSE_DNA_RUNTIME · STYLE_PROFILES · FORBIDDEN_WORDS · forbiddenWordsChecker
+              voiceCorpusGate · VOICE_CORPUS_BENCHMARKS · corpusExchangeStore · catalogueRegistry · DisconnectionBanner
             </p>
           </div>
         </Panel>
@@ -186,10 +188,21 @@ const Dashboard = () => {
         <OutlineDiagnosticPanel />
       </Panel>
 
-      {/* VOICE CORPUS GATE + SECURITY LOG */}
+      {/* VOICE CORPUS GATE + CORPUS EXCHANGES */}
       <div className="grid grid-cols-2 gap-4">
         <Panel title="Voice Corpus Gate">
           <VoiceCorpusGatePanel />
+        </Panel>
+
+        <Panel title="Corpus Exchanges">
+          <CorpusExchangePanel />
+        </Panel>
+      </div>
+
+      {/* CATALOGUE REGISTRY + SECURITY LOG */}
+      <div className="grid grid-cols-2 gap-4">
+        <Panel title="Catalogue Registry">
+          <CatalogueRegistryPanel />
         </Panel>
 
         <Panel title="Security Log">
