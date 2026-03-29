@@ -337,10 +337,16 @@ const Dashboard = () => {
         </Panel>
       </div>
 
-      {/* TOKEN ECONOMY */}
-      <Panel title="Token Economy">
-        <TokenEconomyPanel />
-      </Panel>
+      {/* MEMORY CORE + TOKEN ECONOMY */}
+      <div className="grid grid-cols-2 gap-4">
+        <Panel title="Memory Core">
+          <MemoryCorePanel />
+        </Panel>
+
+        <Panel title="Token Economy">
+          <TokenEconomyPanel />
+        </Panel>
+      </div>
 
       {/* SECURITY LOG */}
       <Panel title="Security Log">
