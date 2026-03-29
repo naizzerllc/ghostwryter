@@ -111,15 +111,7 @@ const MemoryCorePanel = () => {
         )}
       </div>
 
-      {/* DEV TEST — remove after verification */}
-      {snap.status === "READY" && (
-        <button
-          onClick={() => proposeUpdate("test-project", { chapter: 1, notes: "Test staged update" })}
-          className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-border text-muted-foreground hover:text-foreground transition-colors"
-        >
-          [DEV] Stage Test Update
-        </button>
-      )}
+
 
       {/* Three profiles */}
       <div className="space-y-2">
