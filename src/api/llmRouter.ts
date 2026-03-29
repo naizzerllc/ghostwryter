@@ -21,7 +21,9 @@ export type TaskType =
   | "living_state_update"
   | "revision_scope"
   | "misdirection_erosion_check"
-  | "reader_simulation";
+  | "reader_simulation"
+  | "dna_extraction"
+  | "dna_gap_options";
 
 export interface TaskRoute {
   provider: Provider;
@@ -77,6 +79,8 @@ export const TASK_ROUTING: Record<TaskType, TaskRoute> = {
   revision_scope:              { provider: "gemini_flash", inject_prose_dna: false },
   misdirection_erosion_check:  { provider: "gemini_flash", inject_prose_dna: false },
   reader_simulation:           { provider: "openai",       inject_prose_dna: false },
+  dna_extraction:              { provider: "anthropic",    inject_prose_dna: true  },
+  dna_gap_options:             { provider: "anthropic",    inject_prose_dna: false },
 };
 
 export const TASK_FALLBACK_OVERRIDES: Partial<Record<TaskType, Provider[]>> = {
