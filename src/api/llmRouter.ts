@@ -37,6 +37,17 @@ export interface LLMResponse {
   fallback_reason?: string;
 }
 
+export interface AnthropicCachedResponse {
+  content: string;
+  model_used: string;
+  provider: "anthropic";
+  tokens_used: number;
+  cache_read_tokens: number;
+  cache_write_tokens: number;
+  refusal_detected: boolean;
+  truncation_suspected: boolean;
+}
+
 export interface CallOptions {
   timeout_ms?: number;
   max_tokens?: number;
