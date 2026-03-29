@@ -65,6 +65,8 @@ export function logCost(entry: Omit<CostEntry, "timestamp">): void {
 }
 
 export function getSessionSummary(): SessionCostSummary {
+  if (cachedSummary) return cachedSummary;
+
   let total_tokens = 0;
   let total_cache_read = 0;
   let total_cache_write = 0;
@@ -78,7 +80,6 @@ export function getSessionSummary(): SessionCostSummary {
     total_saved += e.saved_tokens;
 
     const rates = COST_PER_1M[e.provider] ?? COST_PER_1M.openai;
-    // Rough estimate: assume 60% input 40% output
     const inputTokens = e.tokens_used * 0.6;
     const outputTokens = e.tokens_used * 0.4;
     estimated_cost_usd +=
@@ -86,7 +87,7 @@ export function getSessionSummary(): SessionCostSummary {
       (outputTokens / 1_000_000) * rates.output;
   }
 
-  return {
+  cachedSummary = {
     total_tokens,
     total_cache_read,
     total_cache_write,
@@ -95,6 +96,7 @@ export function getSessionSummary(): SessionCostSummary {
     call_count: entries.length,
     entries: [...entries],
   };
+  return cachedSummary;
 }
 
 export function resetSession(): void {
