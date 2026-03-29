@@ -1,6 +1,8 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { getSecurityLog, type SecurityEvent } from "@/security/sanitizer";
 import { getSessionSummary, subscribe, type SessionCostSummary } from "@/api/sessionCostTracker";
+import STYLE_PROFILES from "@/constants/STYLE_PROFILES.json";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
