@@ -9,7 +9,7 @@
 ```
 Platform:          Ghostly v2.2
 Active prompt:     5 (in progress — MSG-5 complete)
-Last completed:    4
+Last completed:    Prompt 01 ✅ (all deliverables verified)
 Prompts pending:   5–15
 MIC version:       2.1
 Schema version:    2.8 (outline format)
