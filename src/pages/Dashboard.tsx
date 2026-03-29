@@ -7,6 +7,7 @@ import MemoryCorePanel from "@/components/dashboard/MemoryCorePanel";
 import TokenEconomyPanel from "@/components/dashboard/TokenEconomyPanel";
 import MICPanel from "@/components/dashboard/MICPanel";
 import CharacterDBPanel from "@/components/dashboard/CharacterDBPanel";
+import VoiceCorpusGatePanel from "@/components/dashboard/VoiceCorpusGatePanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -166,12 +167,15 @@ const Dashboard = () => {
         </Panel>
       </div>
 
-      {/* SECURITY LOG */}
+      {/* VOICE CORPUS GATE + SECURITY LOG */}
       <div className="grid grid-cols-2 gap-4">
+        <Panel title="Voice Corpus Gate">
+          <VoiceCorpusGatePanel />
+        </Panel>
+
         <Panel title="Security Log">
           <SecurityLogPanel />
         </Panel>
-        <div />
       </div>
     </div>
   );
