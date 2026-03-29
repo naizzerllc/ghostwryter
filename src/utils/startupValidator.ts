@@ -143,7 +143,7 @@ const checks: { label: string; category: string; fn: CheckFn }[] = [
     label: "forbiddenWordsChecker registered",
     category: "Forbidden Words",
     fn: () => {
-      const ok = typeof (window as Record<string, unknown>).__ghostly_forbiddenWords !== "undefined";
+      const ok = typeof (window as unknown as Record<string, unknown>).__ghostly_forbiddenWords !== "undefined";
       return { status: ok ? "PASS" : "WARN", detail: ok ? "Global checker available" : "Not yet registered" };
     },
   },
@@ -153,7 +153,7 @@ const checks: { label: string; category: string; fn: CheckFn }[] = [
     label: "LLM Router registered",
     category: "LLM Router",
     fn: () => {
-      const ok = typeof (window as Record<string, unknown>).__ghostly_llmRouter !== "undefined";
+      const ok = typeof (window as unknown as Record<string, unknown>).__ghostly_llmRouter !== "undefined";
       return { status: ok ? "PASS" : "WARN", detail: ok ? "Global router available" : "Not yet registered" };
     },
   },
@@ -161,7 +161,7 @@ const checks: { label: string; category: string; fn: CheckFn }[] = [
     label: "Sanitizer registered",
     category: "Security",
     fn: () => {
-      const ok = typeof (window as Record<string, unknown>).__ghostly_sanitizer !== "undefined";
+      const ok = typeof (window as unknown as Record<string, unknown>).__ghostly_sanitizer !== "undefined";
       return { status: ok ? "PASS" : "WARN", detail: ok ? "Global sanitizer available" : "Not yet registered" };
     },
   },
@@ -169,7 +169,7 @@ const checks: { label: string; category: string; fn: CheckFn }[] = [
     label: "GitHub storage initialized",
     category: "Storage",
     fn: () => {
-      const storage = (window as Record<string, unknown>).__ghostly_storage as Record<string, unknown> | undefined;
+      const storage = (window as unknown as Record<string, unknown>).__ghostly_storage as Record<string, unknown> | undefined;
       const ok = storage && typeof storage === "object";
       return { status: ok ? "PASS" : "WARN", detail: ok ? "Storage module available" : "Not yet initialized" };
     },
