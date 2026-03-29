@@ -6,6 +6,7 @@ import SecurityLogPanel from "@/components/dashboard/SecurityLogPanel";
 import MemoryCorePanel from "@/components/dashboard/MemoryCorePanel";
 import TokenEconomyPanel from "@/components/dashboard/TokenEconomyPanel";
 import MICPanel from "@/components/dashboard/MICPanel";
+import CharacterDBPanel from "@/components/dashboard/CharacterDBPanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -154,15 +155,23 @@ const Dashboard = () => {
         </Panel>
       </div>
 
-      {/* MODULE INTERFACE CONTRACT + SECURITY LOG */}
+      {/* CHARACTER DB + MODULE INTERFACE CONTRACT */}
       <div className="grid grid-cols-2 gap-4">
+        <Panel title="Character DB">
+          <CharacterDBPanel />
+        </Panel>
+
         <Panel title="Module Interface Contract">
           <MICPanel />
         </Panel>
+      </div>
 
+      {/* SECURITY LOG */}
+      <div className="grid grid-cols-2 gap-4">
         <Panel title="Security Log">
           <SecurityLogPanel />
         </Panel>
+        <div />
       </div>
     </div>
   );
