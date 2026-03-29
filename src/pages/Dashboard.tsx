@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { getSecurityLog, type SecurityEvent } from "@/security/sanitizer";
+import { getSessionSummary, subscribe, type SessionCostSummary } from "@/api/sessionCostTracker";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
