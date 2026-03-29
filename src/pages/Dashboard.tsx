@@ -10,6 +10,7 @@ import CharacterDBPanel from "@/components/dashboard/CharacterDBPanel";
 import VoiceCorpusGatePanel from "@/components/dashboard/VoiceCorpusGatePanel";
 import StoryBibleImportPanel from "@/components/dashboard/StoryBibleImportPanel";
 import AntagonistPromptPanel from "@/components/dashboard/AntagonistPromptPanel";
+import OutlineDiagnosticPanel from "@/components/dashboard/OutlineDiagnosticPanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -179,6 +180,11 @@ const Dashboard = () => {
           <AntagonistPromptPanel />
         </Panel>
       </div>
+
+      {/* OUTLINE DIAGNOSTIC */}
+      <Panel title="Outline Import Diagnostic">
+        <OutlineDiagnosticPanel />
+      </Panel>
 
       {/* VOICE CORPUS GATE + SECURITY LOG */}
       <div className="grid grid-cols-2 gap-4">
