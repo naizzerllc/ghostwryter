@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { getSecurityLog, type SecurityEvent } from "@/security/sanitizer";
+
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
   label: `Session ${String(i + 1).padStart(2, "0")}`,
@@ -12,6 +15,43 @@ const Panel = ({ title, children }: { title: string; children: React.ReactNode }
     <div className="p-4">{children}</div>
   </div>
 );
+
+const SecurityLogPanel = () => {
+  const [events, setEvents] = useState<SecurityEvent[]>([]);
+
+  useEffect(() => {
+    // Poll every 2 seconds for new events
+    const update = () => setEvents(getSecurityLog().slice(0, 5));
+    update();
+    const interval = setInterval(update, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (events.length === 0) {
+    return <p className="text-sm text-muted-foreground">No security events</p>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {events.map((event, i) => (
+        <div key={`${event.timestamp}-${i}`} className="border border-destructive/30 bg-destructive/5 p-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono text-destructive uppercase">{event.severity}</span>
+            <span className="text-[10px] font-mono text-muted-foreground">
+              {new Date(event.timestamp).toLocaleTimeString()}
+            </span>
+          </div>
+          <p className="text-xs font-mono text-foreground mt-1">
+            Field: <span className="text-destructive">{event.field}</span>
+          </p>
+          <p className="text-[10px] font-mono text-muted-foreground">
+            Patterns: {event.patterns.join(", ")}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const Dashboard = () => {
   return (
@@ -33,7 +73,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Build</p>
-                <p className="text-sm font-mono">1 / 28</p>
+                <p className="text-sm font-mono">2 / 28</p>
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Status</p>
@@ -46,9 +86,9 @@ const Dashboard = () => {
         {/* BUILD NOTES */}
         <Panel title="Build Notes">
           <div className="space-y-2">
-            <p className="text-sm text-foreground">Session 1 in progress. Foundation build.</p>
+            <p className="text-sm text-foreground">Session 2 complete. GitHub storage + security layer.</p>
             <p className="text-xs text-muted-foreground">
-              Scaffold · Three-zone layout · Navigation · Dashboard · Settings
+              GitHub Storage · Security Sanitizer · Disconnection Detection
             </p>
           </div>
         </Panel>
@@ -83,7 +123,7 @@ const Dashboard = () => {
 
       {/* SECURITY LOG */}
       <Panel title="Security Log">
-        <p className="text-sm text-muted-foreground">No security events</p>
+        <SecurityLogPanel />
       </Panel>
     </div>
   );
