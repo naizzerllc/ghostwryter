@@ -1,0 +1,67 @@
+{
+  "version": "1.0",
+  "register_definition": {
+    "name": "clinical_dissociative",
+    "brand": "leila_rex_default",
+    "description": "The Leila Rex clinical-dissociative register is the calibration anchor for all voice corpus evaluation.",
+    "traits": [
+      "First-person present tense",
+      "Clinical precision in observation",
+      "Emotional affect rendered through physical detail only — never named emotions",
+      "Slightly detached observational tone",
+      "No self-diagnosis — the narrator does not accurately identify her own psychological state before the revelation chapter",
+      "Interiority expressed through what the narrator notices rather than what she feels",
+      "Controlled sentence rhythm — tension modulated through sentence length variation",
+      "Physical responses substitute for emotional labelling (e.g. 'my fingers tighten on the glass' not 'I feel anxious')",
+      "Suppressed evidence rendered as conspicuous omission — the narrator visibly does not look at something"
+    ],
+    "anti_patterns": [
+      "Named emotions ('I feel scared', 'anger rises in me')",
+      "Direct psychological labelling ('my anxiety spikes')",
+      "Self-aware diagnosis ('I know I'm deflecting')",
+      "Warm, empathetic, or effusive tone",
+      "Third-person detachment or omniscient perspective",
+      "Past tense narration"
+    ]
+  },
+  "pressure_states": {
+    "DEFLECTION": "Character redirects attention away from the source of pressure. Voice becomes more controlled, sentences shorten, subject changes abruptly.",
+    "DECEPTION": "Character actively misleads. Voice may become smoother, more precise, or adopt a rehearsed quality. Specific verbal tics emerge.",
+    "COLLAPSE": "Character's defences fail. Voice register shifts — may fragment, lose precision, or revert to raw physical response."
+  },
+  "arc_points": {
+    "ARC_START": {
+      "description": "Baseline establishment. Character's wound is rendered in voice — not stated, demonstrated through register, word choice, and what the character notices or avoids.",
+      "minimum_exchanges": 5
+    },
+    "ARC_MID": {
+      "description": "Wound under pressure. The same wound surfaces under escalating circumstances without resolving. Voice shows stress through tell intensification.",
+      "minimum_exchanges": 3
+    },
+    "ARC_END": {
+      "description": "Transformation rendered. Register shifts demonstrate change — not explained. The character's voice is measurably different from ARC_START without the narrator naming the change.",
+      "minimum_exchanges": 3
+    }
+  },
+  "dimension_weights": {
+    "register_consistency": 0.25,
+    "voice_distinctiveness": 0.25,
+    "tell_operationalisation": 0.30,
+    "pressure_state_coverage": 0.20
+  },
+  "thresholds": {
+    "passed": { "min_composite": 16, "description": "Composite >= 16/20: PASSED — corpus_approved: true" },
+    "conditional": { "min_composite": 12, "max_composite": 15, "description": "Composite 12–15: CONDITIONAL — targeted revision required, generation blocked" },
+    "failed": { "max_composite": 11, "description": "Composite < 12: FAILED — full corpus rewrite required, generation blocked" }
+  },
+  "arc_coherence_check": {
+    "applies_to": "protagonist",
+    "threshold": 9,
+    "max_score": 15,
+    "questions": [
+      "Does the ARC_START corpus establish the character's baseline wound in their voice — not stated, rendered?",
+      "Does the ARC_MID corpus show the wound under pressure without resolving it?",
+      "Does the ARC_END corpus show transformation without naming it — demonstrated through register shift not explanation?"
+    ]
+  }
+}
