@@ -8,7 +8,7 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     5 (in progress — MSG-3 complete)
+Active prompt:     5 (in progress — MSG-4 complete)
 Last completed:    4
 Prompts pending:   5–15
 MIC version:       2.1
