@@ -45,7 +45,10 @@ const COST_PER_1M: Record<string, { input: number; output: number }> = {
 const entries: CostEntry[] = [];
 const listeners: Set<() => void> = new Set();
 
+let cachedSummary: SessionCostSummary | null = null;
+
 function notify() {
+  cachedSummary = null; // invalidate cache
   listeners.forEach((fn) => fn());
 }
 
