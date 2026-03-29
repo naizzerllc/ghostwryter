@@ -1,0 +1,82 @@
+{
+  "version": "1.0",
+  "brand": "leila_rex",
+  "permanent_tropes": [
+    {
+      "id": "credentialed_liar",
+      "label": "Credentialed Liar",
+      "description": "Medical insider whose professional authority collapses under the weight of their deception. Their credentials are the weapon and the wound.",
+      "enabled_default": true,
+      "locked": true
+    },
+    {
+      "id": "institutional_gaslighting",
+      "label": "Institutional Gaslighting",
+      "description": "The system reframes the narrator's legitimate concern as instability. The institution protects itself by pathologising dissent.",
+      "enabled_default": true,
+      "locked": true
+    }
+  ],
+  "rotating_tropes": [
+    {
+      "id": "trope_a",
+      "label": "A — Medication as Unreliable Witness",
+      "description": "Medication blurs the narrator's capacity to distinguish memory from pharmacological artifact. The reader cannot trust what the narrator remembers under chemical influence.",
+      "enabled_default": true,
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "trope_b",
+      "label": "B — Complicit Witness",
+      "description": "A secondary character who witnessed the truth but chose complicity. Their silence is load-bearing to the misdirection architecture.",
+      "enabled_default": true,
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "trope_c",
+      "label": "C — Retrospective Confession",
+      "description": "The narrator has already confessed before the story begins. The novel is the confession. The reader discovers this structural truth late.",
+      "enabled_default": true,
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "trope_d",
+      "label": "D — Reserved",
+      "description": "Locked until after Book 3. Requires editorial unlock with written rationale.",
+      "enabled_default": false,
+      "status": "RESERVED"
+    }
+  ],
+  "rolling_overlap_pattern": {
+    "book_1": ["trope_a", "trope_b"],
+    "book_2": ["trope_a", "trope_c"],
+    "book_3": ["trope_b", "trope_c"],
+    "book_4": ["trope_c", "trope_d"],
+    "book_4_note": "Blocked until Trope D defined and editorially unlocked"
+  },
+  "thematic_dna": [
+    {
+      "id": "protagonist_complicity",
+      "label": "Protagonist Complicity",
+      "description": "The protagonist is always complicit before they are victimised. This is not optional — it is the moral engine of every Leila Rex novel.",
+      "locked": true
+    },
+    {
+      "id": "medical_setting_as_mechanism",
+      "label": "Medical Setting as Mechanism",
+      "description": "Medicine is not backdrop — it is weaponised. The clinical environment enables both the crime and its concealment.",
+      "locked": true
+    },
+    {
+      "id": "moral_ambiguity_without_relativism",
+      "label": "Moral Ambiguity Without Moral Relativism",
+      "description": "The reader is forced into moral discomfort, but the novel does not pretend all positions are equal. There is a moral floor.",
+      "locked": true
+    }
+  ],
+  "narrator_architecture": {
+    "type": "unreliable",
+    "description": "Narrator unreliability is load-bearing to the twist architecture. The narrator's self-deception is not decoration — it is the structural mechanism that makes the twist land.",
+    "locked": true
+  }
+}
