@@ -1,0 +1,131 @@
+{
+  "version": "2.1",
+  "fields_version": "v1.9",
+  "description": "Canonical schema definitions for all inter-module data exchange. No module may exchange data using undocumented schemas.",
+
+  "schemas": {
+    "project_config_record": {
+      "description": "Top-level project configuration and state tracking",
+      "fields": {
+        "genre_mode": { "type": "enum", "values": ["psychological_thriller", "standard_thriller"], "required": true },
+        "twist_architecture": { "type": "enum", "values": ["active", "none"], "required": true },
+        "narrator_reliability": { "type": "enum", "values": ["unreliable", "ambiguous", "reliable"], "required": true },
+        "revelation_chapter": { "type": "number", "required": true, "description": "Chapter number where the twist is revealed" },
+        "override_log": { "type": "array", "items": { "type": "object", "fields": { "timestamp": "string", "field": "string", "old_value": "any", "new_value": "any", "reason": "string" } }, "default": [] },
+        "breadcrumb_landing_summary": { "type": "object", "fields": { "total_breadcrumbs": "number", "landed": "number", "pending": "number", "orphaned": "number" }, "default": {} },
+        "cost_log": { "type": "array", "items": { "type": "object", "fields": { "session_id": "string", "total_tokens": "number", "estimated_cost_usd": "number", "timestamp": "string" } }, "default": [] },
+        "reader_simulation_persona": { "type": "object", "fields": { "active_persona": "string", "tolerance_profile": "object", "injection_target": "reader_simulation_system_prompt" }, "required": true },
+        "last_anthropic_model": { "type": "string", "description": "Last resolved Anthropic model string for drift detection" },
+        "voice_benchmark_baseline": { "type": "object", "fields": { "baseline_chapter": "number", "scores": "object", "captured_at": "string" }, "default": null },
+        "token_budget_audit": { "type": "object", "fields": { "generation_ceiling": "number", "quality_ceiling": "number", "reader_sim_ceiling": "number", "last_checked": "string" }, "default": {} },
+        "outline_amendment_record": { "type": "array", "items": { "type": "object", "fields": { "chapter": "number", "field": "string", "old_value": "any", "new_value": "any", "reason": "string", "timestamp": "string" } }, "default": [] }
+      }
+    },
+
+    "chapter_outline_record": {
+      "description": "Per-chapter outline specification — schema v2.8",
+      "fields": {
+        "chapter_number": { "type": "number", "required": true },
+        "timeline_id": { "type": "string", "required": true, "description": "Timeline strand identifier" },
+        "scene_purpose": { "type": "string", "required": true, "description": "Single clear purpose — one scene one job (R5)" },
+        "hook_type": { "type": "enum", "values": ["REVELATION", "THREAT", "DECISION", "THE_LIE", "NEW_QUESTION"], "required": true },
+        "hook_seed": { "type": "string", "required": true, "description": "Mandatory specific image/detail for the hook — not generic" },
+        "narrator_deception_gesture": { "type": "string", "required_when": "genre_mode === 'psychological_thriller' && chapter_number < revelation_chapter", "description": "Mandatory for psych thriller pre-revelation chapters" },
+        "tension_score_target": { "type": "number", "min": 1, "max": 10, "required": true },
+        "opening_type": { "type": "enum", "values": ["action_mid_scene", "sensory_disorientation", "dialogue_no_tag", "object_close_up"], "required": true },
+        "opening_seed": { "type": "string", "required": true },
+        "compulsion_floor_note": { "type": "string", "default": null, "description": "Required when compulsion < 5 to avoid hard veto" },
+        "collision_specification": { "type": "string", "required": true, "description": "What forces collide in this chapter" },
+        "permanent_change": { "type": "string", "required": true, "description": "What irreversibly changes by chapter end" },
+        "protagonist_decision_type": { "type": "enum", "values": ["active", "passive_justified", "forced"], "required": true },
+        "reader_information_mode": { "type": "enum", "values": ["dramatic_irony", "shared_discovery", "delayed_reveal"], "required": true }
+      }
+    },
+
+    "character_record": {
+      "description": "Character definition with voice DNA and psychological profile",
+      "fields": {
+        "id": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "role": { "type": "enum", "values": ["protagonist", "antagonist", "supporting"], "required": true },
+        "classification": { "type": "string", "description": "Archetype or functional classification" },
+        "wound": { "type": "string", "required": true },
+        "flaw": { "type": "string", "required": true },
+        "want": { "type": "string", "required": true },
+        "need": { "type": "string", "required": true },
+        "self_deception": { "type": "string", "required": true, "description": "Core lie the character tells themselves" },
+        "fear": { "type": "string", "required": true },
+        "arc_start": { "type": "string", "required": true },
+        "arc_end": { "type": "string", "required": true },
+        "arc_lesson": { "type": "string", "required": true },
+        "compressed_voice_dna": { "type": "string", "required": true, "description": "Compressed voice fingerprint for generation" },
+        "external_goal": { "type": "string", "required": true, "description": "v1.9 addition — visible objective" },
+        "internal_desire": { "type": "string", "required": true, "description": "v1.9 addition — hidden emotional need" },
+        "goal_desire_gap": { "type": "string", "required": true, "description": "v1.9 addition — tension between external_goal and internal_desire" },
+        "psychological_sliders": { "type": "object", "fields": { "openness": "number", "conscientiousness": "number", "extraversion": "number", "agreeableness": "number", "neuroticism": "number" } },
+        "voice_corpus_status": { "type": "enum", "values": ["PENDING", "APPROVED", "REJECTED"], "default": "PENDING" },
+        "voice_reliability": { "type": "enum", "values": ["HIGH", "MISSING"], "default": "MISSING" },
+        "corpus_approved": { "type": "boolean", "default": false }
+      }
+    },
+
+    "approved_chapter_record": {
+      "description": "Approved chapter output with quality scores and editorial status",
+      "fields": {
+        "chapter_number": { "type": "number", "required": true },
+        "approved_draft": { "type": "string", "required": true, "description": "Full chapter text" },
+        "composite_score": { "type": "number", "required": true, "description": "Weighted quality score — approve >= 8.0" },
+        "human_editorial_override": { "type": "object", "fields": { "override_applied": "boolean", "reason": "string", "original_score": "number" }, "default": null },
+        "emotional_state_at_chapter_end": { "type": "object", "fields": { "protagonist": "string", "reader_expected": "string" }, "required": true },
+        "generation_truncation_suspected": { "type": "boolean", "default": false, "description": "True if output_tokens < 300 with end_turn stop_reason" },
+        "human_editorial_sign_off": {
+          "type": "object",
+          "fields": {
+            "status": { "type": "enum", "values": ["PENDING", "SIGNED_OFF", "FLAGGED_FOR_REVISION", "SKIPPED"], "default": "PENDING", "description": "ALWAYS defaults to PENDING — no chapter born SIGNED_OFF" },
+            "signed_off_by": "string",
+            "signed_off_at": "string",
+            "notes": "string"
+          },
+          "required": true
+        }
+      }
+    },
+
+    "platform_failure_record": {
+      "description": "Platform failure event logging — 7 failure types",
+      "fields": {
+        "failure_type": { "type": "enum", "values": ["GITHUB_DISCONNECTION", "PROVIDER_OUTAGE", "REVISION_ESCALATION", "MEMORY_DESYNC", "CONTEXT_OVERFLOW", "CONTENT_REFUSAL", "MODEL_VOICE_DRIFT"], "required": true },
+        "detected_at": { "type": "string", "format": "ISO8601", "required": true },
+        "chapter_number": { "type": "number", "default": null },
+        "description": { "type": "string", "required": true },
+        "recovery_action": { "type": "string", "required": true },
+        "resolved_at": { "type": "string", "format": "ISO8601", "default": null },
+        "data_loss_risk": { "type": "boolean", "required": true },
+        "data_loss_occurred": { "type": "boolean", "default": false }
+      }
+    },
+
+    "quality_gate_result": {
+      "description": "Quality gate evaluation output — approve >= 8.0, review 7.0-7.9, regenerate < 4.0",
+      "fields": {
+        "module_scores": {
+          "type": "object",
+          "fields": {
+            "reader_simulation": { "type": "number", "weight": 0.32 },
+            "dev_editor": { "type": "number", "weight": 0.20 },
+            "anti_ai": { "type": "number", "weight": 0.18 },
+            "line_editor": { "type": "number", "weight": 0.15 },
+            "dialogue_editor": { "type": "number", "weight": 0.10 },
+            "continuity_editor": { "type": "number", "weight": 0.05 }
+          },
+          "required": true
+        },
+        "weighted_score": { "type": "number", "required": true },
+        "compulsion_rating": { "type": "number", "min": 1, "max": 10, "required": true },
+        "twist_integrity_verdict": { "type": "enum", "values": ["INTACT", "DEGRADED", "BREACHED"], "required": true },
+        "result": { "type": "enum", "values": ["APPROVE", "REVIEW", "REGENERATE"], "required": true },
+        "veto_scene_purpose": { "type": "boolean", "default": false, "description": "True triggers FULL_REGENERATION — scene_purpose_delivered = false" }
+      }
+    }
+  }
+}
