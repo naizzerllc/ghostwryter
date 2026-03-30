@@ -48,8 +48,11 @@ interface HumanReviewProps {
   truncationSuspected: boolean;
   approvedRecord: ApprovedChapterRecord | null;
   qualityGateRejected: boolean;
+  medicalFactCheckResult: MedicalFactCheckResult | null;
+  medicalAdvisoryRequired: boolean;
   onApproved: (record: ApprovedChapterRecord) => void;
   onFlagged: (flagType: FlagType, notes: string) => void;
+  onMedicalClaimDecision: (claimId: string, decision: WriterDecision, reasoning?: string) => void;
 }
 
 // ── Sign-off Badge ──────────────────────────────────────────────────────
