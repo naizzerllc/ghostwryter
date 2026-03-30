@@ -257,7 +257,7 @@ const ClinicalProfileTab = ({ characterId, onSave }: ClinicalProfileTabProps) =>
             title="What should the reader feel about this character before any reveal?"
             options={FEELING_OPTIONS}
             value={feeling}
-            onChange={setFeeling}
+            onChange={(v) => setFeeling(v as ReaderFeeling)}
           />
           <QuestionGroup
             title="Where does this character operate?"
