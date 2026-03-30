@@ -1,0 +1,241 @@
+/**
+ * Briefing Generator — Assembles 4-tier context for generation calls.
+ * GHOSTLY v2.2 · Session 14
+ *
+ * Tier 0 (800T, immovable): Prose DNA runtime
+ * Tier 1 (1,200T / 1,000T if series): Style Layer + active clocks + session memory
+ * Tier 2 (2,000T, relevance-scored): Character context + scene brief
+ * Tier 3 (1,500T, sub-budgeted): Continuity bridge from previous chapters
+ * Tier 4 (4,500T): Output headroom — reserved for generation
+ *
+ * Total ceiling: 10,000T. Assembled brief must verify total ≤ 10,000T.
+ */
+
+import { PROSE_DNA_RUNTIME } from "@/constants/PROSE_DNA_RUNTIME";
+import { getActiveClocksForChapter } from "@/modules/dramaticArchitecture/clockRegistry";
+import { getAllCharacters } from "@/modules/characterDB/characterDB";
+import { getChapter, getAllChapters } from "@/modules/outline/outlineSystem";
+import { getLivingState } from "@/modules/livingState/livingState";
+import { getSeriesContext } from "@/modules/seriesMemory/seriesMemory";
+import { scoreCharacterRelevance } from "./relevanceScorer";
+
+// ── Types ───────────────────────────────────────────────────────────────
+
+export interface TierBudget {
+  tier: number;
+  label: string;
+  budget: number;
+  used: number;
+  content: string;
+}
+
+export interface GenerationBrief {
+  chapter_number: number;
+  project_id: string;
+  tiers: TierBudget[];
+  total_tokens: number;
+  total_budget: number;
+  over_budget: boolean;
+  budget_warnings: string[];
+  truncation_log: string[];
+  assembled_at: string;
+}
+
+// ── Token Counting ──────────────────────────────────────────────────────
+
+export function countTokens(text: string): number {
+  return Math.ceil(text.length / 4);
+}
+
+function truncateToTokens(text: string, maxTokens: number): string {
+  const maxChars = maxTokens * 4;
+  if (text.length <= maxChars) return text;
+  return text.slice(0, maxChars);
+}
+
+// ── Tier Builders ───────────────────────────────────────────────────────
+
+function buildTier0(): string {
+  return PROSE_DNA_RUNTIME;
+}
+
+function buildTier1(chapterNumber: number, projectId: string, seriesBudget: number): string {
+  const parts: string[] = [];
+
+  // Active clocks
+  const clocks = getActiveClocksForChapter(chapterNumber);
+  if (clocks.length > 0) {
+    const clockSummary = clocks
+      .map(c => `[${c.type}] ${c.name}: intensity ${c.current_intensity}/10`)
+      .join("\n");
+    parts.push(`ACTIVE CLOCKS (${clocks.length}):\n${clockSummary}`);
+  }
+
+  // Living state emotional context
+  const livingState = getLivingState(projectId);
+  if (livingState.emotional_state_at_chapter_end) {
+    parts.push(`EMOTIONAL STATE: ${livingState.emotional_state_at_chapter_end}`);
+  }
+
+  // Series memory if active
+  const seriesCtx = getSeriesContext(projectId);
+  if (seriesCtx.active && seriesCtx.previous_titles.length > 0) {
+    const seriesSummary = seriesCtx.previous_titles
+      .map(t => `Book ${t.sequence_number} (${t.title_name}): ${t.protagonist_arc_resolution.slice(0, 200)}`)
+      .join("\n");
+    parts.push(`SERIES MEMORY:\n${seriesSummary}`);
+  }
+
+  return truncateToTokens(parts.join("\n\n"), seriesBudget);
+}
+
+function buildTier2(
+  chapterNumber: number,
+  projectId: string,
+  budget: number
+): { content: string; truncated: string[] } {
+  const chapterOutline = getChapter(chapterNumber);
+  const livingState = getLivingState(projectId);
+  const allCharacters = getAllCharacters();
+  const truncated: string[] = [];
+
+  if (allCharacters.length === 0 || !chapterOutline) {
+    return { content: "", truncated };
+  }
+
+  // Score and rank characters
+  const scored = allCharacters
+    .map(char => ({
+      character: char,
+      score: scoreCharacterRelevance(char, chapterOutline, livingState),
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  const parts: string[] = [];
+  let usedTokens = 0;
+
+  for (const { character, score } of scored) {
+    const entry = `[${character.role.toUpperCase()}] ${character.name} (relevance: ${score}/10)
+Wound: ${character.wound} | Flaw: ${character.flaw}
+Want: ${character.want} | Need: ${character.need}
+Voice: ${character.compressed_voice_dna.slice(0, 200)}
+Goal: ${character.external_goal} | Desire: ${character.internal_desire}`;
+
+    const entryTokens = countTokens(entry);
+    if (usedTokens + entryTokens > budget) {
+      truncated.push(character.name);
+      continue;
+    }
+
+    parts.push(entry);
+    usedTokens += entryTokens;
+  }
+
+  // Append scene brief context
+  if (chapterOutline) {
+    const sceneBrief = `SCENE PURPOSE: ${chapterOutline.scene_purpose}
+HOOK: ${chapterOutline.hook_type} — ${chapterOutline.hook_seed}
+OPENING: ${chapterOutline.opening_type} — ${chapterOutline.opening_seed}
+TENSION TARGET: ${chapterOutline.tension_score_target}/10
+COLLISION: ${chapterOutline.collision_specification}
+PERMANENT CHANGE: ${chapterOutline.permanent_change}`;
+
+    const briefTokens = countTokens(sceneBrief);
+    if (usedTokens + briefTokens <= budget) {
+      parts.push(sceneBrief);
+    }
+  }
+
+  return { content: parts.join("\n\n"), truncated };
+}
+
+function buildTier3(chapterNumber: number): string {
+  const allChapters = getAllChapters();
+  const parts: string[] = [];
+
+  // Sub-budgets
+  const subBudgets: Array<{ offset: number; budget: number; label: string }> = [
+    { offset: 1, budget: 600, label: "last_chapter_summary" },
+    { offset: 2, budget: 400, label: "chapter_n-2" },
+    { offset: 3, budget: 300, label: "chapter_n-3" },
+  ];
+
+  for (const { offset, budget, label } of subBudgets) {
+    const prevNum = chapterNumber - offset;
+    const prevChapter = allChapters.find(c => c.chapter_number === prevNum);
+    if (prevChapter) {
+      const summary = `Ch${prevNum} (${label}): Purpose: ${prevChapter.scene_purpose} | Hook: ${prevChapter.hook_type} — ${prevChapter.hook_seed} | Change: ${prevChapter.permanent_change}`;
+      parts.push(truncateToTokens(summary, budget));
+    }
+  }
+
+  // Act 1 anchor slot (from Chapter 30 onward)
+  if (chapterNumber >= 30) {
+    const act1Chapters = allChapters.filter(c => c.act === 1);
+    if (act1Chapters.length > 0) {
+      const anchorSummary = `ACT 1 ANCHOR: ${act1Chapters.length} chapters. Key purposes: ${act1Chapters.slice(0, 3).map(c => c.scene_purpose).join(" | ")}`;
+      parts.push(truncateToTokens(anchorSummary, 200));
+    }
+  }
+
+  return parts.join("\n\n");
+}
+
+// ── Main Assembly ───────────────────────────────────────────────────────
+
+export function assembleBrief(chapterNumber: number, projectId: string): GenerationBrief {
+  const warnings: string[] = [];
+  const truncationLog: string[] = [];
+
+  // Determine series budget adjustment
+  const seriesCtx = getSeriesContext(projectId);
+  const tier1Budget = seriesCtx.active ? 1000 : 1200;
+
+  // Build all tiers
+  const tier0Content = buildTier0();
+  const tier1Content = buildTier1(chapterNumber, projectId, tier1Budget);
+  const { content: tier2Content, truncated: tier2Truncated } = buildTier2(chapterNumber, projectId, 2000);
+  const tier3Content = buildTier3(chapterNumber);
+
+  if (tier2Truncated.length > 0) {
+    truncationLog.push(`Characters truncated from Tier 2: ${tier2Truncated.join(", ")}`);
+  }
+
+  const tiers: TierBudget[] = [
+    { tier: 0, label: "Prose DNA", budget: 800, used: countTokens(tier0Content), content: tier0Content },
+    { tier: 1, label: "Style + Clocks + Session", budget: tier1Budget, used: countTokens(tier1Content), content: tier1Content },
+    { tier: 2, label: "Characters + Scene Brief", budget: 2000, used: countTokens(tier2Content), content: tier2Content },
+    { tier: 3, label: "Continuity Bridge", budget: 1500, used: countTokens(tier3Content), content: tier3Content },
+    { tier: 4, label: "Output Headroom", budget: 4500, used: 0, content: "" },
+  ];
+
+  const totalUsed = tiers.reduce((sum, t) => sum + t.used, 0);
+  const totalBudget = 10000;
+
+  // Budget warnings
+  if (totalUsed > 8000) {
+    warnings.push(`⚠ Brief token count (${totalUsed}) exceeds 8,000T warning threshold`);
+  }
+  if (totalUsed > totalBudget) {
+    warnings.push(`🛑 Brief token count (${totalUsed}) exceeds 10,000T ceiling — generation blocked`);
+  }
+
+  // Check individual tier overruns
+  for (const tier of tiers) {
+    if (tier.used > tier.budget && tier.tier !== 4) {
+      warnings.push(`Tier ${tier.tier} (${tier.label}) over budget: ${tier.used}/${tier.budget}T`);
+    }
+  }
+
+  return {
+    chapter_number: chapterNumber,
+    project_id: projectId,
+    tiers,
+    total_tokens: totalUsed,
+    total_budget: totalBudget,
+    over_budget: totalUsed > totalBudget,
+    budget_warnings: warnings,
+    truncation_log: truncationLog,
+    assembled_at: new Date().toISOString(),
+  };
+}
