@@ -11,6 +11,7 @@ import {
   FileInput,
   Users,
   Mic,
+  BookOpen,
 } from "lucide-react";
 
 const NAV_ITEMS = [
