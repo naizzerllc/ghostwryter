@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S17 (pending)
-Last completed:    S16 ✅ (Pacing Contrast · Genre Calibration · Cold Start System complete)
-Prompts pending:   S17–S28
+Active prompt:     S18 (pending)
+Last completed:    S17 ✅ (Generation Core · Chapter Pipeline complete)
+Prompts pending:   S18–S28
 MIC version:       2.1
 Schema version:    2.8 (outline format)
 Prose DNA version: v2.3 (17 rules)
@@ -34,7 +34,8 @@ Prose DNA version: v2.3 (17 rules)
 | S14 | ✅ Complete | briefingGenerator.ts · relevanceScorer.ts · briefValidationGate.ts |
 | S15 | ✅ Complete | dialogueSubtextMapper.ts · quirkInjection.ts · voiceRegisterAnchorInjection.ts · VOICE_REGISTER_ANCHORS.json |
 | S16 | ✅ Complete | pacingContrastSystem.ts · genreCalibration.ts · coldStartSystem.ts |
-| S17–S28 | ⏳ Pending | — |
+| S17 | ✅ Complete | generationCore.ts · chapterPipeline.ts |
+| S18–S28 | ⏳ Pending | — |
 
 ---
 
