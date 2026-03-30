@@ -23,7 +23,8 @@ export type TaskType =
   | "misdirection_erosion_check"
   | "reader_simulation"
   | "dna_extraction"
-  | "dna_gap_options";
+  | "dna_gap_options"
+  | "quality_medical_fact_check";
 
 export interface TaskRoute {
   provider: Provider;
