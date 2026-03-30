@@ -13,6 +13,8 @@ import AntagonistPromptPanel from "@/components/dashboard/AntagonistPromptPanel"
 import OutlineDiagnosticPanel from "@/components/dashboard/OutlineDiagnosticPanel";
 import CorpusExchangePanel from "@/components/dashboard/CorpusExchangePanel";
 import CatalogueRegistryPanel from "@/components/dashboard/CatalogueRegistryPanel";
+import CanonicalFactsPanel from "@/components/dashboard/CanonicalFactsPanel";
+import SeriesMemoryPanel from "@/components/dashboard/SeriesMemoryPanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
