@@ -263,7 +263,12 @@ export async function generateChapter(
 
   // ── Step 9: Knowledge boundary check ──────────────────────────────
   const outline = { chapters: getAllChapters() };
-  const boundaryMap = buildBoundaryMap(outline, allCharacters);
+  const boundaryCharacters = allCharacters.map(c => ({
+    character_id: c.id,
+    name: c.name,
+    introduced_chapter: undefined as number | undefined,
+  }));
+  const boundaryMap = buildBoundaryMap(outline, boundaryCharacters);
   const boundaryViolations = checkBoundary(response.content, chapterNumber, boundaryMap);
 
   const criticalBoundary = boundaryViolations.filter(v => v.severity === "CRITICAL");

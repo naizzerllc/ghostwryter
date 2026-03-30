@@ -183,6 +183,9 @@ export async function runChapterPipeline(
     return { success: false, state };
   }
 
+  // Narrow type after blocked check
+  const successResult = generationResult as GenerationSuccess;
+
   // ── Stage 2: QUALITY_CHECK (stubbed — Sessions 19–22) ───────────
   state.stage = "QUALITY_CHECK";
   emitStateChange(state);
@@ -198,7 +201,7 @@ export async function runChapterPipeline(
 
   // For now, auto-approve. Session 18 will add the human review interface.
   // ── Stage 4: APPROVED ───────────────────────────────────────────
-  const approvedRecord = createApprovedRecord(chapterNumber, generationResult);
+  const approvedRecord = createApprovedRecord(chapterNumber, successResult);
   state.approved_record = approvedRecord;
   state.stage = "APPROVED";
   state.completed_at = new Date().toISOString();
@@ -217,7 +220,7 @@ export async function runChapterPipeline(
 
   // ── Post-approval: Living state update ──────────────────────────
   try {
-    await updateLivingState(projectId, chapterNumber, generationResult.content);
+    await updateLivingState(successResult.content, chapterNumber, projectId);
     console.log(`[Pipeline] Living state updated after chapter ${chapterNumber}`);
   } catch (error) {
     console.error(`[Pipeline] Living state update failed:`, error);
@@ -227,11 +230,11 @@ export async function runChapterPipeline(
   try {
     proposeUpdate(projectId, {
       chapter_approved: chapterNumber,
-      model_used: generationResult.model_used,
-      tokens_used: generationResult.tokens_used,
-      truncation_suspected: generationResult.truncation_suspected,
-      forbidden_word_count: generationResult.forbidden_word_violations.violations.length,
-      boundary_warning_count: generationResult.boundary_violations.length,
+      model_used: successResult.model_used,
+      tokens_used: successResult.tokens_used,
+      truncation_suspected: successResult.truncation_suspected,
+      forbidden_word_count: successResult.forbidden_word_violations.violations.length,
+      boundary_warning_count: successResult.boundary_violations.length,
     });
     console.log(`[Pipeline] Memory Core update proposed — awaiting human confirmation`);
   } catch (error) {
