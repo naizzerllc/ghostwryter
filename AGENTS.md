@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S19 (pending)
-Last completed:    S18 ✅ (Human Review · Calibration · Recovery UIs complete)
-Prompts pending:   S19–S28
+Active prompt:     S21 (pending)
+Last completed:    S20 ✅ (Dialogue Editor · Continuity Editor · Misdirection Erosion Index complete)
+Prompts pending:   S21–S28
 MIC version:       2.1
 Schema version:    2.8 (outline format)
 Prose DNA version: v2.3 (17 rules)
@@ -36,7 +36,9 @@ Prose DNA version: v2.3 (17 rules)
 | S16 | ✅ Complete | pacingContrastSystem.ts · genreCalibration.ts · coldStartSystem.ts |
 | S17 | ✅ Complete | generationCore.ts · chapterPipeline.ts |
 | S18 | ✅ Complete | HumanReview.tsx · CalibrationGate.tsx · ManuscriptHealthDashboard.tsx · RecoveryUIs.tsx · Review.tsx |
-| S19–S28 | ⏳ Pending | — |
+| S19 | ✅ Complete | developmentalEditor.ts · lineEditor.ts |
+| S20 | ✅ Complete | dialogueEditor.ts · continuityEditor.ts · misdirectionErosionIndex.ts |
+| S21–S28 | ⏳ Pending | — |
 
 ---
 
