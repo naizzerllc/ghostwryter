@@ -12,6 +12,7 @@ import { generateChapter, type GenerationResult, type GenerationSuccess } from "
 import { updateLivingState } from "@/modules/livingState/livingState";
 import { proposeUpdate } from "@/modules/memoryCore/memoryCore";
 import { githubStorage } from "@/storage/githubStorage";
+import { runMedicalFactCheck, type MedicalFactCheckResult } from "@/modules/quality/medicalFactChecker";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
