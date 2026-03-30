@@ -256,7 +256,7 @@ export async function generateChapter(
   }
 
   // ── Step 8: Forbidden words check ─────────────────────────────────
-  const forbiddenWordViolations = checkChapter(response.content, chapterNumber);
+  const forbiddenWordViolations = checkChapter(response.content, String(chapterNumber));
   if (forbiddenWordViolations.hardBanCount > 0) {
     console.warn(`[GenerationCore] ${forbiddenWordViolations.hardBanCount} hard-ban violations in chapter ${chapterNumber}`);
   }
