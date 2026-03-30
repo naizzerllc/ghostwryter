@@ -194,10 +194,24 @@ export async function runChapterPipeline(
   // ── Stage 2: QUALITY_CHECK (stubbed — Sessions 19–22) ───────────
   state.stage = "QUALITY_CHECK";
   emitStateChange(state);
-  console.log(`[Pipeline] Chapter ${chapterNumber}: QUALITY_CHECK (stub — no quality modules yet)`);
+  console.log(`[Pipeline] Chapter ${chapterNumber}: QUALITY_CHECK`);
 
-  // Quality score is null until quality pipeline modules are built
+  // Quality score is null until full quality pipeline orchestrator is built
   state.quality_score = null;
+
+  // ── Medical Fact Check (after Continuity Editor, before Reader Simulation) ──
+  try {
+    const medicalResult = await runMedicalFactCheck(
+      successResult.content,
+      { medical_fact_check_active: true }, // TODO: read from project config
+      chapterNumber,
+    );
+    state.medical_fact_check_result = medicalResult;
+    state.medical_advisory_required = medicalResult.advisory_required;
+    console.log(`[Pipeline] Chapter ${chapterNumber}: Medical fact check — pass: ${medicalResult.pass}, advisory: ${medicalResult.advisory_required}`);
+  } catch (error) {
+    console.warn(`[Pipeline] Medical fact check failed (non-blocking):`, error);
+  }
 
   // ── Stage 3: HUMAN_REVIEW (surfaced — Session 18 builds UI) ─────
   state.stage = "HUMAN_REVIEW";
