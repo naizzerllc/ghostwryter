@@ -34,7 +34,8 @@ Prose DNA version: v2.3 (17 rules)
 | S14 | ✅ Complete | briefingGenerator.ts · relevanceScorer.ts · briefValidationGate.ts |
 | S15 | ✅ Complete | dialogueSubtextMapper.ts · quirkInjection.ts · voiceRegisterAnchorInjection.ts · VOICE_REGISTER_ANCHORS.json |
 | S16 | ✅ Complete | pacingContrastSystem.ts · genreCalibration.ts · coldStartSystem.ts |
-| S17–S28 | ⏳ Pending | — |
+| S17 | ✅ Complete | generationCore.ts · chapterPipeline.ts |
+| S18–S28 | ⏳ Pending | — |
 
 ---
 
