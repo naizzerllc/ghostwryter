@@ -12,6 +12,7 @@ import {
   Users,
   Mic,
   BookOpen,
+  List,
 } from "lucide-react";
 
 const NAV_ITEMS = [
