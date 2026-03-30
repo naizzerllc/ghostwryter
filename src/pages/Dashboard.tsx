@@ -211,6 +211,17 @@ const Dashboard = () => {
           <SecurityLogPanel />
         </Panel>
       </div>
+
+      {/* CANONICAL FACTS + SERIES MEMORY */}
+      <div className="grid grid-cols-2 gap-4">
+        <Panel title="Canonical Facts DB">
+          <CanonicalFactsPanel />
+        </Panel>
+
+        <Panel title="Series Memory">
+          <SeriesMemoryPanel />
+        </Panel>
+      </div>
     </div>
   );
 };
