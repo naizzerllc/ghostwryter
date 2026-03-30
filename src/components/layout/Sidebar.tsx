@@ -11,6 +11,7 @@ import {
   FileInput,
   Users,
   Mic,
+  BookOpen,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { to: "/outline-import", label: "Outline Import", icon: FileInput },
   { to: "/characters", label: "Characters", icon: Users },
   { to: "/voice-corpus", label: "Voice Corpus", icon: Mic },
+  { to: "/catalogue", label: "Catalogue", icon: BookOpen },
   { to: "/generate", label: "Generate", icon: PenTool },
   { to: "/review", label: "Review", icon: CheckCircle },
   { to: "/archive", label: "Archive", icon: Archive },

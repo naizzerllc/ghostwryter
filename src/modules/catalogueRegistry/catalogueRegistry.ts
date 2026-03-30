@@ -12,28 +12,38 @@ import { githubStorage } from "@/storage/githubStorage";
 
 export interface CatalogueRegistryRecord {
   title_id: string;
-  title: string;
+  title_name: string;
+  title: string; // alias kept for backward compat
+  status: "ACTIVE" | "COMPLETE" | "ARCHIVED";
   self_deception_category: string;
   protagonist_wound_type: string;
   antagonist_type: string;
   revelation_mechanism: string;
   key_imagery_set: string[];
-  status: "planned" | "in_progress" | "complete";
-  created_at: string;
+  genre_mode: string;
+  creation_date: string;
+  completion_date?: string;
+  created_at: string; // legacy alias
 }
 
 export interface FitCheckIssue {
   field: string;
   message: string;
-  severity: "error" | "warning";
+  severity: "error" | "warning" | "note";
   conflicting_title_id: string;
 }
 
-export interface FitCheckResult {
+export interface CatalogueFitResult {
   title_id: string;
+  fit_score: number; // 1-5
+  warnings: FitCheckIssue[];
+  notes: FitCheckIssue[];
+  recommendation: string;
   passed: boolean;
-  issues: FitCheckIssue[];
 }
+
+// Legacy alias
+export type FitCheckResult = CatalogueFitResult;
 
 // ── State ───────────────────────────────────────────────────────────────
 
@@ -131,52 +141,100 @@ export function getAllTitles(): CatalogueRegistryRecord[] {
 // ── Catalogue Fit Check ─────────────────────────────────────────────────
 
 /**
- * Check a title (or proposed title) against the existing catalogue for:
- * 1. self_deception_category reuse — CRITICAL: erodes brand differentiation
- * 2. revelation_mechanism reuse — WARNING: reader fatigue risk
+ * Enhanced fit check — compares incoming against existing catalogue.
+ * Checks: self_deception_category, protagonist_wound_type, revelation_mechanism, key_imagery_set overlap.
+ * Returns fit_score 1-5, warnings, notes, recommendation.
  */
 export function runFitCheck(
   titleId: string,
-  record: Pick<CatalogueRegistryRecord, "self_deception_category" | "revelation_mechanism">,
-): FitCheckResult {
-  const issues: FitCheckIssue[] = [];
+  record: Pick<CatalogueRegistryRecord, "self_deception_category" | "revelation_mechanism" | "protagonist_wound_type" | "key_imagery_set">,
+): CatalogueFitResult {
+  const warnings: FitCheckIssue[] = [];
+  const notes: FitCheckIssue[] = [];
+  let deductions = 0;
 
   for (const [existingId, existing] of registry) {
     if (existingId === titleId) continue;
+    if (existing.status === "ARCHIVED") continue;
 
-    // Self-deception category reuse — error
+    // Self-deception category reuse — WARNING (COMPLETE titles only)
     if (
       record.self_deception_category &&
       existing.self_deception_category &&
-      record.self_deception_category.toLowerCase() === existing.self_deception_category.toLowerCase()
+      record.self_deception_category.toLowerCase() === existing.self_deception_category.toLowerCase() &&
+      existing.status === "COMPLETE"
     ) {
-      issues.push({
+      warnings.push({
         field: "self_deception_category",
-        message: `Reuses self-deception category "${record.self_deception_category}" from "${existing.title}" — erodes catalogue differentiation`,
-        severity: "error",
+        message: `Self-deception category reused — reader familiarity risk. Consider variation. Conflicts with "${existing.title_name || existing.title}".`,
+        severity: "warning",
         conflicting_title_id: existingId,
       });
+      deductions += 2;
     }
 
-    // Revelation mechanism reuse — warning
+    // Protagonist wound type reuse — NOTE
+    if (
+      record.protagonist_wound_type &&
+      existing.protagonist_wound_type &&
+      record.protagonist_wound_type.toLowerCase() === existing.protagonist_wound_type.toLowerCase()
+    ) {
+      notes.push({
+        field: "protagonist_wound_type",
+        message: `Protagonist wound type "${record.protagonist_wound_type}" also used in "${existing.title_name || existing.title}".`,
+        severity: "note",
+        conflicting_title_id: existingId,
+      });
+      deductions += 0.5;
+    }
+
+    // Revelation mechanism reuse — WARNING
     if (
       record.revelation_mechanism &&
       existing.revelation_mechanism &&
       record.revelation_mechanism.toLowerCase() === existing.revelation_mechanism.toLowerCase()
     ) {
-      issues.push({
+      warnings.push({
         field: "revelation_mechanism",
-        message: `Reuses revelation mechanism "${record.revelation_mechanism}" from "${existing.title}" — reader fatigue risk`,
+        message: `Revelation mechanism reused — twist predictability risk. Conflicts with "${existing.title_name || existing.title}".`,
         severity: "warning",
         conflicting_title_id: existingId,
       });
+      deductions += 1.5;
+    }
+
+    // Key imagery overlap > 50% — WARNING
+    if (record.key_imagery_set && record.key_imagery_set.length > 0 && existing.key_imagery_set?.length > 0) {
+      const incomingSet = new Set(record.key_imagery_set.map(s => s.toLowerCase().trim()));
+      const overlapCount = existing.key_imagery_set.filter(s => incomingSet.has(s.toLowerCase().trim())).length;
+      const overlapRatio = overlapCount / Math.max(incomingSet.size, 1);
+      if (overlapRatio > 0.5) {
+        warnings.push({
+          field: "key_imagery_set",
+          message: `>${Math.round(overlapRatio * 100)}% imagery overlap with "${existing.title_name || existing.title}" — visual identity conflict.`,
+          severity: "warning",
+          conflicting_title_id: existingId,
+        });
+        deductions += 1;
+      }
     }
   }
 
+  const rawScore = Math.max(1, Math.min(5, 5 - deductions));
+  const fit_score = Math.round(rawScore) as 1 | 2 | 3 | 4 | 5;
+
+  let recommendation = "Strong catalogue fit — no significant overlap detected.";
+  if (fit_score <= 2) recommendation = "High overlap risk — significant differentiation changes needed before proceeding.";
+  else if (fit_score <= 3) recommendation = "Moderate overlap — consider adjusting flagged elements for stronger catalogue differentiation.";
+  else if (fit_score <= 4) recommendation = "Minor overlap notes — review before committing.";
+
   return {
     title_id: titleId,
-    passed: issues.filter(i => i.severity === "error").length === 0,
-    issues,
+    fit_score,
+    warnings,
+    notes,
+    recommendation,
+    passed: warnings.filter(w => w.field === "self_deception_category").length === 0,
   };
 }
 
@@ -185,7 +243,7 @@ export function runFitCheck(
 export interface CatalogueSnapshot {
   titles: CatalogueRegistryRecord[];
   count: number;
-  byStatus: { planned: number; in_progress: number; complete: number };
+  byStatus: { ACTIVE: number; COMPLETE: number; ARCHIVED: number };
   _v: number;
 }
 
@@ -204,9 +262,9 @@ export function getSnapshot(): CatalogueSnapshot {
     titles: all,
     count: all.length,
     byStatus: {
-      planned: all.filter(t => t.status === "planned").length,
-      in_progress: all.filter(t => t.status === "in_progress").length,
-      complete: all.filter(t => t.status === "complete").length,
+      ACTIVE: all.filter(t => t.status === "ACTIVE").length,
+      COMPLETE: all.filter(t => t.status === "COMPLETE").length,
+      ARCHIVED: all.filter(t => t.status === "ARCHIVED").length,
     },
     _v: snapshotVersion,
   };

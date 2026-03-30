@@ -15,6 +15,7 @@ import DnaIntake from "./pages/DnaIntake";
 import OutlineImport from "./pages/OutlineImport";
 import CharacterDBPage from "./pages/CharacterDB";
 import VoiceCorpus from "./pages/VoiceCorpus";
+import CatalogueRegistryPage from "./pages/CatalogueRegistry";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/outline-import" element={<OutlineImport />} />
             <Route path="/characters" element={<CharacterDBPage />} />
             <Route path="/voice-corpus" element={<VoiceCorpus />} />
+            <Route path="/catalogue" element={<CatalogueRegistryPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
