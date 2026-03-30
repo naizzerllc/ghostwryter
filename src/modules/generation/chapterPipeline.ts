@@ -61,6 +61,8 @@ export interface PipelineState {
   generation_result: GenerationResult | null;
   approved_record: ApprovedChapterRecord | null;
   quality_score: number | null;
+  medical_fact_check_result: MedicalFactCheckResult | null;
+  medical_advisory_required: boolean;
   error: string | null;
   started_at: string;
   completed_at: string | null;
