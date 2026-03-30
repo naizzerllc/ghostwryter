@@ -111,6 +111,9 @@ export default function Review() {
             qualityGateRejected={false}
             onApproved={handleApproved}
             onFlagged={handleFlagged}
+            medicalFactCheckResult={null}
+            medicalAdvisoryRequired={false}
+            onMedicalClaimDecision={() => {}}
           />
         </div>
 

@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   type ApprovedChapterRecord,
   type SignOffStatus,
@@ -22,6 +23,8 @@ import {
 import type { GenerationSuccess } from "@/modules/generation/generationCore";
 import type { ForbiddenWordsResult } from "@/utils/forbiddenWordsChecker";
 import type { BoundaryViolation } from "@/modules/knowledgeBoundary/knowledgeBoundaryMap";
+import type { MedicalFactCheckResult, WriterDecision } from "@/modules/quality/medicalFactChecker";
+import ClinicalAccuracyTab from "./ClinicalAccuracyTab";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -45,8 +48,11 @@ interface HumanReviewProps {
   truncationSuspected: boolean;
   approvedRecord: ApprovedChapterRecord | null;
   qualityGateRejected: boolean;
+  medicalFactCheckResult: MedicalFactCheckResult | null;
+  medicalAdvisoryRequired: boolean;
   onApproved: (record: ApprovedChapterRecord) => void;
   onFlagged: (flagType: FlagType, notes: string) => void;
+  onMedicalClaimDecision: (claimId: string, decision: WriterDecision, reasoning?: string) => void;
 }
 
 // ── Sign-off Badge ──────────────────────────────────────────────────────
@@ -79,8 +85,11 @@ export default function HumanReview({
   truncationSuspected,
   approvedRecord,
   qualityGateRejected,
+  medicalFactCheckResult,
+  medicalAdvisoryRequired,
   onApproved,
   onFlagged,
+  onMedicalClaimDecision,
 }: HumanReviewProps) {
   const [editMode, setEditMode] = useState(false);
   const [editedProse, setEditedProse] = useState(prose);
@@ -170,6 +179,12 @@ export default function HumanReview({
   const criticalBoundary = boundaryViolations.filter(v => v.severity === "CRITICAL");
   const warningBoundary = boundaryViolations.filter(v => v.severity !== "CRITICAL");
 
+  // Medical advisory: block approval if flagged claims still PENDING
+  const medicalPendingFlags = medicalAdvisoryRequired && medicalFactCheckResult
+    ? medicalFactCheckResult.claims.filter(c => c.severity !== "NONE" && c.writer_decision === "PENDING").length
+    : 0;
+  const approvalBlockedByMedical = medicalPendingFlags > 0;
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -255,6 +270,12 @@ export default function HumanReview({
         </div>
       )}
 
+      {/* Clinical Accuracy */}
+      <ClinicalAccuracyTab
+        result={medicalFactCheckResult}
+        onClaimDecisionChange={onMedicalClaimDecision}
+      />
+
       <Separator />
 
       {/* Generated Prose */}
@@ -301,12 +322,16 @@ export default function HumanReview({
       <div className="flex flex-wrap gap-2">
         <Button
           onClick={handleApprove}
+          disabled={approvalBlockedByMedical}
+          title={approvalBlockedByMedical ? "Resolve all clinical flags to approve this chapter." : undefined}
           className="font-mono text-xs bg-success hover:bg-success/80 text-success-foreground"
         >
           APPROVE
         </Button>
         <Button
           onClick={handleApproveAndSignOff}
+          disabled={approvalBlockedByMedical}
+          title={approvalBlockedByMedical ? "Resolve all clinical flags to approve this chapter." : undefined}
           className="font-mono text-xs bg-success hover:bg-success/80 text-success-foreground"
         >
           APPROVE + SIGN OFF
