@@ -1,131 +1,31 @@
 {
   "version": "1.0",
-  "register_definition": {
-    "name": "clinical_dissociative",
-    "description": "Controlled, precise, slightly detached first-person present-tense narration. Interiority expressed through observation and physical response, never direct psychological labelling.",
-    "markers": [
-      "Observation-first interiority (physical sensation over emotion naming)",
-      "Controlled sentence structure that fractures under pressure",
-      "Clinical detachment in describing emotionally charged events",
-      "Sensory dissociation (time distortion, auditory lag, visual delay)"
-    ],
-    "benchmarks": {
-      "deflection": {
-        "description": "Avoidant defense mechanisms redirecting attention away from traumatic triggers or psychological breakdown",
-        "examples": [
-          {
-            "label": "Forced brightness pivot",
-            "context": "Chapter 4 — Lily confronts Ashley after boutique outburst",
-            "text": "Lily studies me. \"Are you okay?\" \"Yeah. I'll be even better once I get a scoop or two.\" She hesitates, her hand on the handle, her voice gentle but intruding. \"You wanna talk about what just happened in there?\" I pretend ignorance. \"What's that?\" \"Are you serious?\" She lets out a breath. \"You went off on that woman. I've never seen you that angry.\" ... \"She was a nosy old lady, Lily. Anyone would've snapped.\" ... \"Drop it, goddammit!\""
-          },
-          {
-            "label": "Rationalization of dissociative behavior",
-            "context": "Detective Reeves notices table set for two",
-            "text": "\"But what caught Reeves's attention was the dining table. It was set for two. Two place settings, two coffee cups, two napkins folded precisely... 'You entertaining?' Reeves asked casually... 'No. I... like the symmetry,' Ashley said. Her voice was tight.\""
-          },
-          {
-            "label": "Dismissal of auditory/verbal dissociation",
-            "context": "Lily catches Ashley talking to Elle",
-            "text": "\"Lily's gaze drifts from me to the empty side of the bed. 'Sounded like someone.' 'Just… thinking out loud.' She hesitates... Lily's eyes dart to the empty space. 'Ash… who are you looking at?' 'No one,' I whisper.\""
-          }
-        ]
-      },
-      "deception": {
-        "description": "Active maintenance of a false narrative to preserve the wall between the constructed self and the truth of the past",
-        "examples": [
-          {
-            "label": "Polished false identity",
-            "context": "Lunch with Arden's family — practiced lie about parents",
-            "text": "\"I force a smile. 'They'll... love that.' But my pulse is thundering, and the chandelier above me flickers... A lie, polished smooth with practice. It's strange how easily it comes now, how 'they're gone' breathes for me. A small lie that fences my worlds apart: the bright one I've built with Arden, and the dark one I barely crawled out of. Because the truth would drag Clara into this room, and Clara… Clara would set everything on fire.\""
-          },
-          {
-            "label": "Systematic parental deception",
-            "context": "Clara Whitmore describes drugging her child",
-            "text": "\"I never saw her take medication,\" I say. \"She hated pills.\" Mom looks down at her cup. \"She didn't know. I put it in her food,\" she continues. \"The doctor said deception was better than confrontation. She wasn't old enough to understand a trigger, but it kept the episodes quiet. She was stable.\""
-          },
-          {
-            "label": "Performance of friendly closure",
-            "context": "Public interview post-divorce — sensory dissociation while lying",
-            "text": "\"I'm in a tailored ivory jumpsuit... on the monitor across the studio, my reflection is a half-second off, smiling when I haven't yet. ... 'Arden's doing just fine,' I say, smoothing my palms against my thighs. ... Tessa beams. 'So no hard feelings.' 'None,' I say. 'Just perspective, and good timing.' ... The audience claps, but I don't hear it the right way. It comes in waves, too slow, like a heartbeat not my own.\""
-          }
-        ]
-      },
-      "collapse": {
-        "description": "Total failure of dissociative defenses where compartmentalization breaks down and suppressed trauma floods consciousness",
-        "examples": [
-          {
-            "label": "Full dissociative collapse",
-            "context": "Chapter 43 — mother reveals truth of identity",
-            "text": "Something inside gives way. My shoulders slump. Energy leaks out at once. I'm too empty to rage, too heavy to lift my head. Then it hits all at once. Everything I've held rigid for seventeen years shatters. The sob starts small, grows raw, animalistic. My throat burns. ... Crying from somewhere under the ribs, where grief has been hiding too long. ... I don't fight anymore. I let it wreck me. The guilt. The loss. The impossible relief of finally remembering."
-          },
-          {
-            "label": "Immediate internal mental collapse",
-            "context": "Direct aftermath of traumatic event — agency shutdown",
-            "text": "\"The gun lies where it fell, metal winking in the weak light. A dark pool spreads from the body beside it, finding the seams in the floorboards. My breath hitches. Pulse slams in my ears. I can't move. I can't think. Only feel the world collapsing inward. Can I ever make this right?\""
-          },
-          {
-            "label": "Clinical observation of dissociative routine",
-            "context": "Detective Reeves observes table set for absent guest",
-            "text": "\"But what caught Reeves's attention was the dining table. It was set for two. Two place settings, two coffee cups, two napkins folded precisely. A plate of fruit sat in the center, apples, grapes, tangerines. None of it looked recently eaten... Reeves made a mental note: Possible dissociative behavior. Setting table for an absent guest. Or a ghost.\""
-          },
-          {
-            "label": "Formal identification of identity collapse",
-            "context": "Interrogation — self fragments into distinct personalities",
-            "text": "\"I don't remember,\" she said. \"But I think I did. Or... she did.\" \"Who's 'she'?\" Ashley didn't answer. She was staring at something behind Reeves, at a point in empty space where nothing existed... Reeves made a note: Possible DID (Dissociative Identity Disorder). Requires psychiatric evaluation."
-          }
-        ]
-      }
+  "register": "clinical_dissociative",
+  "benchmark_note": "Human-authored. Proprietary. Platform calibration reference only. Not for reproduction in manuscripts.",
+  "exchanges": [
+    {
+      "id": "BENCH-001",
+      "pressure_state": "DEFLECTION",
+      "situation": "After an explosive, disproportionate outburst at a stranger in a boutique, Lily tries to address what just happened. Ashley is still buzzing with adrenaline she can't explain.",
+      "dialogue": "\"Are you okay?\" \"Yeah. I'll be even better once I get a scoop or two.\" \"You wanna talk about what just happened in there?\" \"What's that?\" \"Are you serious? You went off on that woman. I've never seen you that angry.\" \"She was a nosy old lady, Lily. Anyone would've snapped.\" \"Drop it, goddammit!\"",
+      "interior": "The air outside the boutique tastes like exhaust and cold pavement. I keep walking. The outburst is already calcifying into something I can manage — a bad moment, a difficult woman, anyone would have. By the time we reach the parlour door I've filed it somewhere I won't look.",
+      "register_notes": "Clinical-dissociative deflection operates in escalating layers, not a single pivot. First: forced brightness and a redirect to appetite (ice cream). Second: feigned ignorance — the question treated as noise. Third: rationalisation that outsources blame. Fourth: hard shutdown via aggression. The interior shows the dissociative mechanism in action — the memory being filed rather than processed. No emotion word appears. The reader sees the architecture without being told it is there."
+    },
+    {
+      "id": "BENCH-002",
+      "pressure_state": "DECEPTION",
+      "situation": "At a dinner with Arden's family, his mother asks warmly about Ashley's parents — when will she meet them? Arden steps in before the silence stretches too long.",
+      "dialogue": "\"Her parents passed away,\" Arden says softly. \"She's got a close friend who's basically family. I'm sure she'll be there.\" \"Thank you,\" I say. I force a smile. \"They'll love that.\"",
+      "interior": "The chandelier above the table flickers — or maybe it doesn't. My pulse is in my throat. A lie, polished smooth with practice. It's strange how easily it comes now, how they're gone breathes for me. A small lie that fences my worlds apart: the bright one I've built with Arden, and the dark one I barely crawled out of. Because the truth would drag Clara into this room, and Clara — Clara would set everything on fire.",
+      "register_notes": "Clinical-dissociative deception is not performed anxiety — it is performed competence. The character does not sweat; she smiles. The tell is the flicker — sensory distortion, not visible distress. The interior uses architectural metaphor to render the lie as structural necessity, not moral failure. The final sentence uses a fragmented repetition that signals the internal system straining at the seam. The lie is described as breathing — autonomous, alive, no longer requiring effort. This is the register: deception as a managed clinical condition rather than an acute moral event."
+    },
+    {
+      "id": "BENCH-003",
+      "pressure_state": "COLLAPSE",
+      "situation": "Seventeen years after burying her identity and building a life as Ashley, her mother reveals the truth of who she was. The last structural wall comes down.",
+      "dialogue": "\"I don't fight anymore. I let it wreck me.\"",
+      "interior": "Something inside gives way. My shoulders slump. Energy leaks out at once — too empty to rage, too heavy to lift my head. Then it hits all at once. Everything I've held rigid for seventeen years shatters. The sob starts small, grows raw, animalistic. My throat burns. Crying from somewhere under the ribs, where grief has been hiding too long. The guilt. The loss. The impossible relief of finally remembering.",
+      "register_notes": "Clinical-dissociative collapse is total structural failure, not emotional escalation. The register shifts: sentences fragment. Energy drains before grief arrives — the system powers down before feeling floods in. The final line enumerates without elaboration — guilt, loss, relief — three words given equal grammatical weight, none explained. The relief being described as impossible is the register's signature move: the clinical observer noting the paradox even inside the breakdown. The character is witnessing herself collapse."
     }
-  },
-  "pressure_states": {
-    "description": "Voice register must be demonstrated across all pressure states to pass the gate",
-    "states": [
-      {
-        "id": "baseline",
-        "label": "Baseline / Safe",
-        "description": "Character at rest — controlled, observational, precise"
-      },
-      {
-        "id": "social_performance",
-        "label": "Social Performance",
-        "description": "Character maintaining facade in public — heightened control, micro-fractures visible"
-      },
-      {
-        "id": "confrontation",
-        "label": "Under Confrontation",
-        "description": "Character challenged directly — deflection patterns activate, sentence structure shifts"
-      },
-      {
-        "id": "internal_crisis",
-        "label": "Internal Crisis",
-        "description": "Dissociative defense straining — sensory distortion, temporal displacement"
-      },
-      {
-        "id": "collapse",
-        "label": "Full Collapse",
-        "description": "Defense failure — raw, uncontrolled, animalistic register"
-      }
-    ]
-  },
-  "arc_points": {
-    "description": "Protagonist arc coherence check — wound must be rendered, tested under pressure, and transformed",
-    "questions": [
-      {
-        "id": "q1_wound_rendered",
-        "question": "Is the character's core wound clearly rendered through behavior and physical response (not stated)?",
-        "passing_score": 4
-      },
-      {
-        "id": "q2_wound_under_pressure",
-        "question": "Does the wound visibly distort the character's behavior under pressure (deflection, deception, collapse)?",
-        "passing_score": 4
-      },
-      {
-        "id": "q3_transformation_shown",
-        "question": "Is there evidence of transformation potential — the wound's grip loosening or tightening across corpus samples?",
-        "passing_score": 3
-      }
-    ],
-    "composite_passing": 9
-  }
+  ]
 }
