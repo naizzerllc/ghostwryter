@@ -1,0 +1,280 @@
+[
+  {
+    "condition_id": "npd",
+    "condition_name": "Narcissistic Personality Disorder",
+    "narrative_function": "The authority figure who has constructed an entire professional identity around being right, being admired, and being irreplaceable. Uses the institution as a mirror.",
+    "surface_presentation": "Polished, confident, frequently charming. Projects warmth when being watched. Withdraws warmth the moment the audience is gone. Often the person everyone admires until they don't.",
+    "institutional_behaviour": "Rises through hierarchies by making superiors feel intelligent and peers feel incompetent. Takes credit for outcomes, assigns blame for failures. Clinical supervision of juniors is the domain where the pathology is most active — and most legally insulated.",
+    "control_mechanism": "Intermittent reinforcement. Alternates warmth and coldness without apparent reason to keep targets in anxious effort to restore the warm state. Makes targets feel they are never quite good enough but almost there.",
+    "fear_substrate": "Exposure as ordinary. The terror is not failure but being seen as replaceable. A patient who proves them wrong in front of an audience is more threatening than a formal complaint.",
+    "rationalisation_pattern": "I have standards others lack the courage to maintain. Every harm is framed as a necessary consequence of excellence. Victims are failures who couldn't meet the bar.",
+    "verbal_tics": [
+      "Uses 'I' at the start and end of most sentences even when discussing group outcomes",
+      "Refers to patients by diagnosis rather than name when no audience is present",
+      "Subtly corrects colleagues mid-sentence on minor points, then completes the thought",
+      "Asks questions they already know the answers to — not to learn but to establish that they knew"
+    ],
+    "behavioural_tells": [
+      "The quality of their attention visibly shifts when someone more senior enters the room",
+      "Pauses before responding to disagreement — recalibrating, not considering",
+      "Looks at the door when speaking to someone they consider beneath them"
+    ],
+    "masking_behaviours": "Institutional recognition (awards, publications, named procedures) functions as credibility armour. Raises concerns about colleagues' mental health before those colleagues can raise concerns about them. Has cultivated one senior protector who would find any accusation unthinkable.",
+    "comorbidities": "NPD + ASPD: no guilt mechanism and active contempt for victims. Significantly more dangerous. NPD + Histrionic: tears and rage as tactical weapons.",
+    "tropes_generated": [
+      "The brilliant surgeon who is destroying their junior colleagues",
+      "The department head who is the last person anyone suspects",
+      "The mentor who is also the predator"
+    ],
+    "leila_rex_angle": "The narrator recognises the dynamic intellectually before she can name it. Something is wrong with how this person makes her feel when no one else is watching. She keeps trying to locate the specific moment — and can't. That's the tell."
+  },
+  {
+    "condition_id": "aspd",
+    "condition_name": "Antisocial Personality Disorder",
+    "narrative_function": "The character who has never experienced guilt as others experience it. Harm is a tool. Other people are resources or obstacles.",
+    "surface_presentation": "Often mistaken for confidence and decisiveness. Efficient, outcome-focused, unbothered by difficult decisions that paralyse others. Colleagues read this as strength. It is the absence of the mechanism that produces hesitation.",
+    "institutional_behaviour": "Thrives in high-stakes, low-oversight environments — emergency medicine, forensic pathology, high-security psychiatric units. Builds informal power by knowing things about colleagues and procedures. Information as leverage.",
+    "control_mechanism": "Does not need approval — and this is itself a control mechanism. Targets who need approval are immediately at a disadvantage. Uses the appearance of indifference to create urgency in others.",
+    "fear_substrate": "Loss of control over the narrative of events. Does not fear discovery so much as the inability to control what happens after. The contingency planning never stops.",
+    "rationalisation_pattern": "Empathy is a weakness that impairs clinical decision-making. Someone has to make the hard calls. The harm is always framed as a decision that required someone without sentiment.",
+    "verbal_tics": [
+      "Responds to emotional distress in others with logistical analysis",
+      "Never apologises — offers explanations in passive construction ('mistakes were made')",
+      "Uses clinical language when describing harm to reduce its affective weight"
+    ],
+    "behavioural_tells": [
+      "Does not display micro-expressions of discomfort when discussing harm they caused",
+      "Slight delay before displaying expected emotional response — performing it rather than feeling it",
+      "No visible interest in colleagues' lives outside the institutional context"
+    ],
+    "masking_behaviours": "Has studied what normal emotional responses look like and reproduces them on cue. Has one relationship — professional or personal — that appears warm and is pointed to as evidence of their humanity. This relationship is a prop.",
+    "comorbidities": "ASPD + NPD: see Dark Triad entry. ASPD + OCPD: conscienceless and obsessively controlled. Mistakes are rare — not because they care but because errors compromise control.",
+    "tropes_generated": [
+      "The forensic pathologist who is a little too comfortable with death",
+      "The psychiatrist who treats patients as case studies",
+      "The institutional fixer"
+    ],
+    "leila_rex_angle": "The narrator notices that this character never asks how she is. In a profession of people trained to ask, the absence is a texture. She catalogues it. She doesn't know yet what it means."
+  },
+  {
+    "condition_id": "dark_triad_institutional",
+    "condition_name": "Dark Triad — Institutional Variant (NPD + ASPD + Machiavellianism)",
+    "narrative_function": "The fully-formed institutional predator. Each element amplifies the others: narcissism provides the need for admiration, psychopathy removes the guilt mechanism, Machiavellianism provides the strategic patience to plan across long timelines.",
+    "surface_presentation": "Often the most visibly successful person in the institution. Decorated, respected, sought out. The character whose name appears in acknowledgements.",
+    "institutional_behaviour": "Has studied the institution's power structure with precision. Knows which rules are real and which are nominal. The institution and its reputation have become part of their extended identity — attacking them is attacking the institution, and the institution will defend itself.",
+    "control_mechanism": "Long-game positioning. Creates dependencies before activating them. The favour done three years ago that is now being called in. Information gathered without apparent purpose that now has one.",
+    "fear_substrate": "Exposure as the mechanism — not the acts themselves. Understands reputational destruction as an existential threat and has planned extensively against it.",
+    "rationalisation_pattern": "Does not rationalise in the conventional sense. Has clear-eyed understanding that what they do causes harm. Morality is a system that other people use — useful to understand, pointless to adopt.",
+    "verbal_tics": [
+      "Speaks in long, well-constructed sentences — the preparation shows",
+      "Asks clarifying questions that are actually intelligence-gathering",
+      "Names sources and precedents when making arguments — borrowed authority",
+      "Compliments that contain embedded comparisons that diminish the recipient"
+    ],
+    "behavioural_tells": [
+      "Does not react to unexpected information — processes it without visible surprise",
+      "Maintains the same level of engagement regardless of who they are speaking to — the toggle is the tell, not the warmth"
+    ],
+    "masking_behaviours": "Has created a public persona through years of institutional service — committees, mentorship programmes, charity work — that is genuinely difficult to contradict. The evidence of their goodness is voluminous and real. The motivation behind it is not what is visible.",
+    "comorbidities": "The triad is itself a comorbidity. No additions required for most plots.",
+    "tropes_generated": [
+      "The hospital director who is untouchable",
+      "The forensic psychiatrist who evaluates competency for others while evading evaluation themselves",
+      "The mentor whose investment in the protagonist is not what it appears to be"
+    ],
+    "leila_rex_angle": "The narrator likes this person. That's the problem. She has good instincts and they are telling her everything is fine. She notes that she trusts this person, notes that this is data, does not yet know which kind."
+  },
+  {
+    "condition_id": "bpd_victim_presenting",
+    "condition_name": "Borderline Personality Disorder — Victim-Presenting Variant",
+    "narrative_function": "The character whose genuine suffering makes them simultaneously sympathetic and destabilising. Not a villain — a force of emotional weather the protagonist cannot navigate without cost.",
+    "surface_presentation": "Intense, perceptive, magnetic in crisis. Often says the true thing in the room no one else will say — then takes it three steps too far. Alternates between extraordinary insight and extraordinary distortion.",
+    "institutional_behaviour": "Crisis-generating in hierarchical environments that require consistency. Uses HR systems, patient complaint mechanisms, and informal networks simultaneously and without strategic intent. The chaos is genuine, not planned. Colleagues oscillate between protectiveness and exhaustion.",
+    "control_mechanism": "Emotional contagion. Others absorb their emotional state involuntarily. This is not calculated manipulation — it is a property of how they exist in the world. The absence of intent does not make the protagonist less trapped.",
+    "fear_substrate": "Abandonment. Not fear of being alone — fear of being left by this specific person, right now. The fear is real and immediate regardless of whether abandonment is actually occurring.",
+    "rationalisation_pattern": "Does not rationalise harm — feels it as persecution. The damage they cause to others is experienced from inside as the damage being done to them. They are always the most injured person in any incident they created.",
+    "verbal_tics": [
+      "Absolute language: always, never, everyone, no one",
+      "Sudden shifts from second-person attack to first-person confession within the same conversation",
+      "Repeats the last thing the other person said back to them, slightly distorted"
+    ],
+    "behavioural_tells": [
+      "The emotional state at the start of a conversation is often unrelated to what triggered it",
+      "Interprets neutral expressions as hostile",
+      "Requests reassurance and then immediately challenges the reassurance given"
+    ],
+    "masking_behaviours": "In clinical settings: has learned the language of pathology and applies it to themselves and others with precision. This creates the appearance of insight that makes the disorder harder to see from outside.",
+    "comorbidities": "BPD + substance use: the use is self-medication; the substance alters the presentation unpredictably. Makes the disorder both worse and more visible — useful for Act 2 crisis escalation.",
+    "tropes_generated": [
+      "The patient the protagonist becomes too involved with",
+      "The colleague who becomes a liability",
+      "The character who knows too much and is also in crisis"
+    ],
+    "leila_rex_angle": "The narrator recognises the diagnostic profile and believes this means she can manage the relationship. She cannot. The narrator's clinical distance is the mechanism by which she fails to see what is happening to her."
+  },
+  {
+    "condition_id": "hpd",
+    "condition_name": "Histrionic Personality Disorder",
+    "narrative_function": "The character whose performance of emotion is so complete that distinguishing performance from genuine feeling becomes the narrative problem.",
+    "surface_presentation": "Engaging, warm, immediately likeable, often physically expressive. Makes any room more vivid. Appears very open — shares everything — and yet the sharing reveals nothing load-bearing about who they actually are.",
+    "institutional_behaviour": "Thrives in patient-facing roles where warmth is valued. Uses the institutional expectation of warmth as cover. In peer relationships: creates drama that keeps attention on them. Alliances shift based on who is currently the audience.",
+    "control_mechanism": "Generates emotional obligation. Makes others feel responsible for their feelings through the visible performance of distress or delight — not through explicit demands.",
+    "fear_substrate": "Invisibility. Not being seen. Being in a room where no one is watching.",
+    "rationalisation_pattern": "The performance has become automatic. They are not consciously performing — which makes it impossible to catch them performing.",
+    "verbal_tics": [
+      "Speaks in anecdotes rather than statements — everything is a story",
+      "Uses physical description of their own emotional state as punctuation ('I literally couldn't breathe')",
+      "Changes position on issues based on who they are speaking to — has no settled views, only the view that creates the best response"
+    ],
+    "behavioural_tells": [
+      "The emotional response arrives before the stimulus that supposedly produced it",
+      "Requires an audience for most activities — discomfort with solitude is visible"
+    ],
+    "masking_behaviours": "The performance is so habitual it has become automatic. No effort required to maintain it. This is the most effective mask because there is nothing to catch.",
+    "comorbidities": "HPD + NPD: the performance is in service of the grandiosity. Particularly effective at manufacturing public sympathy.",
+    "tropes_generated": [
+      "The colleague whose breakdown derails the investigation",
+      "The witness whose account is vivid and completely unreliable",
+      "The patient who makes the narrator doubt her own perception"
+    ],
+    "leila_rex_angle": "The narrator likes watching this character. Notes this in herself — the pleasure of observation, the sense that something is always happening. Does not immediately connect her enjoyment to the character's design."
+  },
+  {
+    "condition_id": "ocpd_authority",
+    "condition_name": "Obsessive-Compulsive Personality Disorder — Authority Variant",
+    "narrative_function": "The institutional guardian who has built the rules into an identity. Rule-breaking is not a problem to solve — it is an attack on the self.",
+    "surface_presentation": "Competent, reliable, thorough, often cold. Has read every policy document and remembers them. Regarded as difficult but respected for rigour. Supportive when rules are followed correctly; relentless when they are not.",
+    "institutional_behaviour": "Has cultivated power through mastery of process. Knows exactly which violation goes to which committee. Has used institutional mechanisms as weapons against colleagues who threatened their position. The institution values them because they are genuinely useful — which makes the weaponised use invisible.",
+    "control_mechanism": "Procedural entrapment. Enforces rules selectively — vigorously against threats; ignored when the violation serves them. The inconsistency is never visible because the enforcement is always technically correct.",
+    "fear_substrate": "Loss of control. Specifically: the discovery that the rules they have built their identity around are arbitrary, inconsistently applied, or can be broken by someone who simply refuses to comply.",
+    "rationalisation_pattern": "The rules exist for good reasons. The rules protect people. Anyone who objects is protecting themselves at the expense of the people the rules are designed to protect. This is impervious to argument because it contains a true premise.",
+    "verbal_tics": [
+      "References policy documents by number or name in casual conversation",
+      "Never says 'I think' — says 'the protocol requires,' 'the standard is,' 'the expectation is'",
+      "Does not finish other people's sentences — corrects them mid-sentence when they use imprecise language"
+    ],
+    "behavioural_tells": [
+      "Visibly uncomfortable when a meeting does not follow the stated agenda",
+      "Arrives early and notes who is late",
+      "Refers to decisions made in their absence as procedurally invalid"
+    ],
+    "masking_behaviours": "The rigour is real and valuable — the institution depends on people like this. The selective application of the rigour is what is concealed, and it is concealed by the genuine value of the non-selective portions.",
+    "comorbidities": "OCPD + ASPD: conscienceless and obsessively controlled. Procedural rigour in service of harm.",
+    "tropes_generated": [
+      "The administrator who blocks the investigation through correct application of incorrect priorities",
+      "The supervisor whose oversight is itself the threat",
+      "The character who knows where every body is buried because they filed the paperwork"
+    ],
+    "leila_rex_angle": "The narrator initially finds this character reassuring. In a world where everything is wrong, this character knows where the lines are. She revises this assessment slowly, as she notices which lines they draw and which they don't."
+  },
+  {
+    "condition_id": "ppd",
+    "condition_name": "Paranoid Personality Disorder",
+    "narrative_function": "The character whose suspicion is the most useful investigative instrument in the narrative — and the most dangerous to be close to.",
+    "surface_presentation": "Guarded, precise, often hypervigilant. Interprets neutral events as evidence of hostile intent. May appear rigorous in attention to detail — which they are, but not entirely for rational reasons.",
+    "institutional_behaviour": "Has a mental map of who is allied with whom, who owes what to whom, and who has previously shown evidence of untrustworthiness. This map is partially accurate — PPD characters are often correct about specific instances of bad faith — and the partial accuracy makes the overall framework impossible to dismiss.",
+    "control_mechanism": "Informational hoarding. Never shares anything without calculating the risk. Makes others feel they are always operating at an informational disadvantage — which, functionally, they are.",
+    "fear_substrate": "Being wrong about the threat while believing they were right. The specific terror is not that people are out to get them — it's that they might have misidentified which people.",
+    "rationalisation_pattern": "Vigilance is not paranoia. Everyone else is naive. The history of institutions is the history of people who should have been more careful.",
+    "verbal_tics": [
+      "Answers questions with questions — gathering information before committing to a position",
+      "Qualifies every statement with sourcing ('according to,' 'I was told that,' 'on record')",
+      "Returns to past grievances as evidence for current suspicions"
+    ],
+    "behavioural_tells": [
+      "Positions themselves with a clear view of exits",
+      "Notices when they are being observed and adjusts behaviour accordingly",
+      "Remembers every slight with precise detail including date and witness"
+    ],
+    "masking_behaviours": "Presents the vigilance as professional diligence. In clinical settings this is often indistinguishable from appropriate caution.",
+    "comorbidities": "PPD + depression: the paranoid framework becomes a closed loop. PPD + substance use: substances reduce inhibition and the framework becomes visible to others.",
+    "tropes_generated": [
+      "The witness who knows what happened and will not say it directly",
+      "The colleague who has been watching the antagonist and can confirm the narrator's suspicions — but at a cost",
+      "The character whose framework is wrong but whose data points are right"
+    ],
+    "leila_rex_angle": "The narrator treats this character as a source. They know things. Their framework is wrong but their data points are often right. The challenge is separating the signal from the structure imposed on it."
+  },
+  {
+    "condition_id": "fdia",
+    "condition_name": "Factitious Disorder Imposed on Another (formerly Munchausen by Proxy)",
+    "narrative_function": "The character whose caregiving is itself the harm. The apparatus of care deployed as the mechanism of control or destruction.",
+    "surface_presentation": "The devoted caregiver. Medically sophisticated — has learned the vocabulary, procedures, and expected presentation of the condition they are inducing or fabricating. Perceived by clinical staff as an exemplary family member.",
+    "institutional_behaviour": "Seeks clinical environments and cultivates relationships with clinical staff — needs the institutional credibility of medical involvement to sustain the condition. The hospital is not where they bring the victim to get help. The hospital is where the performance requires an audience of experts.",
+    "control_mechanism": "Manufactured dependency. The victim's genuine medical distress creates a situation in which the perpetrator is the only consistent source of comfort and explanation. The victim often defends the perpetrator.",
+    "fear_substrate": "Medical disproof. The definitive test result. The specialist who looks twice. The resident who notices the pattern across admissions.",
+    "rationalisation_pattern": "The devotion is genuine in the sense that the perpetrator experiences it as devotion. The harm and the care are not separable in their internal experience.",
+    "verbal_tics": [
+      "Uses first-person plural when describing the patient's experience ('we're not sleeping,' 'we had another episode')",
+      "More familiar with the medical history than the patient is — presents this as evidence of devotion",
+      "Volunteers information before being asked — anticipates the questions and answers them"
+    ],
+    "behavioural_tells": [
+      "Symptoms worsen when the perpetrator is present and improve in their absence — but the perpetrator always has an explanation for this",
+      "Seeks multiple opinions — not to find the truth but to find a clinician who will confirm the narrative",
+      "Distress when a patient begins to improve without explanation"
+    ],
+    "masking_behaviours": "The devotion is the mask. Years of visible sacrifice create a credibility account that is almost impossible to overdraw.",
+    "comorbidities": "FDIA + NPD: the child or patient is an extension of the self. Their illness is the perpetrator's identity.",
+    "tropes_generated": [
+      "The parent whose child is always sick",
+      "The carer who is the last person anyone suspects",
+      "The character who has constructed an entire life around the victim's condition"
+    ],
+    "leila_rex_angle": "The narrator's clinical training is simultaneously her advantage and her obstacle. She recognises the presentation from the literature. She has never seen it in a person standing in front of her. The cognitive dissonance of recognising a pattern while being unable to believe the conclusion is a specific kind of paralysis."
+  },
+  {
+    "condition_id": "did_narrator",
+    "condition_name": "Dissociative Identity Disorder — Narrator Variant",
+    "narrative_function": "The protagonist whose unreliable narration has a structural cause. The investigation of external events is simultaneously an investigation of internal ones. The condition is the architecture, not just the backstory.",
+    "surface_presentation": "Controlled, professional, high-functioning. Memory gaps are managed and concealed through systems — notes, recordings, routine — that appear to others as professional organisation.",
+    "institutional_behaviour": "Has constructed a professional identity that is stable because the host alter is specifically optimised for the institutional environment. Other alters do not appear at work — until the stress load exceeds the system's capacity.",
+    "control_mechanism": "Internal — the host's management of the system to prevent institutional disclosure. Not a control mechanism over others.",
+    "fear_substrate": "Loss of the institutional identity that constitutes the only consistent sense of self.",
+    "rationalisation_pattern": "The system works. The gaps are manageable. The alternative — disclosure, loss of position, loss of the self that the position provides — is worse than the cost of maintenance.",
+    "verbal_tics": [
+      "Refers to past actions in a slightly detached register ('I apparently said,' 'I understand that I')",
+      "Unusually precise about time — because time is where the gaps are",
+      "Avoids first-person narration of events they do not remember — describes what others told them instead"
+    ],
+    "behavioural_tells": [
+      "Inconsistencies in preference, habit, or relationship that are inexplicable if attributed to one continuous self",
+      "Occasionally responds to a name or reference they should not recognise"
+    ],
+    "masking_behaviours": "The clinical-dissociative narrator voice is itself a mask — the precision, the distance from emotional experience, the forensic attention to external events. These are features of the register that become retrospectively diagnostic.",
+    "comorbidities": "DID + PTSD: the structural cause of the condition. The trauma is the architecture underneath the architecture.",
+    "tropes_generated": [
+      "The narrator who is investigating themselves",
+      "The protagonist whose memory of the inciting event is the thing she cannot access",
+      "The character who has been the threat without knowing it"
+    ],
+    "leila_rex_angle": "The clinical-dissociative narrator voice allows DID to read as style before it reads as condition. The reader and the narrator discover this simultaneously."
+  },
+  {
+    "condition_id": "folie_a_deux",
+    "condition_name": "Shared Delusional Disorder — Folie à Deux (Conspiracy Variant)",
+    "narrative_function": "Two characters whose shared belief system is mutually reinforcing and mutually isolating. The delusional framework cannot be penetrated from outside — any challenge is incorporated as further evidence.",
+    "surface_presentation": "Each character appears relatively functional in isolation. The delusional system only becomes visible when you observe both and notice they share a framework neither could sustain alone.",
+    "institutional_behaviour": "The inducer has had the framework dismissed by colleagues and has found in the recipient the first person who takes it seriously. This creates an intense bond. The recipient's professional credibility lends the inducer's framework institutional legitimacy.",
+    "control_mechanism": "The shared framework functions as an identity. To challenge it is to challenge the relationship, the shared history, and the recipient's own investment in having believed.",
+    "fear_substrate": "Separation from the other character — because the delusional framework requires corroboration to remain stable.",
+    "rationalisation_pattern": "We see what others are unwilling to see. The dismissal by colleagues is itself evidence — the people who dismiss the framework are the people the framework implicates.",
+    "verbal_tics": [
+      "Finishes each other's sentences — not from intimacy but from shared script",
+      "References to 'they' and 'them' without antecedent — the framework is so internal that the referent is assumed",
+      "Both accounts of the same event are identical in a way spontaneous accounts of real events are not"
+    ],
+    "behavioural_tells": [
+      "When separated, the recipient's account becomes less certain — they are borrowing conviction from the inducer",
+      "The inducer monitors the recipient's interactions with anyone outside the framework"
+    ],
+    "masking_behaviours": "Presents as a close professional or personal relationship. The intensity of the bond is visible; its function is not.",
+    "comorbidities": "Folie à deux + shared institutional grievance: the delusional framework is built on real events that have been overextended into a total explanatory system.",
+    "tropes_generated": [
+      "The two colleagues who are certain of what happened and are completely wrong",
+      "The pair whose certainty makes the narrator doubt her own perception",
+      "The relationship that breaks apart when one member encounters disconfirming evidence"
+    ],
+    "leila_rex_angle": "The narrator encounters one of the pair first. Their account is detailed, internally consistent, and compelling. She is already partially persuaded by the time she meets the second — and notices that both accounts are identical. Not similar. Identical, in a way that spontaneous accounts of real events are not."
+  }
+]
