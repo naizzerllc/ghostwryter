@@ -264,6 +264,12 @@ export default function HumanReview({
         </div>
       )}
 
+      {/* Clinical Accuracy */}
+      <ClinicalAccuracyTab
+        result={medicalFactCheckResult}
+        onClaimDecisionChange={onMedicalClaimDecision}
+      />
+
       <Separator />
 
       {/* Generated Prose */}
