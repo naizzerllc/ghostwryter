@@ -1,67 +1,60 @@
-{
-  "version": "1.0",
-  "register_definition": {
-    "name": "clinical_dissociative",
-    "brand": "leila_rex_default",
-    "description": "The Leila Rex clinical-dissociative register is the calibration anchor for all voice corpus evaluation.",
-    "traits": [
-      "First-person present tense",
-      "Clinical precision in observation",
-      "Emotional affect rendered through physical detail only — never named emotions",
-      "Slightly detached observational tone",
-      "No self-diagnosis — the narrator does not accurately identify her own psychological state before the revelation chapter",
-      "Interiority expressed through what the narrator notices rather than what she feels",
-      "Controlled sentence rhythm — tension modulated through sentence length variation",
-      "Physical responses substitute for emotional labelling (e.g. 'my fingers tighten on the glass' not 'I feel anxious')",
-      "Suppressed evidence rendered as conspicuous omission — the narrator visibly does not look at something"
-    ],
-    "anti_patterns": [
-      "Named emotions ('I feel scared', 'anger rises in me')",
-      "Direct psychological labelling ('my anxiety spikes')",
-      "Self-aware diagnosis ('I know I'm deflecting')",
-      "Warm, empathetic, or effusive tone",
-      "Third-person detachment or omniscient perspective",
-      "Past tense narration"
-    ]
-  },
-  "pressure_states": {
-    "DEFLECTION": "Character redirects attention away from the source of pressure. Voice becomes more controlled, sentences shorten, subject changes abruptly.",
-    "DECEPTION": "Character actively misleads. Voice may become smoother, more precise, or adopt a rehearsed quality. Specific verbal tics emerge.",
-    "COLLAPSE": "Character's defences fail. Voice register shifts — may fragment, lose precision, or revert to raw physical response."
-  },
-  "arc_points": {
-    "ARC_START": {
-      "description": "Baseline establishment. Character's wound is rendered in voice — not stated, demonstrated through register, word choice, and what the character notices or avoids.",
-      "minimum_exchanges": 5
-    },
-    "ARC_MID": {
-      "description": "Wound under pressure. The same wound surfaces under escalating circumstances without resolving. Voice shows stress through tell intensification.",
-      "minimum_exchanges": 3
-    },
-    "ARC_END": {
-      "description": "Transformation rendered. Register shifts demonstrate change — not explained. The character's voice is measurably different from ARC_START without the narrator naming the change.",
-      "minimum_exchanges": 3
-    }
-  },
-  "dimension_weights": {
-    "register_consistency": 0.25,
-    "voice_distinctiveness": 0.25,
-    "tell_operationalisation": 0.30,
-    "pressure_state_coverage": 0.20
-  },
-  "thresholds": {
-    "passed": { "min_composite": 16, "description": "Composite >= 16/20: PASSED — corpus_approved: true" },
-    "conditional": { "min_composite": 12, "max_composite": 15, "description": "Composite 12–15: CONDITIONAL — targeted revision required, generation blocked" },
-    "failed": { "max_composite": 11, "description": "Composite < 12: FAILED — full corpus rewrite required, generation blocked" }
-  },
-  "arc_coherence_check": {
-    "applies_to": "protagonist",
-    "threshold": 9,
-    "max_score": 15,
-    "questions": [
-      "Does the ARC_START corpus establish the character's baseline wound in their voice — not stated, rendered?",
-      "Does the ARC_MID corpus show the wound under pressure without resolving it?",
-      "Does the ARC_END corpus show transformation without naming it — demonstrated through register shift not explanation?"
-    ]
-  }
-}
+1\. DEFLECTION  
+Deflection occurs when the individual uses avoidant defense mechanisms to redirect attention away from traumatic triggers or a breakdown in their psychological "front." A clear example occurs in Chapter 4, when Lily attempts to address Ashley's irrational and violent outburst at the boutique:  
+Example:  
+Lily studies me. “Are you okay?” “Yeah. I’ll be even better once I get a scoop or two.” She hesitates, her hand on the handle, her voice gentle but intruding. “You wanna talk about what just happened in there?” I pretend ignorance. “What’s that?” “Are you serious?” She lets out a breath. “You went off on that woman. I’ve never seen you that angry.” ... “She was a nosy old lady, Lily. Anyone would’ve snapped.” ... “Drop it, goddammit\!”  
+In this passage, Ashley first attempts to normalize the situation with "forced brightness" and a request for ice cream  
+. When Lily persists, Ashley deflects by feigning ignorance and then by aggressively shifting the blame to the victim of her outburst before finally using anger to shut down the conversation entirely  
+.  
+In the sources, deflection is a primary defense mechanism used by the protagonist to protect her fractured reality. It often manifests as a swift pivot from a traumatic trigger to a mundane topic or a rationalization of her dissociative symptoms.  
+Here are three typical examples of this clinical-dissociative register:
+
+2\. Rationalization of Dissociative Behavior (The Table)  
+When Detective Reeves investigates Ashley’s apartment, she notices that the dining table is set for two people despite Ashley living alone—a physical manifestation of her "roommate" Elle. Ashley uses a clinical, aesthetic excuse to deflect the detective's suspicion away from her mental state.  
+Example:  
+"But what caught Reeves’s attention was the dining table. It was set for two. Two place settings, two coffee cups, two napkins folded precisely... 'You entertaining?' Reeves asked casually... 'No. I... like the symmetry,' Ashley said. Her voice was tight."
+
+3\. Dismissal of Auditory/Verbal Dissociation  
+Lily catches Ashley in the middle of a conversation with her internal "voice," Elle. To hide the fact that she is interacting with a separate persona, Ashley deflects by characterizing the behavior as a common, harmless habit.  
+Example:  
+"Lily’s gaze drifts from me to the empty side of the bed. 'Sounded like someone.' 'Just… thinking out loud.' She hesitates... Lily’s eyes dart to the empty space. 'Ash… who are you looking at?' 'No one,' I whisper."
+
+2\. DECEPTION  
+Deception in a dissociative context involves the active maintenance of a false narrative to preserve the wall between the constructed "self" and the truth of the past. This is exemplified in Chapter 19 during the lunch with Arden’s parents, where Ashley maintains the lie that her family is dead:  
+Example:  
+“Her parents passed away,” Arden says softly, stepping in before the silence can strangle me. “She’s got a close friend who’s basically family. I’m sure she’ll be there.” ... I force a smile. “Thank you.” ... It’s strange how easily it comes now, how “they’re gone” breathes for me. A small lie that fences my worlds apart: the bright one I’ve built with Arden, and the dark one I barely crawled out of.  
+Ashley acknowledges that this lie is "polished smooth with practice"  
+. This deception is not merely social; it is a clinical tool used to "fence" her worlds apart, preventing her mother's reality from "setting everything on fire" and destroying her fragile present
+
+1\. The "Polished" False Identity  
+During a lunch with Arden's family, the protagonist performs a practiced lie about her parents to maintain her curated persona. The register here is clinical in its description of the lie as a functional tool used to "fence" different realities apart.  
+Example:  
+"I force a smile. 'They’ll... love that.' But my pulse is thundering, and the chandelier above me flickers... A lie, polished smooth with practice. It’s strange how easily it comes now, how 'they’re gone' breathes for me. A small lie that fences my worlds apart: the bright one I’ve built with Arden, and the dark one I barely crawled out of. Because the truth would drag Clara into this room, and Clara… Clara would set everything on fire."
+
+2\. Systematic Parental Deception  
+In this instance, Clara Whitmore describes the act of drugging her child as a calculated, medical necessity. The register is chillingly clinical, framing the betrayal of her daughter’s trust as a "deception" recommended by professionals to maintain "stability."  
+Example:  
+"I never saw her take medication,” I say. “She hated pills.” Mom looks down at her cup. “She didn’t know. I put it in her food,” she continues. “The doctor said deception was better than confrontation. She wasn’t old enough to understand a trigger, but it kept the episodes quiet. She was stable."
+
+3\. The Performance of "Friendly" Closure  
+During a public interview following her divorce, the protagonist experiences sensory dissociation—seeing her reflection as "out of sync"—while delivering a socially acceptable lie about her relationship with Arden. The deception is described with a cold, observational detachment.  
+Example:  
+"I’m in a tailored ivory jumpsuit... on the monitor across the studio, my reflection is a half-second off, smiling when I haven’t yet. ... 'Arden’s doing just fine,' I say, smoothing my palms against my thighs. ... Tessa beams. 'So no hard feelings.' 'None,' I say. 'Just perspective, and good timing.' ... The audience claps, but I don’t hear it the right way. It comes in waves, too slow, like a heartbeat not my own."
+
+.  
+3\. COLLAPSE  
+A clinical collapse represents the total failure of dissociative defenses, where compartmentalization breaks down and the individual is overwhelmed by the sudden intrusion of suppressed trauma. In this moment, the "rigid" structures that sustained her life as "Ashley" for seventeen years are destroyed  
+. The result is an "animalistic" and "raw" breakdown as the suppressed memories of the staircase and her sister's death finally flood her consciousness, forcing her to mourn both her sister and the version of herself that died that nightThis occurs in Chapter 43 after her mother reveals the truth of her identity:  
+Example:  
+Something inside gives way. My shoulders slump. Energy leaks out at once. I’m too empty to rage, too heavy to lift my head. Then it hits all at once. Everything I’ve held rigid for seventeen years shatters. The sob starts small, grows raw, animalistic. My throat burns. ... Crying from somewhere under the ribs, where grief has been hiding too long. ... I don’t fight anymore. I let it wreck me. The guilt. The loss. The impossible relief of finally remembering.
+
+Example 2: Immediate Internal Mental Collapse In the direct aftermath of a traumatic event, the protagonist describes a total shutdown of agency and a literal "collapsing" of her perceived reality:  
+Example text:  
+"The gun lies where it fell, metal winking in the weak light. A dark pool spreads from the body beside it, finding the seams in the floorboards. My breath hitches. Pulse slams in my ears. I can’t move. I can’t think. Only feel the world collapsing inward. Can I ever make this right?"
+
+Example 3: Clinical Observation of Dissociative Routine Detective Reeves provides a clinical perspective on the protagonist's mental state, noting how her reality has fragmented to the point of performing domestic tasks for non-existent entities:  
+Example text:  
+"But what caught Reeves's attention was the dining table. It was set for two. Two place settings, two coffee cups, two napkins folded precisely. A plate of fruit sat in the center, apples, grapes, tangerines. None of it looked recently eaten... Reeves made a mental note: Possible dissociative behavior. Setting table for an absent guest. Or a ghost."
+
+Example 4: Formal Identification of Identity Collapse During an interrogation, the protagonist's unified sense of self collapses into distinct, fragmented personalities, leading the detective to categorize the state using formal psychiatric terminology:  
+Example text:  
+"I don't remember," she said. "But I think I did. Or... she did." "Who's 'she'?" Ashley didn't answer. She was staring at something behind Reeves, at a point in empty space where nothing existed... Reeves made a note: Possible DID (Dissociative Identity Disorder). Requires psychiatric evaluation.
