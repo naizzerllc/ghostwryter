@@ -223,6 +223,11 @@ const Dashboard = () => {
           <SeriesMemoryPanel />
         </Panel>
       </div>
+
+      {/* DRAMATIC ARCHITECTURE */}
+      <Panel title="Dramatic Architecture">
+        <DramaticArchitecturePanel />
+      </Panel>
     </div>
   );
 };
