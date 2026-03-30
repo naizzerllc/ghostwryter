@@ -235,9 +235,9 @@ function validateMisdirectionMap(
   // Validate each entry references a real chapter and is specific
   const chapterNumbers = new Set(chapters.map(c => c.chapter_number as number));
   for (let i = 0; i < recontList.length; i++) {
-    const entry = recontList[i] as Record<string, unknown>;
-    if (typeof entry === "string") {
-      if (entry.length < 10) {
+    const raw = recontList[i];
+    if (typeof raw === "string") {
+      if (raw.length < 10) {
         issues.push({
           severity: "WARNING",
           category: "MISDIRECTION",
@@ -248,6 +248,7 @@ function validateMisdirectionMap(
       }
       continue;
     }
+    const entry = raw as Record<string, unknown>;
     if (typeof entry?.chapter === "number" && !chapterNumbers.has(entry.chapter)) {
       issues.push({
         severity: "ERROR",
