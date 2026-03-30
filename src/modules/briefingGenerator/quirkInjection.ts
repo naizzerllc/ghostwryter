@@ -61,7 +61,7 @@ export function injectQuirks(
 
   for (const character of characters) {
     // Check for quirk field on character record (extended field)
-    const quirk = (character as Record<string, unknown>).quirk as string | undefined;
+    const quirk = (character as unknown as Record<string, unknown>).quirk as string | undefined;
     if (quirk && quirk.trim().length > 0) {
       injections.push(
         `Character texture active: ${character.name} — ${quirk}. Allow this to surface naturally in behaviour or speech.`
