@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S21 (pending)
-Last completed:    S20 ✅ (Dialogue Editor · Continuity Editor · Misdirection Erosion Index complete)
-Prompts pending:   S21–S28
+Active prompt:     S23 (pending)
+Last completed:    S22 ✅ (Medical Fact-Checker module · Clinical Accuracy tab · pipeline wiring complete)
+Prompts pending:   S23–S28
 MIC version:       2.1
 Schema version:    2.8 (outline format)
 Prose DNA version: v2.3 (17 rules)
@@ -38,7 +38,9 @@ Prose DNA version: v2.3 (17 rules)
 | S18 | ✅ Complete | HumanReview.tsx · CalibrationGate.tsx · ManuscriptHealthDashboard.tsx · RecoveryUIs.tsx · Review.tsx |
 | S19 | ✅ Complete | developmentalEditor.ts · lineEditor.ts |
 | S20 | ✅ Complete | dialogueEditor.ts · continuityEditor.ts · misdirectionErosionIndex.ts |
-| S21–S28 | ⏳ Pending | — |
+| S21 | ✅ Complete | readerSimulation.ts · antiAIDetector.ts |
+| S22 | ✅ Complete | medicalFactChecker.ts · ClinicalAccuracyTab.tsx · pipeline wiring + task routing |
+| S23–S28 | ⏳ Pending | — |
 
 ---
 
