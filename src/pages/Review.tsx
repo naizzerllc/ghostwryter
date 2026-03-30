@@ -34,7 +34,7 @@ She watches me catalogue the room. She always watches me do this.
 
 const DEMO_FORBIDDEN_RESULT = {
   violations: [
-    { word: "noticed", tier: "hard_ban" as const, context: "narration", location: "line 12", position: 245 },
+    { word: "noticed", tier: "hard_ban" as const, context: "narration" as const, location: "line 12", position: 245 },
   ],
   hardBanCount: 1,
   softBanCount: 0,
