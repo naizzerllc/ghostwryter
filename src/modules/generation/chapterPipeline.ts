@@ -154,6 +154,8 @@ export async function runChapterPipeline(
     generation_result: null,
     approved_record: null,
     quality_score: null,
+    medical_fact_check_result: null,
+    medical_advisory_required: false,
     error: null,
     started_at: new Date().toISOString(),
     completed_at: null,
