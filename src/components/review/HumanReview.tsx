@@ -322,12 +322,16 @@ export default function HumanReview({
       <div className="flex flex-wrap gap-2">
         <Button
           onClick={handleApprove}
+          disabled={approvalBlockedByMedical}
+          title={approvalBlockedByMedical ? "Resolve all clinical flags to approve this chapter." : undefined}
           className="font-mono text-xs bg-success hover:bg-success/80 text-success-foreground"
         >
           APPROVE
         </Button>
         <Button
           onClick={handleApproveAndSignOff}
+          disabled={approvalBlockedByMedical}
+          title={approvalBlockedByMedical ? "Resolve all clinical flags to approve this chapter." : undefined}
           className="font-mono text-xs bg-success hover:bg-success/80 text-success-foreground"
         >
           APPROVE + SIGN OFF
