@@ -32,7 +32,9 @@ Prose DNA version: v2.3 (17 rules)
 | S12 | ✅ Complete | clockRegistry.ts · tensionCurve.ts · DramaticArchitecturePanel.tsx |
 | S13 | ✅ Complete | outlineSystem.ts · livingState.ts · karmaTracker.ts · subplotRegistry.ts · OutlinePage.tsx · LivingStatePanel.tsx · KarmaSubplotPanel.tsx |
 | S14 | ✅ Complete | briefingGenerator.ts · relevanceScorer.ts · briefValidationGate.ts |
-| S15–S28 | ⏳ Pending | — |
+| S15 | ✅ Complete | dialogueSubtextMapper.ts · quirkInjection.ts · voiceRegisterAnchorInjection.ts · VOICE_REGISTER_ANCHORS.json |
+| S16 | ✅ Complete | pacingContrastSystem.ts · genreCalibration.ts · coldStartSystem.ts |
+| S17–S28 | ⏳ Pending | — |
 
 ---
 
