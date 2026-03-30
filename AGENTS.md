@@ -31,7 +31,8 @@ Prose DNA version: v2.3 (17 rules)
 | S11 | ✅ Complete | canonicalFactsDB.ts · knowledgeBoundaryMap.ts · seriesMemory.ts · CanonicalFactsPanel · SeriesMemoryPanel |
 | S12 | ✅ Complete | clockRegistry.ts · tensionCurve.ts · DramaticArchitecturePanel.tsx |
 | S13 | ✅ Complete | outlineSystem.ts · livingState.ts · karmaTracker.ts · subplotRegistry.ts · OutlinePage.tsx · LivingStatePanel.tsx · KarmaSubplotPanel.tsx |
-| S14–S28 | ⏳ Pending | — |
+| S14 | ✅ Complete | briefingGenerator.ts · relevanceScorer.ts · briefValidationGate.ts |
+| S15–S28 | ⏳ Pending | — |
 
 ---
 
