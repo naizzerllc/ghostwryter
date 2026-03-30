@@ -12,6 +12,7 @@ import { generateChapter, type GenerationResult, type GenerationSuccess } from "
 import { updateLivingState } from "@/modules/livingState/livingState";
 import { proposeUpdate } from "@/modules/memoryCore/memoryCore";
 import { githubStorage } from "@/storage/githubStorage";
+import { runMedicalFactCheck, type MedicalFactCheckResult } from "@/modules/quality/medicalFactChecker";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -60,6 +61,8 @@ export interface PipelineState {
   generation_result: GenerationResult | null;
   approved_record: ApprovedChapterRecord | null;
   quality_score: number | null;
+  medical_fact_check_result: MedicalFactCheckResult | null;
+  medical_advisory_required: boolean;
   error: string | null;
   started_at: string;
   completed_at: string | null;
@@ -151,6 +154,8 @@ export async function runChapterPipeline(
     generation_result: null,
     approved_record: null,
     quality_score: null,
+    medical_fact_check_result: null,
+    medical_advisory_required: false,
     error: null,
     started_at: new Date().toISOString(),
     completed_at: null,
@@ -189,10 +194,24 @@ export async function runChapterPipeline(
   // ── Stage 2: QUALITY_CHECK (stubbed — Sessions 19–22) ───────────
   state.stage = "QUALITY_CHECK";
   emitStateChange(state);
-  console.log(`[Pipeline] Chapter ${chapterNumber}: QUALITY_CHECK (stub — no quality modules yet)`);
+  console.log(`[Pipeline] Chapter ${chapterNumber}: QUALITY_CHECK`);
 
-  // Quality score is null until quality pipeline modules are built
+  // Quality score is null until full quality pipeline orchestrator is built
   state.quality_score = null;
+
+  // ── Medical Fact Check (after Continuity Editor, before Reader Simulation) ──
+  try {
+    const medicalResult = await runMedicalFactCheck(
+      successResult.content,
+      { medical_fact_check_active: true }, // TODO: read from project config
+      chapterNumber,
+    );
+    state.medical_fact_check_result = medicalResult;
+    state.medical_advisory_required = medicalResult.advisory_required;
+    console.log(`[Pipeline] Chapter ${chapterNumber}: Medical fact check — pass: ${medicalResult.pass}, advisory: ${medicalResult.advisory_required}`);
+  } catch (error) {
+    console.warn(`[Pipeline] Medical fact check failed (non-blocking):`, error);
+  }
 
   // ── Stage 3: HUMAN_REVIEW (surfaced — Session 18 builds UI) ─────
   state.stage = "HUMAN_REVIEW";
