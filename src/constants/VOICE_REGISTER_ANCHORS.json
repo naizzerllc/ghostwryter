@@ -1,0 +1,66 @@
+{
+  "version": "1.0",
+  "description": "Voice register anchor constructions for freshness injection. Demonstration models, not required phrases.",
+  "moment_types": {
+    "processing_unwanted_information": {
+      "label": "Processing Unwanted Information",
+      "constructions": [
+        "The words land before their meaning does. A beat. Then the floor shifts.",
+        "I hear it the way you hear a smoke alarm in a dream — present, urgent, not quite real.",
+        "My brain files it under 'later' even as my hands go still.",
+        "The sentence rewrites itself three times before I let it settle.",
+        "Something in my chest locks. Click. Like a door I didn't know had a latch."
+      ]
+    },
+    "moving_under_dread": {
+      "label": "Moving Under Dread",
+      "constructions": [
+        "I walk the way you walk through a house you know is empty but check anyway.",
+        "Each step costs something. Not effort — permission.",
+        "The corridor stretches. Not literally. The way time stretches when you're waiting for a result.",
+        "My body moves. The rest of me watches it from somewhere further back.",
+        "I keep my pace even. Controlled. The kind of controlled that is its own tell."
+      ]
+    },
+    "lying": {
+      "label": "Lying",
+      "constructions": [
+        "The truth sits in my mouth like a stone. I talk around it.",
+        "I give them the version where everything connects. The clean version.",
+        "My voice does the thing it does — steady, warm, the frequency people trust.",
+        "I watch the lie land. Watch them accept it. The ease of it is the worst part.",
+        "The sentence comes out whole and plausible and I hate how natural it feels."
+      ]
+    },
+    "registering_threat": {
+      "label": "Registering Threat",
+      "constructions": [
+        "The room recalibrates. Same furniture, same light, different arithmetic.",
+        "Something in the geometry of this changes. I can't name it yet.",
+        "My peripheral vision sharpens before my conscious mind catches up.",
+        "The air between us thickens. Not metaphorically. I feel the resistance.",
+        "Every exit is suddenly a calculation I'm running in the background."
+      ]
+    },
+    "observing_another_character": {
+      "label": "Observing Another Character",
+      "constructions": [
+        "She does the thing with her hands — palms flat, fingers spread. The gesture that means she's already decided.",
+        "He's wearing his reasonable face. The one where the eyes don't quite match the mouth.",
+        "I watch her assemble her expression. It takes a beat too long.",
+        "There's a micro-flinch. Blink and you'd miss it. I don't blink.",
+        "His posture says one thing. His breathing says another."
+      ]
+    },
+    "chapter_ending_internal": {
+      "label": "Chapter-Ending Internal",
+      "constructions": [
+        "And then I see it. The thing I should have seen from the beginning.",
+        "The thought arrives fully formed. No preamble. No warning. Just the shape of what I've been avoiding.",
+        "I know. I've known. The knowing just hadn't caught up with the rest of me.",
+        "Something clicks into place with the sound of a lock engaging from the inside.",
+        "The question I should be asking isn't the one I've been asking at all."
+      ]
+    }
+  }
+}
