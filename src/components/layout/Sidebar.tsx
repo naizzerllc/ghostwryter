@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/dna-intake", label: "DNA Intake", icon: Dna },
   { to: "/outline-import", label: "Outline Import", icon: FileInput },
+  { to: "/outline", label: "Outline", icon: List },
   { to: "/characters", label: "Characters", icon: Users },
   { to: "/voice-corpus", label: "Voice Corpus", icon: Mic },
   { to: "/catalogue", label: "Catalogue", icon: BookOpen },
