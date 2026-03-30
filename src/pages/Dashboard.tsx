@@ -230,6 +230,17 @@ const Dashboard = () => {
       <Panel title="Dramatic Architecture">
         <DramaticArchitecturePanel />
       </Panel>
+
+      {/* LIVING STATE + KARMA & SUBPLOTS */}
+      <div className="grid grid-cols-2 gap-4">
+        <Panel title="Living State">
+          <LivingStatePanel />
+        </Panel>
+
+        <Panel title="Karma & Subplots">
+          <KarmaSubplotPanel />
+        </Panel>
+      </div>
     </div>
   );
 };
