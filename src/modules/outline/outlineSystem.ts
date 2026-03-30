@@ -1,0 +1,168 @@
+/**
+ * Outline System — Loads and navigates the chapter outline.
+ * GHOSTLY v2.2 · Session 13
+ */
+
+import { githubStorage } from "@/storage/githubStorage";
+
+// ── Types ───────────────────────────────────────────────────────────────
+
+export interface StructuralAnchor {
+  type: "inciting_incident" | "all_is_lost" | "revelation";
+  chapter_number: number;
+  label: string;
+}
+
+export interface ChapterOutlineRecord {
+  chapter_number: number;
+  timeline_id: string;
+  scene_purpose: string;
+  hook_type: string;
+  hook_seed: string;
+  opening_type: string;
+  opening_seed: string;
+  tension_score_target: number;
+  narrator_deception_gesture?: string;
+  collision_specification: string;
+  permanent_change: string;
+  protagonist_decision_type: string;
+  reader_information_mode?: string;
+  compulsion_floor_note?: string;
+  act: 1 | 2 | 3;
+  scene_type?: string;
+  approved?: boolean;
+  [key: string]: unknown;
+}
+
+interface OutlineData {
+  schema_version?: string;
+  project_config?: {
+    genre_mode?: string;
+    revelation_chapter?: number;
+    inciting_incident_chapter?: number;
+    all_is_lost_chapter?: number;
+    [key: string]: unknown;
+  };
+  chapters?: ChapterOutlineRecord[];
+  subplot_registry?: SubplotRecord[];
+  [key: string]: unknown;
+}
+
+export interface SubplotRecord {
+  subplot_id: string;
+  subplot_description: string;
+  introduced_chapter: number;
+  subplot_type: string;
+  resolution_chapter: number;
+  act_2_touch_minimum: number;
+  act_2_touch_log: number[];
+  touch_count_total: number;
+}
+
+// ── Storage ─────────────────────────────────────────────────────────────
+
+const STORAGE_KEY = "ghostly_outline_data";
+
+function loadOutlineData(): OutlineData {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveOutlineData(data: OutlineData): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// ── Public API ──────────────────────────────────────────────────────────
+
+export function getChapter(chapterNumber: number): ChapterOutlineRecord | undefined {
+  const data = loadOutlineData();
+  return data.chapters?.find((c) => c.chapter_number === chapterNumber);
+}
+
+export function getAllChapters(): ChapterOutlineRecord[] {
+  const data = loadOutlineData();
+  return (data.chapters ?? []).sort((a, b) => a.chapter_number - b.chapter_number);
+}
+
+export function getActChapters(act: 1 | 2 | 3): ChapterOutlineRecord[] {
+  return getAllChapters().filter((c) => c.act === act);
+}
+
+export function updateChapterField(
+  chapterNumber: number,
+  field: string,
+  value: unknown
+): void {
+  const data = loadOutlineData();
+  if (!data.chapters) return;
+  const idx = data.chapters.findIndex((c) => c.chapter_number === chapterNumber);
+  if (idx === -1) return;
+  (data.chapters[idx] as Record<string, unknown>)[field] = value;
+  saveOutlineData(data);
+}
+
+export function getRevelationChapter(): number {
+  const data = loadOutlineData();
+  return data.project_config?.revelation_chapter ?? 22;
+}
+
+export function getStructuralAnchors(): StructuralAnchor[] {
+  const data = loadOutlineData();
+  const config = data.project_config;
+  const anchors: StructuralAnchor[] = [];
+
+  if (config?.inciting_incident_chapter) {
+    anchors.push({
+      type: "inciting_incident",
+      chapter_number: config.inciting_incident_chapter,
+      label: "Inciting Incident",
+    });
+  }
+  if (config?.all_is_lost_chapter) {
+    anchors.push({
+      type: "all_is_lost",
+      chapter_number: config.all_is_lost_chapter,
+      label: "All Is Lost",
+    });
+  }
+  if (config?.revelation_chapter) {
+    anchors.push({
+      type: "revelation",
+      chapter_number: config.revelation_chapter,
+      label: "Revelation",
+    });
+  }
+
+  return anchors.sort((a, b) => a.chapter_number - b.chapter_number);
+}
+
+export function getGenreMode(): string {
+  const data = loadOutlineData();
+  return data.project_config?.genre_mode ?? "psychological_thriller";
+}
+
+export function getSubplotRegistry(): SubplotRecord[] {
+  const data = loadOutlineData();
+  return data.subplot_registry ?? [];
+}
+
+/**
+ * Load outline from GitHub storage into localStorage.
+ */
+export async function loadOutlineFromGitHub(projectId: string): Promise<boolean> {
+  try {
+    const raw = await githubStorage.loadFile(`story-data/${projectId}/outline.json`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      saveOutlineData(parsed);
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
