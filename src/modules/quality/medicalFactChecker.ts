@@ -139,17 +139,20 @@ export async function runMedicalFactCheck(
     };
   }
 
-  const userPrompt = `Review this chapter for medical and clinical accuracy:
+  const fullPrompt = `${SYSTEM_PROMPT}
+
+---
+
+Review this chapter for medical and clinical accuracy:
 
 ${chapterText}
 
 Chapter number: ${chapterNumber ?? "unknown"}`;
 
   try {
-    const response = await callWithFallback("quality_medical_fact_check", userPrompt, {
+    const response = await callWithFallback("quality_medical_fact_check", fullPrompt, {
       temperature: 0.1,
       max_tokens: 4000,
-      system: SYSTEM_PROMPT,
     });
 
     const text = response.content.trim();
