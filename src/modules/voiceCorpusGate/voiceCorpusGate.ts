@@ -109,20 +109,26 @@ function notify() {
 // ── System prompt builder ───────────────────────────────────────────────
 
 function buildEvaluationPrompt(character: CharacterRecord, corpusText: string): string {
-  const registerDef = BENCHMARKS.register_definition;
-  const pressureStates = BENCHMARKS.pressure_states;
-  const arcPoints = BENCHMARKS.arc_points;
+  // Derive pressure state descriptions from benchmark exchanges
+  const deflectionExchange = BENCHMARKS.exchanges.find(e => e.pressure_state === "DEFLECTION");
+  const deceptionExchange = BENCHMARKS.exchanges.find(e => e.pressure_state === "DECEPTION");
+  const collapseExchange = BENCHMARKS.exchanges.find(e => e.pressure_state === "COLLAPSE");
 
   return `You are evaluating a voice corpus for the character "${character.name}" (role: ${character.role}) in a psychological thriller novel series by Leila Rex.
 
 ## CALIBRATION ANCHOR — Clinical-Dissociative Register
-${registerDef.description}
+Register: ${BENCHMARKS.register} — controlled, precise, slightly detached. Flat emotional affect, precise observation, physical response over named emotion.
 
 Traits:
-${registerDef.traits.map(t => `- ${t}`).join("\n")}
+- Flat emotional affect under pressure
+- Precise sensory observation replacing emotional labelling
+- Physical response over named emotion
+- Slightly detached clinical control
 
 Anti-patterns (these should NOT appear):
-${registerDef.anti_patterns.map(a => `- ${a}`).join("\n")}
+- Direct emotional labelling ("I felt angry")
+- Melodramatic escalation
+- Performed anxiety as deception tell
 
 ## CHARACTER CONTEXT
 - Wound: ${character.wound}
@@ -132,14 +138,14 @@ ${registerDef.anti_patterns.map(a => `- ${a}`).join("\n")}
 - Role: ${character.role}
 
 ## PRESSURE STATES
-- DEFLECTION: ${pressureStates.DEFLECTION}
-- DECEPTION: ${pressureStates.DECEPTION}
-- COLLAPSE: ${pressureStates.COLLAPSE}
+- DEFLECTION: ${deflectionExchange?.register_notes ?? "Escalating layers of redirect, feigned ignorance, rationalisation, hard shutdown"}
+- DECEPTION: ${deceptionExchange?.register_notes ?? "Performed competence, not performed anxiety. Sensory distortion as tell."}
+- COLLAPSE: ${collapseExchange?.register_notes ?? "Total structural failure. Sentences fragment. System powers down before feeling floods in."}
 
 ## ARC POINTS
-- ARC_START (min ${arcPoints.ARC_START.minimum_exchanges} exchanges): ${arcPoints.ARC_START.description}
-- ARC_MID (min ${arcPoints.ARC_MID.minimum_exchanges} exchanges): ${arcPoints.ARC_MID.description}
-- ARC_END (min ${arcPoints.ARC_END.minimum_exchanges} exchanges): ${arcPoints.ARC_END.description}
+- ARC_START (min 5 exchanges): Establishes baseline voice under normal and low-pressure conditions
+- ARC_MID (min 3 exchanges): Voice under escalating pressure — tells intensify, cracks appear
+- ARC_END (min 2 exchanges): Post-revelation voice — register shift after truth surfaces
 
 ## EVALUATION TASK
 Score this corpus on FOUR dimensions (1–5 each):
