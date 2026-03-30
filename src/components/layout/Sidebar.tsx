@@ -10,6 +10,7 @@ import {
   Dna,
   FileInput,
   Users,
+  Mic,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -17,6 +18,7 @@ const NAV_ITEMS = [
   { to: "/dna-intake", label: "DNA Intake", icon: Dna },
   { to: "/outline-import", label: "Outline Import", icon: FileInput },
   { to: "/characters", label: "Characters", icon: Users },
+  { to: "/voice-corpus", label: "Voice Corpus", icon: Mic },
   { to: "/generate", label: "Generate", icon: PenTool },
   { to: "/review", label: "Review", icon: CheckCircle },
   { to: "/archive", label: "Archive", icon: Archive },
