@@ -38,7 +38,9 @@ Prose DNA version: v2.3 (17 rules)
 | S18 | ✅ Complete | HumanReview.tsx · CalibrationGate.tsx · ManuscriptHealthDashboard.tsx · RecoveryUIs.tsx · Review.tsx |
 | S19 | ✅ Complete | developmentalEditor.ts · lineEditor.ts |
 | S20 | ✅ Complete | dialogueEditor.ts · continuityEditor.ts · misdirectionErosionIndex.ts |
-| S21–S28 | ⏳ Pending | — |
+| S21 | ✅ Complete | readerSimulation.ts · antiAIDetector.ts |
+| S22 | ✅ Complete | medicalFactChecker.ts · ClinicalAccuracyTab.tsx · pipeline wiring + task routing |
+| S23–S28 | ⏳ Pending | — |
 
 ---
 
