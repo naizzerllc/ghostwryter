@@ -13,6 +13,7 @@ import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import DnaIntake from "./pages/DnaIntake";
 import OutlineImport from "./pages/OutlineImport";
+import OutlinePage from "./pages/OutlinePage";
 import CharacterDBPage from "./pages/CharacterDB";
 import VoiceCorpus from "./pages/VoiceCorpus";
 import CatalogueRegistryPage from "./pages/CatalogueRegistry";
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/settings" element={<Settings />} />
             <Route path="/dna-intake" element={<DnaIntake />} />
             <Route path="/outline-import" element={<OutlineImport />} />
+            <Route path="/outline" element={<OutlinePage />} />
             <Route path="/characters" element={<CharacterDBPage />} />
             <Route path="/voice-corpus" element={<VoiceCorpus />} />
             <Route path="/catalogue" element={<CatalogueRegistryPage />} />

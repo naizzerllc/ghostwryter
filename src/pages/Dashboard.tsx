@@ -16,6 +16,8 @@ import CatalogueRegistryPanel from "@/components/dashboard/CatalogueRegistryPane
 import CanonicalFactsPanel from "@/components/dashboard/CanonicalFactsPanel";
 import SeriesMemoryPanel from "@/components/dashboard/SeriesMemoryPanel";
 import DramaticArchitecturePanel from "@/components/dashboard/DramaticArchitecturePanel";
+import LivingStatePanel from "@/components/dashboard/LivingStatePanel";
+import KarmaSubplotPanel from "@/components/dashboard/KarmaSubplotPanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -228,6 +230,17 @@ const Dashboard = () => {
       <Panel title="Dramatic Architecture">
         <DramaticArchitecturePanel />
       </Panel>
+
+      {/* LIVING STATE + KARMA & SUBPLOTS */}
+      <div className="grid grid-cols-2 gap-4">
+        <Panel title="Living State">
+          <LivingStatePanel />
+        </Panel>
+
+        <Panel title="Karma & Subplots">
+          <KarmaSubplotPanel />
+        </Panel>
+      </div>
     </div>
   );
 };
