@@ -260,10 +260,10 @@ export async function extractFacts(
   const taskType: TaskType = "quality_analysis"; // Uses Gemini Flash, no Prose DNA
 
   try {
-    const response = await routeCall(taskType, [
-      { role: "system", content: EXTRACTION_PROMPT },
-      { role: "user", content: JSON.stringify(outline) },
-    ]);
+    const response = await callWithFallback(
+      taskType,
+      EXTRACTION_PROMPT + "\n\n" + JSON.stringify(outline),
+    );
 
     const content = response.content.trim();
     // Extract JSON array from response
