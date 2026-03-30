@@ -8,11 +8,15 @@ import {
   BarChart3,
   Settings,
   Dna,
+  FileInput,
+  Users,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/dna-intake", label: "DNA Intake", icon: Dna },
+  { to: "/outline-import", label: "Outline Import", icon: FileInput },
+  { to: "/characters", label: "Characters", icon: Users },
   { to: "/generate", label: "Generate", icon: PenTool },
   { to: "/review", label: "Review", icon: CheckCircle },
   { to: "/archive", label: "Archive", icon: Archive },

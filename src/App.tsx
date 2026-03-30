@@ -12,6 +12,8 @@ import Editorial from "./pages/Editorial";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import DnaIntake from "./pages/DnaIntake";
+import OutlineImport from "./pages/OutlineImport";
+import CharacterDBPage from "./pages/CharacterDB";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,8 @@ const App = () => (
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/dna-intake" element={<DnaIntake />} />
+            <Route path="/outline-import" element={<OutlineImport />} />
+            <Route path="/characters" element={<CharacterDBPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
