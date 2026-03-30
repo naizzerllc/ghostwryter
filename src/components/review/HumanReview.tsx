@@ -179,6 +179,12 @@ export default function HumanReview({
   const criticalBoundary = boundaryViolations.filter(v => v.severity === "CRITICAL");
   const warningBoundary = boundaryViolations.filter(v => v.severity !== "CRITICAL");
 
+  // Medical advisory: block approval if flagged claims still PENDING
+  const medicalPendingFlags = medicalAdvisoryRequired && medicalFactCheckResult
+    ? medicalFactCheckResult.claims.filter(c => c.severity !== "NONE" && c.writer_decision === "PENDING").length
+    : 0;
+  const approvalBlockedByMedical = medicalPendingFlags > 0;
+
   return (
     <div className="space-y-4">
       {/* Header */}
