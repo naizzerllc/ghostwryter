@@ -15,6 +15,7 @@ import CorpusExchangePanel from "@/components/dashboard/CorpusExchangePanel";
 import CatalogueRegistryPanel from "@/components/dashboard/CatalogueRegistryPanel";
 import CanonicalFactsPanel from "@/components/dashboard/CanonicalFactsPanel";
 import SeriesMemoryPanel from "@/components/dashboard/SeriesMemoryPanel";
+import DramaticArchitecturePanel from "@/components/dashboard/DramaticArchitecturePanel";
 
 const MODULE_REGISTRY = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
@@ -222,6 +223,11 @@ const Dashboard = () => {
           <SeriesMemoryPanel />
         </Panel>
       </div>
+
+      {/* DRAMATIC ARCHITECTURE */}
+      <Panel title="Dramatic Architecture">
+        <DramaticArchitecturePanel />
+      </Panel>
     </div>
   );
 };
