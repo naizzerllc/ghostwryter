@@ -1,6 +1,6 @@
 /**
- * Character Database Page — list + editable detail view.
- * GHOSTLY v2.2 · S08
+ * Character Database Page — list + editable detail view + clinical profile tab.
+ * GHOSTLY v2.2 · S08 + S23
  */
 
 import { useState, useSyncExternalStore, useCallback } from "react";
@@ -15,6 +15,8 @@ import {
   type PsychologicalSliders,
 } from "@/lib/characterDatabase";
 import { Users, Shield, UserX, Eye, Plus, X, Save, Trash2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import ClinicalProfileTab from "@/components/character/ClinicalProfileTab";
 
 const ROLE_COLORS: Record<CharacterRole, string> = {
   protagonist: "bg-primary text-primary-foreground",
