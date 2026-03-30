@@ -39,6 +39,7 @@ const DEMO_FORBIDDEN_RESULT = {
   hardBanCount: 1,
   softBanCount: 0,
   dialogueExemptCount: 0,
+  dialogueExemptCleared: 0,
   contextFlagCount: 0,
   cleanedText: DEMO_PROSE,
 };
