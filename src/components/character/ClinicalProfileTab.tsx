@@ -263,7 +263,7 @@ const ClinicalProfileTab = ({ characterId, onSave }: ClinicalProfileTabProps) =>
             title="Where does this character operate?"
             options={SETTING_OPTIONS}
             value={setting}
-            onChange={setSetting}
+            onChange={(v) => setSetting(v as Setting)}
           />
 
           {allAnswered && (
