@@ -37,6 +37,7 @@ const App = () => (
             <Route path="/dna-intake" element={<DnaIntake />} />
             <Route path="/outline-import" element={<OutlineImport />} />
             <Route path="/characters" element={<CharacterDBPage />} />
+            <Route path="/voice-corpus" element={<VoiceCorpus />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
