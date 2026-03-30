@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S18 (pending)
-Last completed:    S17 ✅ (Generation Core · Chapter Pipeline complete)
-Prompts pending:   S18–S28
+Active prompt:     S19 (pending)
+Last completed:    S18 ✅ (Human Review · Calibration · Recovery UIs complete)
+Prompts pending:   S19–S28
 MIC version:       2.1
 Schema version:    2.8 (outline format)
 Prose DNA version: v2.3 (17 rules)
@@ -35,7 +35,8 @@ Prose DNA version: v2.3 (17 rules)
 | S15 | ✅ Complete | dialogueSubtextMapper.ts · quirkInjection.ts · voiceRegisterAnchorInjection.ts · VOICE_REGISTER_ANCHORS.json |
 | S16 | ✅ Complete | pacingContrastSystem.ts · genreCalibration.ts · coldStartSystem.ts |
 | S17 | ✅ Complete | generationCore.ts · chapterPipeline.ts |
-| S18–S28 | ⏳ Pending | — |
+| S18 | ✅ Complete | HumanReview.tsx · CalibrationGate.tsx · ManuscriptHealthDashboard.tsx · RecoveryUIs.tsx · Review.tsx |
+| S19–S28 | ⏳ Pending | — |
 
 ---
 
