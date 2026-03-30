@@ -251,7 +251,7 @@ const ClinicalProfileTab = ({ characterId, onSave }: ClinicalProfileTabProps) =>
             title="What is this character's role in the story?"
             options={ROLE_OPTIONS}
             value={role}
-            onChange={setRole}
+            onChange={(v) => setRole(v as StoryRole)}
           />
           <QuestionGroup
             title="What should the reader feel about this character before any reveal?"
