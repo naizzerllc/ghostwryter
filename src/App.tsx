@@ -39,6 +39,7 @@ const App = () => (
             <Route path="/outline-import" element={<OutlineImport />} />
             <Route path="/characters" element={<CharacterDBPage />} />
             <Route path="/voice-corpus" element={<VoiceCorpus />} />
+            <Route path="/catalogue" element={<CatalogueRegistryPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
