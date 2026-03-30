@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S13 (pending)
-Last completed:    S12 ✅ (Dramatic Architecture complete)
-Prompts pending:   S13–S28
+Active prompt:     S14 (pending)
+Last completed:    S13 ✅ (Outline · Living State · Karma · Subplots complete)
+Prompts pending:   S14–S28
 MIC version:       2.1
 Schema version:    2.8 (outline format)
 Prose DNA version: v2.3 (17 rules)
@@ -30,7 +30,8 @@ Prose DNA version: v2.3 (17 rules)
 | S09–S10 | ✅ Complete | (intermediate sessions) |
 | S11 | ✅ Complete | canonicalFactsDB.ts · knowledgeBoundaryMap.ts · seriesMemory.ts · CanonicalFactsPanel · SeriesMemoryPanel |
 | S12 | ✅ Complete | clockRegistry.ts · tensionCurve.ts · DramaticArchitecturePanel.tsx |
-| S13–S28 | ⏳ Pending | — |
+| S13 | ✅ Complete | outlineSystem.ts · livingState.ts · karmaTracker.ts · subplotRegistry.ts · OutlinePage.tsx · LivingStatePanel.tsx · KarmaSubplotPanel.tsx |
+| S14–S28 | ⏳ Pending | — |
 
 ---
 
