@@ -14,6 +14,7 @@ import Settings from "./pages/Settings";
 import DnaIntake from "./pages/DnaIntake";
 import OutlineImport from "./pages/OutlineImport";
 import CharacterDBPage from "./pages/CharacterDB";
+import VoiceCorpus from "./pages/VoiceCorpus";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
