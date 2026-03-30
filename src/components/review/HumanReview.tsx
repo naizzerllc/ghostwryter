@@ -85,8 +85,11 @@ export default function HumanReview({
   truncationSuspected,
   approvedRecord,
   qualityGateRejected,
+  medicalFactCheckResult,
+  medicalAdvisoryRequired,
   onApproved,
   onFlagged,
+  onMedicalClaimDecision,
 }: HumanReviewProps) {
   const [editMode, setEditMode] = useState(false);
   const [editedProse, setEditedProse] = useState(prose);
