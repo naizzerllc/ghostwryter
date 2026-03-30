@@ -1,6 +1,6 @@
 /**
- * Character Database Page — list + editable detail view.
- * GHOSTLY v2.2 · S08
+ * Character Database Page — list + editable detail view + clinical profile tab.
+ * GHOSTLY v2.2 · S08 + S23
  */
 
 import { useState, useSyncExternalStore, useCallback } from "react";
@@ -14,7 +14,9 @@ import {
   type CharacterRole,
   type PsychologicalSliders,
 } from "@/lib/characterDatabase";
-import { Users, Shield, UserX, Eye, Plus, X, Save, Trash2 } from "lucide-react";
+import { Plus, Save, Trash2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import ClinicalProfileTab from "@/components/character/ClinicalProfileTab";
 
 const ROLE_COLORS: Record<CharacterRole, string> = {
   protagonist: "bg-primary text-primary-foreground",
@@ -177,7 +179,7 @@ const CharacterDBPage = () => {
             Select a character or click + to create one
           </div>
         ) : (
-          <div className="p-4 space-y-4">
+          <Tabs defaultValue="details" className="p-4 space-y-4">
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
@@ -220,119 +222,130 @@ const CharacterDBPage = () => {
               </div>
             )}
 
-            {/* Corpus status badge */}
-            <div className="flex items-center gap-3">
-              <span className={`px-2 py-1 text-[10px] font-mono font-semibold ${
-                activeRecord.corpus_approved ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
-              }`}>
-                corpus_approved: {activeRecord.corpus_approved ? "TRUE" : "FALSE — BLOCKED"}
-              </span>
-              <span className="px-2 py-1 text-[10px] font-mono bg-muted text-muted-foreground">
-                voice: {activeRecord.voice_corpus_status}
-              </span>
-              <span className="px-2 py-1 text-[10px] font-mono bg-muted text-muted-foreground">
-                reliability: {activeRecord.voice_reliability}
-              </span>
-            </div>
+            <TabsList className="bg-muted/30 border border-border">
+              <TabsTrigger value="details" className="text-[10px] font-mono uppercase tracking-widest">Character</TabsTrigger>
+              <TabsTrigger value="clinical" className="text-[10px] font-mono uppercase tracking-widest">Clinical Profile</TabsTrigger>
+            </TabsList>
 
-            {/* Fields */}
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Name" field="name" value={activeRecord.name} editing={!!editing} onChange={updateField} />
-              <div>
-                <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono block mb-1">Role</label>
-                {editing ? (
-                  <select
-                    value={activeRecord.role}
-                    onChange={e => updateField("role", e.target.value)}
-                    className="w-full bg-background border border-border px-2 py-1.5 text-sm font-mono text-foreground"
-                  >
-                    <option value="protagonist">Protagonist</option>
-                    <option value="antagonist">Antagonist</option>
-                    <option value="supporting">Supporting</option>
-                  </select>
-                ) : (
-                  <p className="text-sm text-foreground">{activeRecord.role}</p>
-                )}
+            <TabsContent value="details" className="space-y-4">
+              {/* Corpus status badge */}
+              <div className="flex items-center gap-3">
+                <span className={`px-2 py-1 text-[10px] font-mono font-semibold ${
+                  activeRecord.corpus_approved ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
+                }`}>
+                  corpus_approved: {activeRecord.corpus_approved ? "TRUE" : "FALSE — BLOCKED"}
+                </span>
+                <span className="px-2 py-1 text-[10px] font-mono bg-muted text-muted-foreground">
+                  voice: {activeRecord.voice_corpus_status}
+                </span>
+                <span className="px-2 py-1 text-[10px] font-mono bg-muted text-muted-foreground">
+                  reliability: {activeRecord.voice_reliability}
+                </span>
               </div>
-            </div>
 
-            <SectionHeader title="Psychological Core" />
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Wound" field="wound" value={activeRecord.wound} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Flaw" field="flaw" value={activeRecord.flaw} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Want" field="want" value={activeRecord.want} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Need" field="need" value={activeRecord.need} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Self-Deception" field="self_deception" value={activeRecord.self_deception} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Fear" field="fear" value={activeRecord.fear} editing={!!editing} onChange={updateField} multiline />
-            </div>
-
-            <SectionHeader title="Arc" />
-            <div className="grid grid-cols-3 gap-4">
-              <Field label="Arc Start" field="arc_start" value={activeRecord.arc_start} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Arc End" field="arc_end" value={activeRecord.arc_end} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Arc Lesson" field="arc_lesson" value={activeRecord.arc_lesson} editing={!!editing} onChange={updateField} multiline />
-            </div>
-
-            <SectionHeader title="Goals (v1.9)" />
-            <div className="grid grid-cols-3 gap-4">
-              <Field label="External Goal" field="external_goal" value={activeRecord.external_goal} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Internal Desire" field="internal_desire" value={activeRecord.internal_desire} editing={!!editing} onChange={updateField} multiline />
-              <Field label="Goal/Desire Gap" field="goal_desire_gap" value={activeRecord.goal_desire_gap} editing={!!editing} onChange={updateField} multiline />
-            </div>
-
-            <SectionHeader title="Voice DNA" />
-            <Field
-              label={`Compressed Voice DNA (max 150T · ${activeRecord.compressed_voice_dna?.length ?? 0} chars)`}
-              field="compressed_voice_dna"
-              value={activeRecord.compressed_voice_dna}
-              editing={!!editing}
-              onChange={updateField}
-              multiline
-              fullWidth
-            />
-
-            <SectionHeader title="Psychological Sliders (7 dimensions)" />
-            <div className="grid grid-cols-4 gap-3">
-              {SLIDER_KEYS.map(key => (
-                <div key={key}>
-                  <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono block mb-1">
-                    {key}
-                  </label>
+              {/* Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Name" field="name" value={activeRecord.name} editing={!!editing} onChange={updateField} />
+                <div>
+                  <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono block mb-1">Role</label>
                   {editing ? (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="range"
-                        min={-10}
-                        max={10}
-                        value={activeRecord.psychological_sliders?.[key] ?? 0}
-                        onChange={e => updateField(`psychological_sliders.${key}`, Number(e.target.value))}
-                        className="flex-1"
-                      />
-                      <span className="text-[10px] font-mono text-foreground w-6 text-right">
-                        {activeRecord.psychological_sliders?.[key] ?? 0}
-                      </span>
-                    </div>
+                    <select
+                      value={activeRecord.role}
+                      onChange={e => updateField("role", e.target.value)}
+                      className="w-full bg-background border border-border px-2 py-1.5 text-sm font-mono text-foreground"
+                    >
+                      <option value="protagonist">Protagonist</option>
+                      <option value="antagonist">Antagonist</option>
+                      <option value="supporting">Supporting</option>
+                    </select>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1.5 bg-muted relative">
-                        <div
-                          className="absolute top-0 h-full bg-primary"
-                          style={{
-                            left: "50%",
-                            width: `${Math.abs(activeRecord.psychological_sliders?.[key] ?? 0) * 5}%`,
-                            transform: (activeRecord.psychological_sliders?.[key] ?? 0) < 0 ? "translateX(-100%)" : "none",
-                          }}
-                        />
-                      </div>
-                      <span className="text-[10px] font-mono text-muted-foreground w-6 text-right">
-                        {activeRecord.psychological_sliders?.[key] ?? 0}
-                      </span>
-                    </div>
+                    <p className="text-sm text-foreground">{activeRecord.role}</p>
                   )}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+
+              <SectionHeader title="Psychological Core" />
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Wound" field="wound" value={activeRecord.wound} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Flaw" field="flaw" value={activeRecord.flaw} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Want" field="want" value={activeRecord.want} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Need" field="need" value={activeRecord.need} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Self-Deception" field="self_deception" value={activeRecord.self_deception} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Fear" field="fear" value={activeRecord.fear} editing={!!editing} onChange={updateField} multiline />
+              </div>
+
+              <SectionHeader title="Arc" />
+              <div className="grid grid-cols-3 gap-4">
+                <Field label="Arc Start" field="arc_start" value={activeRecord.arc_start} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Arc End" field="arc_end" value={activeRecord.arc_end} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Arc Lesson" field="arc_lesson" value={activeRecord.arc_lesson} editing={!!editing} onChange={updateField} multiline />
+              </div>
+
+              <SectionHeader title="Goals (v1.9)" />
+              <div className="grid grid-cols-3 gap-4">
+                <Field label="External Goal" field="external_goal" value={activeRecord.external_goal} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Internal Desire" field="internal_desire" value={activeRecord.internal_desire} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Goal/Desire Gap" field="goal_desire_gap" value={activeRecord.goal_desire_gap} editing={!!editing} onChange={updateField} multiline />
+              </div>
+
+              <SectionHeader title="Voice DNA" />
+              <Field
+                label={`Compressed Voice DNA (max 150T · ${activeRecord.compressed_voice_dna?.length ?? 0} chars)`}
+                field="compressed_voice_dna"
+                value={activeRecord.compressed_voice_dna}
+                editing={!!editing}
+                onChange={updateField}
+                multiline
+                fullWidth
+              />
+
+              <SectionHeader title="Psychological Sliders (7 dimensions)" />
+              <div className="grid grid-cols-4 gap-3">
+                {SLIDER_KEYS.map(key => (
+                  <div key={key}>
+                    <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono block mb-1">
+                      {key}
+                    </label>
+                    {editing ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="range"
+                          min={-10}
+                          max={10}
+                          value={activeRecord.psychological_sliders?.[key] ?? 0}
+                          onChange={e => updateField(`psychological_sliders.${key}`, Number(e.target.value))}
+                          className="flex-1"
+                        />
+                        <span className="text-[10px] font-mono text-foreground w-6 text-right">
+                          {activeRecord.psychological_sliders?.[key] ?? 0}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-1.5 bg-muted relative">
+                          <div
+                            className="absolute top-0 h-full bg-primary"
+                            style={{
+                              left: "50%",
+                              width: `${Math.abs(activeRecord.psychological_sliders?.[key] ?? 0) * 5}%`,
+                              transform: (activeRecord.psychological_sliders?.[key] ?? 0) < 0 ? "translateX(-100%)" : "none",
+                            }}
+                          />
+                        </div>
+                        <span className="text-[10px] font-mono text-muted-foreground w-6 text-right">
+                          {activeRecord.psychological_sliders?.[key] ?? 0}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="clinical">
+              <ClinicalProfileTab characterId={activeRecord.id ?? null} />
+            </TabsContent>
+          </Tabs>
         )}
       </div>
     </div>
