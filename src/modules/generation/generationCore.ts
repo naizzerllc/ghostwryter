@@ -162,7 +162,7 @@ export async function generateChapter(
   if (chapterOutline) {
     const chapterCharIds = (chapterOutline as { characters?: string[] }).characters ?? [];
     const unapproved = chapterCharIds.filter(charId => {
-      const char = allCharacters.find(c => c.character_id === charId);
+      const char = allCharacters.find(c => c.id === charId);
       return char && !char.corpus_approved;
     });
 
@@ -178,7 +178,9 @@ export async function generateChapter(
 
   // ── Step 3: Assemble brief → validate ─────────────────────────────
   const brief = assembleBrief(chapterNumber, projectId);
-  const validation = validateBrief(brief);
+  const validation = chapterOutline
+    ? validateBrief(brief, chapterOutline)
+    : { valid: true, errors: [] as string[], warnings: [] as string[], force_classification: "FORCE_MID" as const };
 
   if (!validation.valid && validation.errors.length > 0) {
     return {
