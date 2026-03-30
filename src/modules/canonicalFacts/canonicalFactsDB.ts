@@ -8,7 +8,7 @@
  */
 
 import { githubStorage } from "@/storage/githubStorage";
-import { routeCall, type TaskType } from "@/api/llmRouter";
+import { callWithFallback, type TaskType } from "@/api/llmRouter";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
