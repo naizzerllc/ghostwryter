@@ -82,6 +82,7 @@ export const TASK_ROUTING: Record<TaskType, TaskRoute> = {
   reader_simulation:           { provider: "openai",       inject_prose_dna: false },
   dna_extraction:              { provider: "anthropic",    inject_prose_dna: true  },
   dna_gap_options:             { provider: "anthropic",    inject_prose_dna: false },
+  quality_medical_fact_check:  { provider: "gemini_flash", inject_prose_dna: false },
 };
 
 export const TASK_FALLBACK_OVERRIDES: Partial<Record<TaskType, Provider[]>> = {
