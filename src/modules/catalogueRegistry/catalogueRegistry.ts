@@ -12,28 +12,38 @@ import { githubStorage } from "@/storage/githubStorage";
 
 export interface CatalogueRegistryRecord {
   title_id: string;
-  title: string;
+  title_name: string;
+  title: string; // alias kept for backward compat
+  status: "ACTIVE" | "COMPLETE" | "ARCHIVED";
   self_deception_category: string;
   protagonist_wound_type: string;
   antagonist_type: string;
   revelation_mechanism: string;
   key_imagery_set: string[];
-  status: "planned" | "in_progress" | "complete";
-  created_at: string;
+  genre_mode: string;
+  creation_date: string;
+  completion_date?: string;
+  created_at: string; // legacy alias
 }
 
 export interface FitCheckIssue {
   field: string;
   message: string;
-  severity: "error" | "warning";
+  severity: "error" | "warning" | "note";
   conflicting_title_id: string;
 }
 
-export interface FitCheckResult {
+export interface CatalogueFitResult {
   title_id: string;
+  fit_score: number; // 1-5
+  warnings: FitCheckIssue[];
+  notes: FitCheckIssue[];
+  recommendation: string;
   passed: boolean;
-  issues: FitCheckIssue[];
 }
+
+// Legacy alias
+export type FitCheckResult = CatalogueFitResult;
 
 // ── State ───────────────────────────────────────────────────────────────
 
