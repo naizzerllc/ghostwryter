@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S13 (pending)
-Last completed:    S12 ✅ (Dramatic Architecture complete)
-Prompts pending:   S13–S28
+Active prompt:     S14 (pending)
+Last completed:    S13 ✅ (Outline · Living State · Karma · Subplots complete)
+Prompts pending:   S14–S28
 MIC version:       2.1
 Schema version:    2.8 (outline format)
 Prose DNA version: v2.3 (17 rules)
