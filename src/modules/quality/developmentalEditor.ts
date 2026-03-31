@@ -270,6 +270,7 @@ export interface DevEditorInput {
   isConsequenceChapter: boolean;
   consecutiveReactiveCount: number;
   consecutiveNeutralCount: number;
+  emotionalResonanceTarget?: string | null;
 }
 
 const MAX_RETRIES = 2;
