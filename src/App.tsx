@@ -8,7 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Generate from "./pages/Generate";
 import Review from "./pages/Review";
 import ArchivePage from "./pages/Archive";
-import Editorial from "./pages/Editorial";
+import EditorialPage from "./pages/EditorialPage";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import DnaIntake from "./pages/DnaIntake";
@@ -35,7 +35,7 @@ const App = () => (
             <Route path="/generate" element={<Generate />} />
             <Route path="/review" element={<Review />} />
             <Route path="/archive" element={<ArchivePage />} />
-            <Route path="/editorial" element={<Editorial />} />
+            <Route path="/editorial" element={<EditorialPage />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/dna-intake" element={<DnaIntake />} />
