@@ -16,6 +16,7 @@ import { getAllCharacters } from "@/modules/characterDB/characterDB";
 import { getChapter, getAllChapters } from "@/modules/outline/outlineSystem";
 import { githubStorage } from "@/storage/githubStorage";
 import STYLE_PROFILES from "@/constants/STYLE_PROFILES.json";
+import { TELL_SUPPRESSION_BLOCK, TELL_SUPPRESSION_CONFIG } from "@/constants/PROSE_DNA_RUNTIME";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -46,6 +47,11 @@ export interface GenerationSuccess {
   boundary_violations: BoundaryViolation[];
   brief: GenerationBrief;
   validation: BriefValidationResult;
+  generation_config: {
+    prose_dna_version: string;
+    tell_suppression_active: boolean;
+    tell_suppression_version: string;
+  };
 }
 
 export type GenerationResult = GenerationBlock | GenerationSuccess;
@@ -202,6 +208,7 @@ export async function generateChapter(
 
   // ── Step 5: Build two-block system prompt ─────────────────────────
   // Static block: Prose DNA runtime (Tier 0) + Style Layer + Forbidden Words header
+  // + Tell Suppression Block (GAP2 — cached, ~400T, invariant across chapters)
   const proseDnaTier = brief.tiers.find(t => t.tier === 0);
   const styleLayer = getStyleLayerContent();
   const forbiddenWordsHeader = "FORBIDDEN WORDS: Code-enforced post-generation. Do not self-censor — write naturally.";
@@ -210,6 +217,7 @@ export async function generateChapter(
     proseDnaTier?.content ?? "",
     styleLayer,
     forbiddenWordsHeader,
+    TELL_SUPPRESSION_BLOCK,
   ].filter(Boolean).join("\n\n---\n\n");
 
   // Dynamic block: Assembled brief (Tiers 1–3)
@@ -300,5 +308,10 @@ export async function generateChapter(
     boundary_violations: boundaryViolations,
     brief,
     validation,
+    generation_config: {
+      prose_dna_version: "v2.4",
+      tell_suppression_active: TELL_SUPPRESSION_CONFIG.active,
+      tell_suppression_version: TELL_SUPPRESSION_CONFIG.version,
+    },
   };
 }

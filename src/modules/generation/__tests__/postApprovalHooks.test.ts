@@ -82,6 +82,11 @@ function makeGenerationSuccess(): GenerationSuccess {
     boundary_violations: [],
     brief: {} as any,
     validation: {} as any,
+    generation_config: {
+      prose_dna_version: "v2.4",
+      tell_suppression_active: true,
+      tell_suppression_version: "1.0",
+    },
   };
 }
 
