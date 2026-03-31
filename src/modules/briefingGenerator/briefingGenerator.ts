@@ -366,3 +366,38 @@ export function assembleBrief(chapterNumber: number, projectId: string): Generat
     assembled_at: new Date().toISOString(),
   };
 }
+
+/**
+ * GAP3 — Async enrichment: replaces the synchronous annotation injection with
+ * a Gemini Flash-derived instruction for higher quality calibration notes.
+ * Call after assembleBrief when async context is available.
+ */
+export async function enrichBriefWithDerivedInstructions(
+  brief: GenerationBrief,
+  chapterNumber: number,
+): Promise<GenerationBrief> {
+  const annotations = getAnnotationsForBriefInjection(chapterNumber);
+  if (annotations.length === 0) return brief;
+
+  const injections: string[] = [];
+  for (const ann of annotations) {
+    const injection = await buildAnnotationBriefInjection(ann);
+    if (injection) injections.push(injection);
+  }
+
+  if (injections.length === 0) return brief;
+
+  const tier2 = brief.tiers.find(t => t.tier === 2);
+  if (tier2) {
+    const enrichedContent = tier2.content + "\n\n" + injections.join("\n\n");
+    tier2.content = enrichedContent;
+    tier2.used = countTokens(enrichedContent);
+  }
+
+  // Recalculate totals
+  const totalUsed = brief.tiers.reduce((sum, t) => sum + t.used, 0);
+  brief.total_tokens = totalUsed;
+  brief.over_budget = totalUsed > brief.total_budget;
+
+  return brief;
+}
