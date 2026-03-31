@@ -45,6 +45,19 @@
           "required_for_acts": ["1", "3"],
           "recommended_for_acts": ["2"],
           "format": "one sentence describing the texture of the universal experience, not a category emotion word"
+        },
+        "relationship_pivot": {
+          "type": "boolean",
+          "default": false,
+          "note": "S24D — true when this chapter is a designated relationship pivot chapter from the relationship_architecture block. When true, pivot_pair and pivot_act must also be set."
+        },
+        "pivot_pair": {
+          "type": "PAIR_1 | PAIR_2 | PAIR_3 | null",
+          "note": "S24D — which relationship pair this pivot belongs to. Null when relationship_pivot: false."
+        },
+        "pivot_act": {
+          "type": "1 | 2 | 3 | null",
+          "note": "S24D — which act this pivot falls in. Null when relationship_pivot: false."
         }
       }
     },
