@@ -252,7 +252,22 @@ const Settings = () => {
           </div>
         </div>
       </Panel>
+
+      {/* CALIBRATION */}
+      <Panel title="Module Weight Calibration">
+        <p className="text-[10px] font-mono text-muted-foreground mb-3">
+          After 5 approved chapters, calibrate quality gate module weights against your editorial judgement.
+        </p>
+        <Link
+          to="/calibration"
+          className="px-3 py-2 border border-border text-xs font-mono uppercase tracking-wider text-foreground hover:border-primary hover:text-primary transition-colors inline-block"
+        >
+          Open Calibration
+        </Link>
+      </Panel>
     </div>
+  );
+};
   );
 };
 
