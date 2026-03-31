@@ -91,6 +91,7 @@ export const TASK_FALLBACK_OVERRIDES: Partial<Record<TaskType, Provider[]>> = {
   generation_antagonist:  ["openai"],     // NEVER anthropic — voice homogeneity failure
   generation_supporting:  ["openai"],     // NEVER anthropic — voice homogeneity failure
   reader_simulation:      ["gemini_pro"], // Degraded mode — logs generator-evaluator overlap warning
+  prose_texture_revision: ["openai"],     // NEVER anthropic — separate model for texture revision
 };
 
 // ---------------------------------------------------------------------------
