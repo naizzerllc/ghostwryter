@@ -368,6 +368,14 @@ export interface RelationshipPivotInput {
   whatChanges?: string;
 }
 
+export interface ContradictionSurfaceInput {
+  hasMatrix: boolean;
+  behavioural?: { stated_belief: string; actual_behaviour: string; blind_spot: boolean };
+  moral?: { stated_principle: string; collapse_condition: string };
+  historical?: { past_action: string; self_narrative: string; gap?: string | null };
+  competence?: { exceptional_at: string; humiliated_by: string };
+}
+
 export interface DevEditorInput {
   chapterNumber: number;
   chapterContent: string;
@@ -378,6 +386,7 @@ export interface DevEditorInput {
   consecutiveNeutralCount: number;
   emotionalResonanceTarget?: string | null;
   relationshipPivot?: RelationshipPivotInput;
+  contradictionInput?: ContradictionSurfaceInput;
 }
 
 const MAX_RETRIES = 2;
