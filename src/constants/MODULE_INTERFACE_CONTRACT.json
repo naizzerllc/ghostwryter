@@ -23,7 +23,7 @@
     },
 
     "chapter_outline_record": {
-      "description": "Per-chapter outline specification — schema v2.9",
+      "description": "Per-chapter outline specification — schema v2.10",
       "fields": {
         "chapter_number": { "type": "number", "required": true },
         "timeline_id": { "type": "string", "required": true, "description": "Timeline strand identifier" },
