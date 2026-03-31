@@ -7,7 +7,7 @@ import AppLayout from "./components/layout/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Generate from "./pages/Generate";
 import Review from "./pages/Review";
-import Archive from "./pages/Archive";
+import ArchivePage from "./pages/Archive";
 import Editorial from "./pages/Editorial";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
