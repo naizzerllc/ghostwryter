@@ -1,6 +1,6 @@
 {
-  "version": "2.1.5",
-  "fields_version": "v2.0 (S24 — contradiction_matrix added to character_record)",
+  "version": "2.2",
+  "fields_version": "v2.1 (GAP3 — editorial_annotation + chapter_replacement_record)",
   "description": "Canonical schema definitions for all inter-module data exchange. No module may exchange data using undocumented schemas.",
 
   "schemas": {
