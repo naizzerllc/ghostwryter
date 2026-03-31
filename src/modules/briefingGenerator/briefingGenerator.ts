@@ -19,6 +19,11 @@ import { getChapter, getAllChapters } from "@/modules/outline/outlineSystem";
 import { getLivingState } from "@/modules/livingState/livingState";
 import { getSeriesContext } from "@/modules/seriesMemory/seriesMemory";
 import { scoreCharacterRelevance } from "./relevanceScorer";
+import {
+  getAnnotationsForBriefInjection,
+  buildAnnotationBriefInjection,
+  markAnnotationsInjected,
+} from "@/modules/editorial/editorialAnnotation";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
