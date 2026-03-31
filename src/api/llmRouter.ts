@@ -377,7 +377,7 @@ export async function callAnthropic(
       recordAnthropicModel();
     }
 
-    return {
+    const response: AnthropicCachedResponse = {
       content,
       model_used: model,
       provider: "anthropic",
@@ -387,6 +387,15 @@ export async function callAnthropic(
       refusal_detected,
       truncation_suspected,
     };
+
+    // Broadcast for status bar
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ghostly:llm-call", {
+        detail: { model, provider: "anthropic", taskType },
+      }));
+    }
+
+    return response;
   } finally {
     clearTimeout(timer);
   }
