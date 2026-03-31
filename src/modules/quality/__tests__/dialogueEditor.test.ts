@@ -170,14 +170,13 @@ describe("dialogueEditor", () => {
   // ── Retry handling ──
 
   it("retries on schema validation failure", async () => {
-    const { callWithFallback } = require("@/api/llmRouter");
-    (callWithFallback as any)
-      .mockResolvedValueOnce({ content: JSON.stringify({ incomplete: true }) })
-      .mockResolvedValueOnce({ content: JSON.stringify(baseLLMResponse()) });
+    mockCallWithFallback
+      .mockResolvedValueOnce({ content: JSON.stringify({ incomplete: true }) } as any)
+      .mockResolvedValueOnce({ content: JSON.stringify(baseLLMResponse()) } as any);
 
     const result = await runDialogueEditor(baseInput());
     expect(result.score).toBe(10);
-    expect(callWithFallback).toHaveBeenCalledTimes(2);
+    expect(mockCallWithFallback).toHaveBeenCalledTimes(2);
   });
 
   it("throws after all retries exhausted", async () => {
