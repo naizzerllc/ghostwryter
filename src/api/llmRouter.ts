@@ -429,9 +429,18 @@ export async function callWithFallback(
       saved_tokens: 0,
     });
 
+    const modelUsed = resolveModelString(route.provider);
+
+    // Broadcast for status bar
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ghostly:llm-call", {
+        detail: { model: modelUsed, provider: route.provider, taskType },
+      }));
+    }
+
     return {
       content: result.content,
-      model_used: resolveModelString(route.provider),
+      model_used: modelUsed,
       provider: route.provider,
       tokens_used: result.tokens_used,
       fallback_used: false,
