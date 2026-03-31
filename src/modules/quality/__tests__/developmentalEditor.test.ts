@@ -300,8 +300,7 @@ describe("developmentalEditor", () => {
   });
 
   it("throws after all retries exhausted", async () => {
-    const { callWithFallback } = require("@/api/llmRouter");
-    (callWithFallback as any).mockResolvedValue({ content: "garbage" });
+    mockCallWithFallback.mockResolvedValue({ content: "garbage" } as any);
 
     await expect(runDevelopmentalEditor(baseInput())).rejects.toThrow(/All 3 attempts failed/);
   });
