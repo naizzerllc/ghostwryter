@@ -9,7 +9,8 @@ import Generate from "./pages/Generate";
 import Review from "./pages/Review";
 import ArchivePage from "./pages/Archive";
 import EditorialPage from "./pages/EditorialPage";
-import Analytics from "./pages/Analytics";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import ManuscriptHealthPage from "./pages/ManuscriptHealthPage";
 import Settings from "./pages/Settings";
 import DnaIntake from "./pages/DnaIntake";
 import OutlineImport from "./pages/OutlineImport";
@@ -36,7 +37,8 @@ const App = () => (
             <Route path="/review" element={<Review />} />
             <Route path="/archive" element={<ArchivePage />} />
             <Route path="/editorial" element={<EditorialPage />} />
-            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/manuscript-health" element={<ManuscriptHealthPage />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/dna-intake" element={<DnaIntake />} />
             <Route path="/outline-import" element={<OutlineImport />} />

@@ -14,6 +14,7 @@ import {
   BookOpen,
   List,
   FolderKanban,
+  Activity,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -30,6 +31,7 @@ const NAV_ITEMS = [
   { to: "/archive", label: "Archive", icon: Archive },
   { to: "/editorial", label: "Editorial", icon: FileEdit },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/manuscript-health", label: "Health", icon: Activity },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
