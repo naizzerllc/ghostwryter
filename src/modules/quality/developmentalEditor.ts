@@ -178,6 +178,7 @@ function buildSystemPrompt(
   consecutiveReactiveCount: number,
   consecutiveNeutralCount: number,
   emotionalResonanceTarget?: string | null,
+  relationshipPivot?: RelationshipPivotInput,
 ): string {
   const conditionalChecks: string[] = [];
 
