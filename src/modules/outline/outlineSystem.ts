@@ -204,7 +204,8 @@ export interface OutlineApprovalError {
 
 export function validateRelationshipArchitecture(): OutlineApprovalError[] {
   const errors: OutlineApprovalError[] = [];
-  const relArch = outlineData?.relationship_architecture;
+  const data = loadOutlineData();
+  const relArch = data.relationship_architecture;
 
   if (!relArch) {
     errors.push({
