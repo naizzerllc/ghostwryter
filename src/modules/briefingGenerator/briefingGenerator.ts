@@ -276,7 +276,7 @@ function buildTier3(chapterNumber: number): string {
 
 // ── Main Assembly ───────────────────────────────────────────────────────
 
-export async function assembleBrief(chapterNumber: number, projectId: string): Promise<GenerationBrief> {
+export function assembleBrief(chapterNumber: number, projectId: string): GenerationBrief {
   const warnings: string[] = [];
   const truncationLog: string[] = [];
   const briefingWarnings: BriefingWarning[] = [];
