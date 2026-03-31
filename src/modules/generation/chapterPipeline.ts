@@ -203,7 +203,7 @@ export async function runChapterPipeline(
       chapterNumber,
       chapterType: "standard", // TODO: derive from outline
       emotionalArc: "escalating", // TODO: derive from outline/living state
-      scenePurpose: successResult.brief?.scene_purpose ?? "unknown",
+      scenePurpose: "generation scene", // scene purpose tracked in outline, not brief
       currentPressureState: "active", // TODO: derive from living state
       forbiddenWordsLog,
     });
