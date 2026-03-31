@@ -52,6 +52,9 @@ export interface FullCharacterRecord {
   internal_desire: string;
   goal_desire_gap: string;
 
+  // v2.0 addition — contradiction matrix
+  contradiction_matrix?: ContradictionMatrix;
+
   // Psychological sliders (7 dimensions, -10 to +10)
   psychological_sliders?: PsychologicalSliders;
 
