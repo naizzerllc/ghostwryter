@@ -290,6 +290,49 @@ pivot_delivered requires both subtext_traceable: true AND change_permanent: true
 Set flags: PIVOT_ABSENT if pivot_delivered false, PIVOT_WEAK if only one of the two is true.`);
   }
 
+  // Contradiction Surface Check (S24)
+  if (contradictionInput?.hasMatrix) {
+    const cmParts: string[] = [];
+    if (contradictionInput.behavioural) {
+      cmParts.push(`Stated belief: "${contradictionInput.behavioural.stated_belief}"\nActual behaviour: "${contradictionInput.behavioural.actual_behaviour}"\nBlind spot: ${contradictionInput.behavioural.blind_spot}`);
+    }
+    if (contradictionInput.moral) {
+      cmParts.push(`Stated principle: "${contradictionInput.moral.stated_principle}"\nCollapse condition: "${contradictionInput.moral.collapse_condition}"`);
+    }
+    if (contradictionInput.historical) {
+      cmParts.push(`Past action: "${contradictionInput.historical.past_action}"\nSelf narrative: "${contradictionInput.historical.self_narrative}"${contradictionInput.historical.gap ? `\nGap: "${contradictionInput.historical.gap}"` : ""}`);
+    }
+    if (contradictionInput.competence) {
+      cmParts.push(`Exceptional at: "${contradictionInput.competence.exceptional_at}"\nHumiliated by: "${contradictionInput.competence.humiliated_by}"`);
+    }
+
+    conditionalChecks.push(`
+CONTRADICTION SURFACE CHECK — evaluate for every chapter:
+
+The protagonist has a contradiction_matrix:
+${cmParts.join("\n\n")}
+
+Your task:
+1. BEHAVIOURAL: Is the gap between stated_belief and actual_behaviour visible in this chapter? Not stated — visible. Look for: actions that contradict self-description, dialogue that reveals the gap, decisions that confirm the behaviour without acknowledging it. True/false + one sentence.
+2. MORAL: Has the collapse_condition been approached or triggered in this chapter or the last five chapters? If yes: did she hold her principle or fail? One sentence. Null if not yet approached.
+3. HISTORICAL: Is the self_narrative still intact? Has anything in this chapter disclosed the past_action in a way that collapses the gap? True = gap intact. False = gap collapsed — flag immediately.
+4. COMPETENCE: Has the competence contradiction appeared in any of the last 5 chapters? Yes/no. If no: note whether the plot would benefit from activation.
+
+Do not name the contradiction in your evaluation. Describe what you saw in the prose.
+
+Return in your JSON:
+"contradiction_surface_check": {
+  "behavioural_visible": boolean,
+  "behavioural_assessment": "one sentence",
+  "moral_tested": boolean,
+  "moral_assessment": "one sentence or null",
+  "historical_gap_maintained": boolean,
+  "historical_assessment": "one sentence or null",
+  "competence_surfaced_recently": boolean,
+  "competence_note": "one sentence or null"
+}`);
+  }
+
   return `You are a developmental editor for commercial psychological thrillers. Analyze the chapter structurally.
 
 DECLARED SCENE PURPOSE: "${scenePurpose}"
