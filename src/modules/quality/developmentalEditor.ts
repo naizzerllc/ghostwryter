@@ -90,6 +90,18 @@ export interface OpeningCheck {
   explanation: string;
 }
 
+export type ResonanceConfidence = "HIGH" | "MEDIUM" | "LOW";
+export type ResonanceFlag = "RESONANCE_ABSENT" | "RESONANCE_WEAK" | null;
+
+export interface EmotionalResonanceAssessment {
+  active: boolean;
+  target: string | null;
+  resonance_delivered: boolean;
+  resonance_confidence: ResonanceConfidence;
+  resonance_note: string;
+  flag: ResonanceFlag;
+}
+
 export interface DevEditorResult {
   chapter_number: number;
   scene_purpose_check: ScenePurposeCheck;
@@ -99,6 +111,7 @@ export interface DevEditorResult {
   goal_desire_arc_check: GoalDesireArcCheck | null;
   arc_delivery_check: ArcDeliveryCheck | null;
   opening_check: OpeningCheck;
+  emotional_resonance_assessment: EmotionalResonanceAssessment;
   flags: DevEditorFlag[];
   score: number;
   veto_scene_purpose: boolean;

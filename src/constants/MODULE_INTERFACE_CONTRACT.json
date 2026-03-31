@@ -156,6 +156,35 @@
         "result": { "type": "enum", "values": ["APPROVE", "REVIEW", "REGENERATE"], "required": true },
         "veto_scene_purpose": { "type": "boolean", "default": false, "description": "True triggers FULL_REGENERATION — scene_purpose_delivered = false" }
       }
+    },
+
+    "developmental_editor_output": {
+      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance assessment",
+      "fields": {
+        "scene_purpose_check": { "type": "object", "required": true },
+        "false_progression_check": { "type": "object", "required": true },
+        "scene_collision_check": { "type": "object", "required": true },
+        "protagonist_agency_check": { "type": "object | null" },
+        "goal_desire_arc_check": { "type": "object | null" },
+        "arc_delivery_check": { "type": "object | null" },
+        "opening_check": { "type": "object", "required": true },
+        "emotional_resonance_assessment": {
+          "note": "S24C — Developmental Editor assessment of whether the chapter delivered its emotional_resonance_target. Only active when emotional_resonance_target is non-null in the chapter outline record.",
+          "active": { "type": "boolean", "description": "false when emotional_resonance_target is null" },
+          "target": { "type": "string | null", "description": "echoes the chapter_outline_record.emotional_resonance_target" },
+          "resonance_delivered": { "type": "boolean", "description": "did the chapter create conditions for the target experience?" },
+          "resonance_confidence": { "type": "enum", "values": ["HIGH", "MEDIUM", "LOW"] },
+          "resonance_note": { "type": "string", "description": "one sentence on how the chapter did or did not activate the target" },
+          "flag": { "type": "enum | null", "values": ["RESONANCE_ABSENT", "RESONANCE_WEAK", null] },
+          "flag_thresholds": {
+            "RESONANCE_ABSENT": "resonance_delivered: false AND act is 1 or 3 — CRITICAL",
+            "RESONANCE_WEAK": "resonance_delivered: false AND act is 2, OR resonance_confidence: LOW — WARNING"
+          }
+        },
+        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT (CRITICAL) and RESONANCE_WEAK (WARNING) from S24C" },
+        "score": { "type": "number" },
+        "veto_scene_purpose": { "type": "boolean" }
+      }
     }
   }
 }
