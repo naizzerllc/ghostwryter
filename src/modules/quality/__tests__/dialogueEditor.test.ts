@@ -180,8 +180,7 @@ describe("dialogueEditor", () => {
   });
 
   it("throws after all retries exhausted", async () => {
-    const { callWithFallback } = require("@/api/llmRouter");
-    (callWithFallback as any).mockRejectedValue(new Error("provider down"));
+    mockCallWithFallback.mockRejectedValue(new Error("provider down"));
 
     await expect(runDialogueEditor(baseInput())).rejects.toThrow(/All 3 attempts failed/);
   });
