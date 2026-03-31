@@ -199,6 +199,7 @@ export async function runChapterPipeline(
   console.log(`[Pipeline] Chapter ${chapterNumber}: TEXTURE_PASS`);
   try {
     const forbiddenWordsLog = successResult.forbidden_word_violations.violations.map(v => v.word);
+    const calibrationAnchors = loadCalibrationAnchors(projectId, chapterNumber);
     const { revisedText, texturePassRecord } = await runTexturePass({
       chapterText: successResult.content,
       chapterNumber,
@@ -207,6 +208,7 @@ export async function runChapterPipeline(
       scenePurpose: "generation scene", // scene purpose tracked in outline, not brief
       currentPressureState: "active", // TODO: derive from living state
       forbiddenWordsLog,
+      calibrationAnchors,
     });
     state.texture_pass_record = texturePassRecord;
 
