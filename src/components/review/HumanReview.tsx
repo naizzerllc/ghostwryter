@@ -345,6 +345,21 @@ export default function HumanReview({
 
       <Separator />
 
+      {/* Editorial Annotation Panel — GAP3 */}
+      <EditorialAnnotationPanel
+        chapterNumber={chapterNumber}
+        onAnnotationCreated={(annotation) => {
+          if (approvedRecord) {
+            onApproved({ ...approvedRecord, editorial_annotation: annotation });
+          }
+        }}
+        onReplaceChapter={(annotation) => {
+          onReplaceChapter?.(annotation);
+        }}
+      />
+
+      <Separator />
+
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-2">
         <Button
