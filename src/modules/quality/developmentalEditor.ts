@@ -102,6 +102,19 @@ export interface EmotionalResonanceAssessment {
   flag: ResonanceFlag;
 }
 
+export type PivotPair = "PAIR_1" | "PAIR_2" | "PAIR_3";
+export type PivotFlag = "PIVOT_ABSENT" | "PIVOT_WEAK" | null;
+
+export interface RelationshipPivotAssessment {
+  active: boolean;
+  pivot_pair: PivotPair | null;
+  subtext_traceable: boolean;
+  change_permanent: boolean;
+  pivot_delivered: boolean;
+  pivot_note: string;
+  flag: PivotFlag;
+}
+
 export interface DevEditorResult {
   chapter_number: number;
   scene_purpose_check: ScenePurposeCheck;
@@ -112,6 +125,7 @@ export interface DevEditorResult {
   arc_delivery_check: ArcDeliveryCheck | null;
   opening_check: OpeningCheck;
   emotional_resonance_assessment: EmotionalResonanceAssessment;
+  relationship_pivot_assessment: RelationshipPivotAssessment;
   flags: DevEditorFlag[];
   score: number;
   veto_scene_purpose: boolean;
