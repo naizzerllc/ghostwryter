@@ -29,6 +29,14 @@ export interface TierBudget {
   content: string;
 }
 
+export interface BriefingWarning {
+  type: string;
+  severity: 'WARNING' | 'ERROR';
+  message: string;
+  chapter_number: number;
+  recommendation: string;
+}
+
 export interface GenerationBrief {
   chapter_number: number;
   project_id: string;
@@ -38,6 +46,8 @@ export interface GenerationBrief {
   over_budget: boolean;
   budget_warnings: string[];
   truncation_log: string[];
+  proximity_gap: string | null;
+  warnings: BriefingWarning[];
   assembled_at: string;
 }
 
