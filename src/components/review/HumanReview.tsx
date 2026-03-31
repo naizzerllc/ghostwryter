@@ -26,6 +26,8 @@ import type { BoundaryViolation } from "@/modules/knowledgeBoundary/knowledgeBou
 import type { MedicalFactCheckResult, WriterDecision } from "@/modules/quality/medicalFactChecker";
 import type { TexturePassRecord } from "@/modules/texturePass/texturePass";
 import ClinicalAccuracyTab from "./ClinicalAccuracyTab";
+import EditorialAnnotationPanel from "./EditorialAnnotationPanel";
+import type { EditorialAnnotation } from "@/modules/editorial/editorialAnnotation";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -55,6 +57,7 @@ interface HumanReviewProps {
   onApproved: (record: ApprovedChapterRecord) => void;
   onFlagged: (flagType: FlagType, notes: string) => void;
   onMedicalClaimDecision: (claimId: string, decision: WriterDecision, reasoning?: string) => void;
+  onReplaceChapter?: (annotation: EditorialAnnotation) => void;
 }
 
 // ── Sign-off Badge ──────────────────────────────────────────────────────
@@ -93,6 +96,7 @@ export default function HumanReview({
   onApproved,
   onFlagged,
   onMedicalClaimDecision,
+  onReplaceChapter,
 }: HumanReviewProps) {
   const [editMode, setEditMode] = useState(false);
   const [editedProse, setEditedProse] = useState(prose);
@@ -338,6 +342,21 @@ export default function HumanReview({
           </ScrollArea>
         )}
       </div>
+
+      <Separator />
+
+      {/* Editorial Annotation Panel — GAP3 */}
+      <EditorialAnnotationPanel
+        chapterNumber={chapterNumber}
+        onAnnotationCreated={(annotation) => {
+          if (approvedRecord) {
+            onApproved({ ...approvedRecord, editorial_annotation: annotation });
+          }
+        }}
+        onReplaceChapter={(annotation) => {
+          onReplaceChapter?.(annotation);
+        }}
+      />
 
       <Separator />
 

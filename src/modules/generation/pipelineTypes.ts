@@ -7,6 +7,7 @@ import type { GenerationResult } from "./generationCore";
 import type { MedicalFactCheckResult } from "@/modules/quality/medicalFactChecker";
 import type { TexturePassRecord } from "@/modules/texturePass/texturePass";
 import type { AntiAIDetectorResult } from "@/modules/quality/antiAIDetector";
+import type { EditorialAnnotation } from "@/modules/editorial/editorialAnnotation";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -17,7 +18,9 @@ export type PipelineStage =
   | "HUMAN_REVIEW"
   | "APPROVED"
   | "REJECTED"
-  | "BLOCKED";
+  | "BLOCKED"
+  | "REPLACEMENT_PENDING"
+  | "REPLACED";
 
 export type SignOffStatus =
   | "PENDING"
@@ -44,9 +47,10 @@ export interface ApprovedChapterRecord {
   model_used: string;
   tokens_used: number;
   cache_read_tokens: number;
-  cache_write_tokens: number;
-  approved_at: string;
-}
+    cache_write_tokens: number;
+    approved_at: string;
+    editorial_annotation: EditorialAnnotation | null;
+  }
 
 export interface PipelineState {
   chapter_number: number;

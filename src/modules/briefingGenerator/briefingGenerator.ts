@@ -19,6 +19,11 @@ import { getChapter, getAllChapters } from "@/modules/outline/outlineSystem";
 import { getLivingState } from "@/modules/livingState/livingState";
 import { getSeriesContext } from "@/modules/seriesMemory/seriesMemory";
 import { scoreCharacterRelevance } from "./relevanceScorer";
+import {
+  getAnnotationsForBriefInjection,
+  buildAnnotationBriefInjection,
+  markAnnotationsInjected,
+} from "@/modules/editorial/editorialAnnotation";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -286,6 +291,20 @@ export function assembleBrief(chapterNumber: number, projectId: string): Generat
   const { content: tier2Content, truncated: tier2Truncated } = buildTier2(chapterNumber, projectId, 2000);
   const tier3Content = buildTier3(chapterNumber);
 
+  // GAP3 — Editorial annotation injection into Tier 2 (synchronous, from localStorage)
+  const pendingAnnotations = getAnnotationsForBriefInjection(chapterNumber);
+  let annotationInjection = "";
+  for (const ann of pendingAnnotations) {
+    if (ann.annotation_text && ann.annotation_target) {
+      annotationInjection += `\n\n## EDITORIAL CALIBRATION NOTE — carry forward from Chapter ${ann.annotation_chapter}\n\nThe platform owner reviewed Chapter ${ann.annotation_chapter} and noted:\n"${ann.annotation_text}"\n\nTarget area: ${ann.annotation_target}\nSignificance: ${ann.annotation_severity}\n\nAddress this observation in the current chapter's generation.`;
+    }
+  }
+  const tier2WithAnnotations = annotationInjection ? tier2Content + annotationInjection : tier2Content;
+  if (pendingAnnotations.length > 0) {
+    markAnnotationsInjected(pendingAnnotations, chapterNumber);
+    console.log(`[BriefingGenerator] Injected ${pendingAnnotations.length} editorial annotation(s) into chapter ${chapterNumber} brief`);
+  }
+
   if (tier2Truncated.length > 0) {
     truncationLog.push(`Characters truncated from Tier 2: ${tier2Truncated.join(", ")}`);
   }
@@ -310,7 +329,7 @@ export function assembleBrief(chapterNumber: number, projectId: string): Generat
   const tiers: TierBudget[] = [
     { tier: 0, label: "Prose DNA", budget: 800, used: countTokens(tier0Content), content: tier0Content },
     { tier: 1, label: "Style + Clocks + Session", budget: tier1Budget, used: countTokens(tier1Content), content: tier1Content },
-    { tier: 2, label: "Characters + Scene Brief", budget: 2000, used: countTokens(tier2Content), content: tier2Content },
+    { tier: 2, label: "Characters + Scene Brief", budget: 2000, used: countTokens(tier2WithAnnotations), content: tier2WithAnnotations },
     { tier: 3, label: "Continuity Bridge", budget: 1500, used: countTokens(tier3Content), content: tier3Content },
     { tier: 4, label: "Output Headroom", budget: 4500, used: 0, content: "" },
   ];
@@ -346,4 +365,39 @@ export function assembleBrief(chapterNumber: number, projectId: string): Generat
     warnings: briefingWarnings,
     assembled_at: new Date().toISOString(),
   };
+}
+
+/**
+ * GAP3 — Async enrichment: replaces the synchronous annotation injection with
+ * a Gemini Flash-derived instruction for higher quality calibration notes.
+ * Call after assembleBrief when async context is available.
+ */
+export async function enrichBriefWithDerivedInstructions(
+  brief: GenerationBrief,
+  chapterNumber: number,
+): Promise<GenerationBrief> {
+  const annotations = getAnnotationsForBriefInjection(chapterNumber);
+  if (annotations.length === 0) return brief;
+
+  const injections: string[] = [];
+  for (const ann of annotations) {
+    const injection = await buildAnnotationBriefInjection(ann);
+    if (injection) injections.push(injection);
+  }
+
+  if (injections.length === 0) return brief;
+
+  const tier2 = brief.tiers.find(t => t.tier === 2);
+  if (tier2) {
+    const enrichedContent = tier2.content + "\n\n" + injections.join("\n\n");
+    tier2.content = enrichedContent;
+    tier2.used = countTokens(enrichedContent);
+  }
+
+  // Recalculate totals
+  const totalUsed = brief.tiers.reduce((sum, t) => sum + t.used, 0);
+  brief.total_tokens = totalUsed;
+  brief.over_budget = totalUsed > brief.total_budget;
+
+  return brief;
 }
