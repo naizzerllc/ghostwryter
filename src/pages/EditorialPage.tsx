@@ -1,9 +1,9 @@
 /**
- * Editorial Pipeline Page — S25
+ * Editorial Pipeline Page — S25/S26
  * GHOSTLY v2.2
  *
  * Sections: Manuscript Status, Continuity Audit, Scene Revision Tool,
- * Compulsion Curve Dashboard, Voice Register Review (S26), Outline Amendment (S26).
+ * Compulsion Curve Dashboard, Voice Register Review, Outline Amendment.
  */
 
 import { useState, useCallback } from "react";
@@ -21,8 +21,22 @@ import {
   rejectRevision,
   type RevisionResult,
 } from "@/modules/editorial/sceneRevisionTool";
+import {
+  createAmendment,
+  runImpactAudit,
+  resolveChapter,
+  applyAmendment,
+  rejectAmendment,
+  allChaptersResolved,
+  loadAmendments,
+  hasApprovedChapters,
+  type OutlineAmendment,
+  type AmendmentType,
+  type SuggestedAction,
+} from "@/modules/editorial/outlineAmendmentProtocol";
 import CompulsionCurveDashboard from "@/components/editorial/CompulsionCurveDashboard";
-import { CheckCircle, AlertTriangle, Loader2, FileText, RotateCcw } from "lucide-react";
+import VoiceRegisterReview from "@/components/VoiceRegisterReview";
+import { CheckCircle, AlertTriangle, Loader2, FileText, RotateCcw, Plus } from "lucide-react";
 
 const PROJECT_ID = "default";
 
@@ -110,8 +124,58 @@ export default function EditorialPage() {
 
   const handleReviewChapter = useCallback((chapterNumber: number) => {
     setRevisionChapter(chapterNumber);
-    // Scroll to revision tool
     document.getElementById("revision-tool")?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  // ── Outline Amendment ─────────────────────────────────────────────
+  const showAmendButton = hasApprovedChapters(PROJECT_ID);
+  const [amendments, setAmendments] = useState<OutlineAmendment[]>(() => loadAmendments());
+  const [showAmendForm, setShowAmendForm] = useState(false);
+  const [amendType, setAmendType] = useState<AmendmentType>("CHAPTER");
+  const [amendDescription, setAmendDescription] = useState("");
+  const [amendFields, setAmendFields] = useState("");
+  const [amendNewValues, setAmendNewValues] = useState("");
+  const [amendLoading, setAmendLoading] = useState(false);
+
+  const handleCreateAmendment = useCallback(async () => {
+    if (!amendDescription.trim() || !amendFields.trim()) return;
+    setAmendLoading(true);
+    try {
+      const fields = amendFields.split(",").map((f) => f.trim()).filter(Boolean);
+      let newVals: Record<string, unknown> = {};
+      try { newVals = JSON.parse(amendNewValues || "{}"); } catch { /* use empty */ }
+
+      const amendment = createAmendment(amendType, amendDescription, fields, {}, newVals);
+      await runImpactAudit(amendment.id, PROJECT_ID);
+      setAmendments(loadAmendments());
+      setShowAmendForm(false);
+      setAmendDescription("");
+      setAmendFields("");
+      setAmendNewValues("");
+    } catch (error) {
+      console.error("[Editorial] Amendment creation failed:", error);
+    } finally {
+      setAmendLoading(false);
+    }
+  }, [amendType, amendDescription, amendFields, amendNewValues]);
+
+  const handleResolveAmendChapter = useCallback((amendmentId: string, chapterNumber: number, action: SuggestedAction) => {
+    resolveChapter(amendmentId, chapterNumber, action);
+    setAmendments(loadAmendments());
+  }, []);
+
+  const handleApplyAmendment = useCallback((amendmentId: string) => {
+    try {
+      applyAmendment(amendmentId, PROJECT_ID);
+      setAmendments(loadAmendments());
+    } catch (error) {
+      console.error("[Editorial] Apply amendment failed:", error);
+    }
+  }, []);
+
+  const handleRejectAmendment = useCallback((amendmentId: string) => {
+    rejectAmendment(amendmentId);
+    setAmendments(loadAmendments());
   }, []);
 
   return (
@@ -324,16 +388,117 @@ export default function EditorialPage() {
         <CompulsionCurveDashboard onReviewChapter={handleReviewChapter} />
       </section>
 
-      {/* ── VOICE REGISTER REVIEW (S26) ──────────────────────────── */}
+      {/* ── VOICE REGISTER REVIEW ────────────────────────────────── */}
       <section className="border border-border bg-card p-4">
         <h2 className="text-sm font-semibold tracking-wide text-foreground mb-3">VOICE REGISTER REVIEW</h2>
-        <p className="text-xs text-muted-foreground font-mono">Wired in Session 26</p>
+        <VoiceRegisterReview projectId={PROJECT_ID} />
       </section>
 
-      {/* ── OUTLINE AMENDMENT (S26) ──────────────────────────────── */}
+      {/* ── OUTLINE AMENDMENT ────────────────────────────────────── */}
       <section className="border border-border bg-card p-4">
-        <h2 className="text-sm font-semibold tracking-wide text-foreground mb-3">OUTLINE AMENDMENT</h2>
-        <p className="text-xs text-muted-foreground font-mono">Wired in Session 26</p>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold tracking-wide text-foreground">OUTLINE AMENDMENT</h2>
+          {showAmendButton && (
+            <button
+              onClick={() => setShowAmendForm(true)}
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono border border-accent text-accent hover:bg-accent/10 transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              AMEND OUTLINE
+            </button>
+          )}
+        </div>
+
+        {!showAmendButton && (
+          <p className="text-xs text-muted-foreground font-mono">
+            Amend Outline available after first chapter is approved.
+          </p>
+        )}
+
+        {/* Amendment Form */}
+        {showAmendForm && (
+          <div className="border border-border p-3 mb-4 space-y-3">
+            <div className="flex gap-3 items-end">
+              <div>
+                <label className="text-xs text-muted-foreground font-mono block mb-1">Type</label>
+                <select
+                  value={amendType}
+                  onChange={(e) => setAmendType(e.target.value as AmendmentType)}
+                  className="px-2 py-1.5 bg-background border border-border text-foreground text-xs font-mono"
+                >
+                  <option value="CHAPTER">CHAPTER</option>
+                  <option value="CHARACTER">CHARACTER</option>
+                  <option value="STRUCTURAL">STRUCTURAL</option>
+                  <option value="TWIST">TWIST</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs text-muted-foreground font-mono block mb-1">Description</label>
+              <textarea
+                value={amendDescription}
+                onChange={(e) => setAmendDescription(e.target.value)}
+                placeholder="Describe the amendment..."
+                rows={2}
+                className="w-full px-3 py-2 bg-background border border-border text-foreground text-xs font-mono resize-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs text-muted-foreground font-mono block mb-1">Fields changed (comma-separated paths)</label>
+              <input
+                value={amendFields}
+                onChange={(e) => setAmendFields(e.target.value)}
+                placeholder="chapters.3.scene_purpose, chapters.3.hook_type"
+                className="w-full px-3 py-1.5 bg-background border border-border text-foreground text-xs font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs text-muted-foreground font-mono block mb-1">New values (JSON)</label>
+              <textarea
+                value={amendNewValues}
+                onChange={(e) => setAmendNewValues(e.target.value)}
+                placeholder='{"chapters.3.scene_purpose": "New purpose"}'
+                rows={2}
+                className="w-full px-3 py-2 bg-background border border-border text-foreground text-xs font-mono resize-none"
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={handleCreateAmendment}
+                disabled={!amendDescription.trim() || !amendFields.trim() || amendLoading}
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono border border-accent text-accent hover:bg-accent/10 transition-colors disabled:opacity-50"
+              >
+                {amendLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                CREATE & AUDIT
+              </button>
+              <button
+                onClick={() => setShowAmendForm(false)}
+                className="px-3 py-1.5 text-xs font-mono border border-border text-muted-foreground hover:bg-muted transition-colors"
+              >
+                CANCEL
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Amendment History */}
+        {amendments.length > 0 && (
+          <div className="space-y-3">
+            {amendments.map((amendment) => (
+              <AmendmentCard
+                key={amendment.id}
+                amendment={amendment}
+                onResolveChapter={handleResolveAmendChapter}
+                onApply={handleApplyAmendment}
+                onReject={handleRejectAmendment}
+              />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
@@ -395,5 +560,128 @@ function ViolationRow({
         )}
       </td>
     </tr>
+  );
+}
+
+function AmendmentCard({
+  amendment,
+  onResolveChapter,
+  onApply,
+  onReject,
+}: {
+  amendment: OutlineAmendment;
+  onResolveChapter: (amendmentId: string, chapter: number, action: SuggestedAction) => void;
+  onApply: (amendmentId: string) => void;
+  onReject: (amendmentId: string) => void;
+}) {
+  const statusColors: Record<string, string> = {
+    DRAFT: "text-muted-foreground border-border",
+    IMPACT_AUDIT: "text-warning border-warning",
+    CONFIRMED: "text-accent border-accent",
+    APPLIED: "text-success border-success",
+    REJECTED: "text-destructive border-destructive",
+  };
+
+  const canApply = amendment.status === "IMPACT_AUDIT" && allChaptersResolved(amendment);
+
+  return (
+    <div className="border border-border p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className={`text-[10px] font-mono px-1.5 py-0.5 border ${statusColors[amendment.status] || ""}`}>
+            {amendment.status}
+          </span>
+          <span className="text-[10px] font-mono text-muted-foreground px-1.5 py-0.5 border border-border">
+            {amendment.amendment_type}
+          </span>
+        </div>
+        <span className="text-[10px] font-mono text-muted-foreground">
+          {new Date(amendment.created_at).toLocaleDateString()}
+        </span>
+      </div>
+
+      <p className="text-xs font-mono text-foreground">{amendment.description}</p>
+      <p className="text-[10px] font-mono text-muted-foreground">
+        Fields: {amendment.fields_changed.join(", ")}
+      </p>
+
+      {/* Impact Audit Results */}
+      {amendment.impact_audit && amendment.impact_audit.at_risk_chapters.length > 0 && (
+        <div className="border border-border">
+          <div className="px-2 py-1 border-b border-border text-[10px] font-mono text-muted-foreground flex justify-between">
+            <span>AT-RISK CHAPTERS</span>
+            <span className={`px-1.5 border ${
+              amendment.impact_audit.risk_level === "HIGH" ? "border-destructive text-destructive" :
+              amendment.impact_audit.risk_level === "MEDIUM" ? "border-warning text-warning" :
+              "border-success text-success"
+            }`}>
+              {amendment.impact_audit.risk_level}
+            </span>
+          </div>
+          <table className="w-full text-[10px] font-mono">
+            <thead>
+              <tr className="border-b border-border text-muted-foreground">
+                <th className="p-1.5 text-left">Ch</th>
+                <th className="p-1.5 text-left">Risk</th>
+                <th className="p-1.5 text-left">Description</th>
+                <th className="p-1.5 text-right">Resolution</th>
+              </tr>
+            </thead>
+            <tbody>
+              {amendment.impact_audit.at_risk_chapters.map((ch) => {
+                const resolved = amendment.chapter_resolutions[ch.chapter_number];
+                return (
+                  <tr key={ch.chapter_number} className="border-b border-border last:border-0">
+                    <td className="p-1.5">{ch.chapter_number}</td>
+                    <td className="p-1.5">{ch.risk_type}</td>
+                    <td className="p-1.5 text-foreground">{ch.description}</td>
+                    <td className="p-1.5 text-right">
+                      {resolved ? (
+                        <span className="text-success">{resolved}</span>
+                      ) : amendment.status === "IMPACT_AUDIT" ? (
+                        <div className="flex gap-1 justify-end">
+                          {(["ACCEPT_RISK", "FLAG_FOR_REVISION", "RETROACTIVE_CONTINUITY"] as SuggestedAction[]).map((action) => (
+                            <button
+                              key={action}
+                              onClick={() => onResolveChapter(amendment.id, ch.chapter_number, action)}
+                              className="px-1 py-0.5 border border-border hover:bg-muted transition-colors text-[9px]"
+                            >
+                              {action.replace(/_/g, " ")}
+                            </button>
+                          ))}
+                        </div>
+                      ) : null}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {amendment.impact_audit && amendment.impact_audit.at_risk_chapters.length === 0 && (
+        <p className="text-[10px] font-mono text-success">No chapters at risk.</p>
+      )}
+
+      {/* Action buttons */}
+      {amendment.status === "IMPACT_AUDIT" && (
+        <div className="flex gap-2">
+          <button
+            onClick={() => onApply(amendment.id)}
+            disabled={!canApply}
+            className="px-2 py-1 text-[10px] font-mono border border-success text-success hover:bg-success/10 transition-colors disabled:opacity-50"
+          >
+            APPLY AMENDMENT
+          </button>
+          <button
+            onClick={() => onReject(amendment.id)}
+            className="px-2 py-1 text-[10px] font-mono border border-destructive text-destructive hover:bg-destructive/10 transition-colors"
+          >
+            REJECT
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
