@@ -9,9 +9,9 @@ const mockGetGenreMode = vi.fn(() => "psychological_thriller");
 const mockGetChapter = vi.fn(() => null);
 
 vi.mock("@/modules/outline/outlineSystem", () => ({
-  getRevelationChapter: (...args: unknown[]) => mockGetRevelationChapter(...args),
-  getGenreMode: (...args: unknown[]) => mockGetGenreMode(...args),
-  getChapter: (...args: unknown[]) => mockGetChapter(...args),
+  getRevelationChapter: () => mockGetRevelationChapter(),
+  getGenreMode: () => mockGetGenreMode(),
+  getChapter: (n: number) => mockGetChapter(n),
 }));
 
 vi.mock("@/modules/livingState/livingState", () => ({
