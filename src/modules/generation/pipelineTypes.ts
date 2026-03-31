@@ -18,7 +18,9 @@ export type PipelineStage =
   | "HUMAN_REVIEW"
   | "APPROVED"
   | "REJECTED"
-  | "BLOCKED";
+  | "BLOCKED"
+  | "REPLACEMENT_PENDING"
+  | "REPLACED";
 
 export type SignOffStatus =
   | "PENDING"
