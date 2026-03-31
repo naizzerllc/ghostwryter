@@ -1,6 +1,6 @@
 /**
- * Character DB Types — Matches character_record schema from MIC v2.1 (fields v1.9).
- * GHOSTLY v2.2 · Prompt 02
+ * Character DB Types — Matches character_record schema from MIC v2.1 (fields v2.0).
+ * GHOSTLY v2.2 · S24
  */
 
 export type CharacterRole = "protagonist" | "antagonist" | "supporting";
@@ -13,6 +13,39 @@ export interface PsychologicalSliders {
   extraversion: number;
   agreeableness: number;
   neuroticism: number;
+}
+
+// ── Contradiction Matrix (v2.0) ─────────────────────────────────────────
+
+export interface ContradictionBehavioural {
+  stated_belief: string;
+  actual_behaviour: string;
+  blind_spot: boolean;
+}
+
+export interface ContradictionMoral {
+  stated_principle: string;
+  collapse_condition: string;
+  guilt_residue: string | null;
+}
+
+export interface ContradictionHistorical {
+  past_action: string;
+  self_narrative: string;
+  gap: string | null;
+}
+
+export interface ContradictionCompetence {
+  exceptional_at: string;
+  humiliated_by: string;
+  origin: string | null;
+}
+
+export interface ContradictionMatrix {
+  behavioural?: ContradictionBehavioural;
+  moral?: ContradictionMoral;
+  historical?: ContradictionHistorical;
+  competence?: ContradictionCompetence;
 }
 
 export interface CharacterRecord {
@@ -41,6 +74,9 @@ export interface CharacterRecord {
   external_goal: string;
   internal_desire: string;
   goal_desire_gap: string;
+
+  // v2.0 addition — contradiction matrix
+  contradiction_matrix?: ContradictionMatrix;
 
   // Optional enrichment
   psychological_sliders?: PsychologicalSliders;

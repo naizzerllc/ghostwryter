@@ -1,12 +1,13 @@
 /**
- * Character Database — full CRUD with MIC v1.9 fields, GitHub persistence.
- * GHOSTLY v2.2 · S08
+ * Character Database — full CRUD with MIC v2.0 fields, GitHub persistence.
+ * GHOSTLY v2.2 · S24
  *
- * Extends the Prompt 02 characterDB module with per-project storage
- * and 7-dimension psychological sliders.
+ * Extends the Prompt 02 characterDB module with per-project storage,
+ * 7-dimension psychological sliders, and contradiction matrix validation.
  */
 
 import { githubStorage } from "@/storage/githubStorage";
+import type { ContradictionMatrix } from "@/modules/characterDB/types";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
