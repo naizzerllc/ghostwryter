@@ -158,6 +158,7 @@ export async function runChapterPipeline(
     quality_score: null,
     medical_fact_check_result: null,
     medical_advisory_required: false,
+    texture_pass_record: null,
     error: null,
     started_at: new Date().toISOString(),
     completed_at: null,
