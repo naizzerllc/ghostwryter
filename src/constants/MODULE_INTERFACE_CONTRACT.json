@@ -180,7 +180,36 @@
             "failure_reason": { "type": "string | null" },
             "token_cost": { "type": "number" }
           }
+        },
+        "editorial_annotation": {
+          "type": "object",
+          "note": "GAP3 — Per-chapter editorial annotation. Always present on approved records.",
+          "fields": {
+            "annotation_present": { "type": "boolean", "description": "true if owner wrote a note at approval time" },
+            "annotation_text": { "type": "string | null", "description": "Owner's free-text editorial observation. Max 500 chars." },
+            "annotation_target": { "type": "enum | null", "values": ["PROSE_TEXTURE", "PACING", "VOICE_CONSISTENCY", "EMOTIONAL_FLATNESS", "DIALOGUE", "TENSION_DELIVERY", "HOOK", "TWIST_ARCHITECTURE", "OTHER"] },
+            "annotation_severity": { "type": "enum | null", "values": ["MINOR", "NOTABLE", "SIGNIFICANT"] },
+            "annotation_chapter": { "type": "number" },
+            "brief_injected": { "type": "boolean", "description": "Was this annotation injected into the next chapter's brief?" },
+            "injected_into_chapter": { "type": "number | null" },
+            "replacement_triggered": { "type": "boolean" },
+            "replacement_chapter_number": { "type": "number | null" }
+          }
         }
+      }
+    },
+
+    "chapter_replacement_record": {
+      "description": "GAP3 — Tracks chapter replacement flow when owner triggers replacement from editorial annotation",
+      "fields": {
+        "original_chapter_number": { "type": "number", "required": true },
+        "replacement_reason": { "type": "string", "required": true },
+        "replacement_annotation_target": { "type": "string", "required": true },
+        "original_chapter_archived": { "type": "boolean", "required": true },
+        "original_chapter_archive_id": { "type": "string", "required": true },
+        "replacement_generation_timestamp": { "type": "string", "format": "ISO8601", "required": true },
+        "replacement_approved": { "type": "boolean | null", "description": "null until reviewed" },
+        "replacement_loops": { "type": "number", "description": "How many replacement attempts before approval" }
       }
     },
 

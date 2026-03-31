@@ -47,9 +47,10 @@ export interface ApprovedChapterRecord {
   model_used: string;
   tokens_used: number;
   cache_read_tokens: number;
-  cache_write_tokens: number;
-  approved_at: string;
-}
+    cache_write_tokens: number;
+    approved_at: string;
+    editorial_annotation: EditorialAnnotation | null;
+  }
 
 export interface PipelineState {
   chapter_number: number;
