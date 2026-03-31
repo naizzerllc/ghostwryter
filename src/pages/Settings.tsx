@@ -236,7 +236,7 @@ const Settings = () => {
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Build</p>
-            <p className="text-sm font-mono">1 / 28</p>
+            <p className="text-sm font-mono">28 / 28</p>
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">MIC</p>
