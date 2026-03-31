@@ -118,7 +118,7 @@ export async function executeRevision(input: RevisionInput): Promise<RevisionRes
 
   const scope = assessRevisionScope(input);
 
-  let taskType: string;
+  let taskType: TaskType;
   let prompt: string;
 
   if (scope.scope === "FULL_REGENERATION") {
