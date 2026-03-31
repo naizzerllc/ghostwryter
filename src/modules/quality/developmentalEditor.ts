@@ -759,6 +759,75 @@ function assembleResult(
     };
   }
 
+  // ── Contradiction Surface Check (S24) ──
+  let contradictionSurfaceCheck: ContradictionSurfaceCheck;
+  const cInput = input.contradictionInput;
+
+  if (cInput?.hasMatrix && data.contradiction_surface_check) {
+    const csc = data.contradiction_surface_check as Record<string, unknown>;
+    const behaviouralVisible = (csc.behavioural_visible as boolean) ?? false;
+    const historicalGapMaintained = (csc.historical_gap_maintained as boolean) ?? true;
+
+    let contradictionFlag: ContradictionFlag = { type: "NONE", severity: null, revision_instruction: null };
+
+    if (!historicalGapMaintained) {
+      const severity: FlagSeverity = input.act < 3 ? "CRITICAL" : "WARNING";
+      contradictionFlag = {
+        type: "HISTORICAL_GAP_COLLAPSED",
+        severity,
+        revision_instruction: severity === "CRITICAL"
+          ? "Narrator has accurately disclosed past_action collapsing the self_narrative. Pre-revelation: requires revision."
+          : "Historical gap collapsed — confirm this is intentional arc delivery.",
+      };
+      flags.push({
+        code: "HISTORICAL_GAP_COLLAPSED",
+        severity,
+        message: `Historical gap collapsed — self_narrative no longer intact.`,
+        instruction: contradictionFlag.revision_instruction ?? undefined,
+      });
+      score -= severity === "CRITICAL" ? 2 : 0.5;
+    } else if (!behaviouralVisible) {
+      // Only flag CONTRADICTION_ABSENT — would need consecutive chapter tracking for 3+ threshold
+      contradictionFlag = {
+        type: "CONTRADICTION_ABSENT",
+        severity: "WARNING",
+        revision_instruction: "Behavioural contradiction has been invisible in prose. Consider surfacing the gap between stated_belief and actual_behaviour.",
+      };
+      flags.push({
+        code: "CONTRADICTION_ABSENT",
+        severity: "WARNING",
+        message: "Behavioural contradiction not visible in this chapter.",
+      });
+      score -= 0.5;
+    }
+
+    contradictionSurfaceCheck = {
+      active: true,
+      behavioural_visible: behaviouralVisible,
+      behavioural_assessment: (csc.behavioural_assessment as string) ?? "",
+      moral_tested: (csc.moral_tested as boolean) ?? false,
+      moral_assessment: (csc.moral_assessment as string) ?? null,
+      historical_gap_maintained: historicalGapMaintained,
+      historical_assessment: (csc.historical_assessment as string) ?? null,
+      competence_surfaced_recently: (csc.competence_surfaced_recently as boolean) ?? false,
+      competence_note: (csc.competence_note as string) ?? null,
+      contradiction_flag: contradictionFlag,
+    };
+  } else {
+    contradictionSurfaceCheck = {
+      active: false,
+      behavioural_visible: false,
+      behavioural_assessment: "",
+      moral_tested: false,
+      moral_assessment: null,
+      historical_gap_maintained: true,
+      historical_assessment: null,
+      competence_surfaced_recently: false,
+      competence_note: null,
+      contradiction_flag: { type: "NONE", severity: null, revision_instruction: null },
+    };
+  }
+
   // Clamp score
   score = Math.max(0, Math.min(10, Math.round(score * 10) / 10));
 
@@ -773,6 +842,7 @@ function assembleResult(
     opening_check: openingCheck,
     emotional_resonance_assessment: emotionalResonanceAssessment,
     relationship_pivot_assessment: relationshipPivotAssessment,
+    contradiction_surface_check: contradictionSurfaceCheck,
     flags,
     score,
     veto_scene_purpose: !scenePurposeCheck.scene_purpose_delivered,
