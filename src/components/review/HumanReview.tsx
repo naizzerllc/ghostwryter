@@ -26,6 +26,8 @@ import type { BoundaryViolation } from "@/modules/knowledgeBoundary/knowledgeBou
 import type { MedicalFactCheckResult, WriterDecision } from "@/modules/quality/medicalFactChecker";
 import type { TexturePassRecord } from "@/modules/texturePass/texturePass";
 import ClinicalAccuracyTab from "./ClinicalAccuracyTab";
+import EditorialAnnotationPanel from "./EditorialAnnotationPanel";
+import type { EditorialAnnotation } from "@/modules/editorial/editorialAnnotation";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
