@@ -8,12 +8,12 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S26 (pending)
-Last completed:    S25 ✅ (Prose Texture Pass · pipeline wired · MIC v2.1.4)
-Prompts pending:   S26–S28
-MIC version:       2.1.4
+Active prompt:     COMPLETE ✅
+Last completed:    S28 ✅ (Final Wiring · 25-Item Validator · Calibration Run · FIRST_USE_GUIDE · Launch)
+Prompts pending:   None — all 28 sessions complete
+MIC version:       2.2
 Schema version:    2.10 (outline format)
-Prose DNA version: v2.4 (18 rules)
+Prose DNA version: v2.3 (17 rules)
 ```
 
 ### Completed files (update as each prompt builds them)
