@@ -62,7 +62,7 @@ export default function Review() {
     emotional_state_at_chapter_end: null,
     generation_truncation_suspected: false,
     human_editorial_sign_off: { status: "PENDING", signed_by: null, signed_at: null, notes: null },
-    model_used: "claude-sonnet-latest",
+    model_used: resolveModelString("anthropic"),
     tokens_used: 1240,
     cache_read_tokens: 800,
     cache_write_tokens: 440,
