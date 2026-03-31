@@ -290,14 +290,13 @@ describe("developmentalEditor", () => {
   // ── Retry and error handling ──
 
   it("retries on invalid JSON and succeeds on second attempt", async () => {
-    const { callWithFallback } = require("@/api/llmRouter");
-    (callWithFallback as any)
-      .mockResolvedValueOnce({ content: "not json" })
-      .mockResolvedValueOnce({ content: JSON.stringify(baseLLMResponse()) });
+    mockCallWithFallback
+      .mockResolvedValueOnce({ content: "not json" } as any)
+      .mockResolvedValueOnce({ content: JSON.stringify(baseLLMResponse()) } as any);
 
     const result = await runDevelopmentalEditor(baseInput());
     expect(result.score).toBe(10);
-    expect(callWithFallback).toHaveBeenCalledTimes(2);
+    expect(mockCallWithFallback).toHaveBeenCalledTimes(2);
   });
 
   it("throws after all retries exhausted", async () => {
