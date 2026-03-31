@@ -7,6 +7,7 @@ import type { GenerationResult } from "./generationCore";
 import type { MedicalFactCheckResult } from "@/modules/quality/medicalFactChecker";
 import type { TexturePassRecord } from "@/modules/texturePass/texturePass";
 import type { AntiAIDetectorResult } from "@/modules/quality/antiAIDetector";
+import type { EditorialAnnotation } from "@/modules/editorial/editorialAnnotation";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
