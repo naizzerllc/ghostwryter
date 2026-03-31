@@ -40,7 +40,11 @@ Prose DNA version: v2.4 (18 rules)
 | S20 | ✅ Complete | dialogueEditor.ts · continuityEditor.ts · misdirectionErosionIndex.ts |
 | S21 | ✅ Complete | readerSimulation.ts · antiAIDetector.ts |
 | S22 | ✅ Complete | medicalFactChecker.ts · ClinicalAccuracyTab.tsx · pipeline wiring + task routing |
-| S23–S28 | ⏳ Pending | — |
+| S24A | ✅ Complete | characterDB.ts (entry doctrine gate) · ClinicalProfileTab.tsx · PSYCHIATRIC_CONDITIONS_DB.json · MODULE_INTERFACE_CONTRACT.json v2.1.1 |
+| S24B | ✅ Complete | briefingGenerator.ts (proximity tension injection + PROXIMITY_ABSENT warning) |
+| S24C | ✅ Complete | developmentalEditor.ts (emotional resonance assessment) · MODULE_INTERFACE_CONTRACT.json v2.1.2 |
+| S24D | ✅ Complete | outlineSystem.ts (validateRelationshipArchitecture gate) · developmentalEditor.ts (relationship pivot assessment) · MODULE_INTERFACE_CONTRACT.json v2.1.3 · OutlinePage.tsx (pivot fields) |
+| S25–S28 | ⏳ Pending | — |
 
 ---
 
