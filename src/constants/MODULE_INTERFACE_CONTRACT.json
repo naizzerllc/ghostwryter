@@ -1,5 +1,5 @@
 {
-  "version": "2.1",
+  "version": "2.1.1",
   "fields_version": "v1.9",
   "description": "Canonical schema definitions for all inter-module data exchange. No module may exchange data using undocumented schemas.",
 
@@ -88,6 +88,29 @@
           },
           "required": true
         }
+      }
+    },
+
+    "scene_brief_output": {
+      "description": "Assembled generation brief output — produced by Briefing Generator (Prompt 6)",
+      "fields": {
+        "generation_brief": { "type": "string", "required": true },
+        "active_clocks": { "type": "array", "required": true },
+        "character_context": { "type": "array", "required": true },
+        "subtext_targets": { "type": "array", "default": [] },
+        "tension_target": { "type": "number", "required": true },
+        "hook_required": { "type": "object", "required": true },
+        "opening_required": { "type": "object", "required": true },
+        "micro_mystery_seed": { "type": "string", "default": null },
+        "proximity_gap": {
+          "type": "string | null",
+          "note": "S24B — Proximity Tension field. Specifies the immediate gap between where the character is and where they need to be at scene entry. Creates forward movement imperative distinct from atmosphere. When tension_score_target >= 7 and this field is null, the briefing generator emits a PROXIMITY_ABSENT warning (non-blocking). Format: one sentence — 'Character needs [X] before [threat/clock]. Personal stakes: [Y].' Null is valid for tension_score_target <= 6 and for introspective or false-calm chapters by design.",
+          "required_when": "tension_score_target >= 7 (warning if absent, not a hard block)",
+          "populated_by": "Briefing Generator (Prompt 6) — writer-specified or LLM-derived from chapter outline record",
+          "used_by": "generation_protagonist call (Chapter Writer), Developmental Editor quality assessment"
+        },
+        "hook_continuity_bridge": { "type": "string", "default": null },
+        "token_budget_used": { "type": "number", "required": true }
       }
     },
 

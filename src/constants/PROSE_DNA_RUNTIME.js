@@ -29,7 +29,7 @@ R10 FORBIDDEN WORDS: Enforced by code post-generation. Do not self-censor or avo
 
 R11 THE CUT TEST: If cutting a sentence loses the reader nothing, cut it. Eliminate all transitional padding.
 
-R12 CHAPTER OPENING DOCTRINE: First sentence must do one of: drop mid-action, state a thought requiring prior context, establish a loaded sensory detail, or create a contradiction. Never: orientation sentences, weather openers, re-introducing established characters.
+R12 CHAPTER OPENING DOCTRINE: First sentence must do one of: drop mid-action, state a thought requiring prior context, establish a loaded sensory detail, or create a contradiction. Never: orientation sentences, weather openers, re-introducing established characters. PROXIMITY TENSION CLAUSE: When tension_score_target >= 7, establish forward movement imperative within first 150 words — character needs X + visible clock/cost. Atmosphere alone insufficient at high tension. Exempt: false-calm (1-4), decompression, introspective by design.
 
 R14 SENSORY SPECIFICITY: Minimum two non-visual senses per scene. Under dread, sensory details should be slightly wrong — familiar textures, sounds, or smells with one element off.
 
@@ -67,4 +67,13 @@ export const R18_CHARACTER_ENTRY = {
   protagonist_secondary_test: 'entry_decision_hints_at_wound_OR_mistaken_belief_OR_contradiction',
   test: 'first_action_alone → reader_draws_specific_inference → yes=pass no=rewrite',
   r12_bridge: 'R12_TYPE_1_MID_ACTION_SATISFIES_BOTH_RULES_SIMULTANEOUSLY'
+};
+
+// RULE 12 PROXIMITY TENSION CLAUSE — S24B
+export const R12_PROXIMITY_TENSION = {
+  applies_when: 'tension_score_target >= 7',
+  requirement: 'forward_movement_imperative_within_150_words',
+  definition: 'character needs X + visible clock or cost threatening that need',
+  test: 'reader_can_name_what_character_needs_AND_what_threatens_it_within_150_words',
+  exemptions: ['false_calm_1_to_4', 'decompression', 'introspective_by_design']
 };

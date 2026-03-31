@@ -29,6 +29,14 @@ export interface TierBudget {
   content: string;
 }
 
+export interface BriefingWarning {
+  type: string;
+  severity: 'WARNING' | 'ERROR';
+  message: string;
+  chapter_number: number;
+  recommendation: string;
+}
+
 export interface GenerationBrief {
   chapter_number: number;
   project_id: string;
@@ -38,6 +46,8 @@ export interface GenerationBrief {
   over_budget: boolean;
   budget_warnings: string[];
   truncation_log: string[];
+  proximity_gap: string | null;
+  warnings: BriefingWarning[];
   assembled_at: string;
 }
 
@@ -186,6 +196,7 @@ function buildTier3(chapterNumber: number): string {
 export function assembleBrief(chapterNumber: number, projectId: string): GenerationBrief {
   const warnings: string[] = [];
   const truncationLog: string[] = [];
+  const briefingWarnings: BriefingWarning[] = [];
 
   // Determine series budget adjustment
   const seriesCtx = getSeriesContext(projectId);
@@ -199,6 +210,23 @@ export function assembleBrief(chapterNumber: number, projectId: string): Generat
 
   if (tier2Truncated.length > 0) {
     truncationLog.push(`Characters truncated from Tier 2: ${tier2Truncated.join(", ")}`);
+  }
+
+  // PROXIMITY TENSION — S24B
+  const chapterOutline = getChapter(chapterNumber);
+  const proximityGap: string | null = (chapterOutline as Record<string, unknown>)?.proximity_gap as string | null ?? null;
+  const tensionTarget = chapterOutline?.tension_score_target ?? 0;
+
+  if (tensionTarget >= 7 && !proximityGap) {
+    const warning: BriefingWarning = {
+      type: 'PROXIMITY_ABSENT',
+      severity: 'WARNING',
+      message: `Chapter ${chapterNumber}: tension_score_target is ${tensionTarget} but proximity_gap is not specified. Consider adding a forward movement imperative to the scene brief — the gap between where the character is and where they need to be. This is a quality signal, not a block.`,
+      chapter_number: chapterNumber,
+      recommendation: 'Add proximity_gap to the chapter outline record or let the briefing generator derive one from the scene purpose and clock state.'
+    };
+    briefingWarnings.push(warning);
+    console.warn(`[GHOSTLY PROXIMITY_ABSENT] ${warning.message}`);
   }
 
   const tiers: TierBudget[] = [
@@ -236,6 +264,8 @@ export function assembleBrief(chapterNumber: number, projectId: string): Generat
     over_budget: totalUsed > totalBudget,
     budget_warnings: warnings,
     truncation_log: truncationLog,
+    proximity_gap: proximityGap,
+    warnings: briefingWarnings,
     assembled_at: new Date().toISOString(),
   };
 }

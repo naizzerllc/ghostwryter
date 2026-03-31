@@ -45,6 +45,25 @@ Cut sentence if reader loses nothing. Eliminates transitional padding.
 ### R12 — Chapter Opening Doctrine
 First sentence must do one of four: drop mid-action, state a thought needing prior context, establish loaded sensory detail, or create a contradiction. Banned: orientation sentences, weather openers, re-introducing established characters.
 
+PROXIMITY TENSION CLAUSE (high-tension chapters):
+When tension_score_target ≥ 7: the chapter opening must establish a forward
+movement imperative — the gap between where the character is and where they
+need to be — within the first 150 words. Atmosphere, sensory loading, and
+micro-mystery alone do not satisfy this clause at high tension. The character
+must need something, right now, with a visible clock or cost attached. This
+imperative does not need to be stated explicitly. It must be felt. The reader's
+body should lean forward, not settle back.
+
+TEST: Within the first 150 words of a tension_score_target ≥ 7 chapter —
+can the reader name what the character needs and what threatens that need?
+Yes = proximity tension present. No = the opening may be atmospheric without
+being urgent. Revise to add the imperative.
+
+This clause does not apply to: false-calm chapters (tension_score_target 1–4),
+decompression chapters, or introspective chapters where stillness is the
+architectural intent. It applies without exception to crisis, revelation, and
+standard chapters at tension_score_target 7–10.
+
 ### R14 — Sensory Specificity
 Minimum two non-visual senses per scene. Under dread: sensory details are slightly wrong.
 
