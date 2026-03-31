@@ -40,5 +40,6 @@ export function createApprovedRecord(
     cache_read_tokens: generationResult.cache_read_tokens,
     cache_write_tokens: generationResult.cache_write_tokens,
     approved_at: new Date().toISOString(),
+    editorial_annotation: null,
   };
 }
