@@ -66,6 +66,7 @@ export default function Review() {
     cache_read_tokens: 800,
     cache_write_tokens: 440,
     approved_at: new Date().toISOString(),
+    editorial_annotation: null,
   };
 
   function handleApproved(record: ApprovedChapterRecord) {

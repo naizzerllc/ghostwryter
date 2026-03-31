@@ -49,6 +49,7 @@ function makeState(overrides: Partial<PipelineState> = {}): PipelineState {
       cache_read_tokens: 600,
       cache_write_tokens: 400,
       approved_at: new Date().toISOString(),
+      editorial_annotation: null,
     },
     quality_score: null,
     medical_fact_check_result: null,

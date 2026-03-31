@@ -94,6 +94,7 @@ function makeApprovedRecord(overrides: Partial<ApprovedChapterRecord> = {}): App
     cache_read_tokens: 600,
     cache_write_tokens: 400,
     approved_at: new Date().toISOString(),
+    editorial_annotation: null,
     ...overrides,
   };
 }
