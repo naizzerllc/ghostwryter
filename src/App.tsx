@@ -47,6 +47,7 @@ const App = () => (
             <Route path="/characters" element={<CharacterDBPage />} />
             <Route path="/voice-corpus" element={<VoiceCorpus />} />
             <Route path="/catalogue" element={<CatalogueRegistryPage />} />
+            <Route path="/calibration" element={<CalibrationRunPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
