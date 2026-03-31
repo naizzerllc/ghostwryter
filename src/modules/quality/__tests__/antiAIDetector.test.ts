@@ -101,12 +101,14 @@ describe("runAntiAIDetector", () => {
           tells: [{ tell_id: "hedging_1", category: "hedging", description: "Excessive hedging", severity: "WARNING" }],
         }),
         model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600,
+      fallback_used: false,
       })
       .mockResolvedValueOnce({
         content: secondaryResponse({
           tells: [{ tell_id: "manufactured_1", category: "register", description: "Manufactured voice", severity: "NOTE" }],
         }),
         model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500,
+      fallback_used: false,
       });
 
     const result = await runAntiAIDetector(baseInput());
@@ -130,6 +132,7 @@ describe("runAntiAIDetector", () => {
       .mockResolvedValueOnce({
         content: secondaryResponse({ register_manufactured: true }),
         model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500,
+      fallback_used: false,
       });
 
     const result = await runAntiAIDetector(baseInput());
@@ -145,6 +148,7 @@ describe("runAntiAIDetector", () => {
           tells: [{ tell_id: "hedging_pattern", category: "hedging", description: "Hedging", severity: "WARNING" }],
         }),
         model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600,
+      fallback_used: false,
       })
       .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
 
@@ -166,6 +170,7 @@ describe("runAntiAIDetector", () => {
           tells: [{ tell_id: "hedging_pattern", category: "hedging", description: "Hedging", severity: "WARNING" }],
         }),
         model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600,
+      fallback_used: false,
       })
       .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
 
@@ -183,6 +188,7 @@ describe("runAntiAIDetector", () => {
           tells: [{ tell_id: "new_tell", category: "rhythm", description: "Rhythm", severity: "NOTE" }],
         }),
         model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600,
+      fallback_used: false,
       })
       .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
 

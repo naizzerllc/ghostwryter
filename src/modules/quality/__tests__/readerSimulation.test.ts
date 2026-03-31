@@ -98,6 +98,7 @@ describe("runReaderSimulation", () => {
         information_mode: { delivered_mode: "WITH", mode_mismatch: false, ahead_mystery_lag: false, explanation: "" },
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     const result = await runReaderSimulation(baseInput());
@@ -124,6 +125,7 @@ describe("runReaderSimulation", () => {
         information_mode: { delivered_mode: "BEHIND", mode_mismatch: true, ahead_mystery_lag: false, explanation: "" },
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     const result = await runReaderSimulation(baseInput({ optimismOffset: 20 }));
@@ -138,6 +140,7 @@ describe("runReaderSimulation", () => {
         hook_compulsion: { would_continue: false, score: 3, reasoning: "Boring ending" },
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     const result = await runReaderSimulation(baseInput());
@@ -150,6 +153,7 @@ describe("runReaderSimulation", () => {
         protagonist_sympathy: { engagement_maintained: true, protagonist_active: false, sympathy_score: 5, reasoning: "" },
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     const result = await runReaderSimulation(baseInput());
@@ -162,6 +166,7 @@ describe("runReaderSimulation", () => {
         entry_assessment: { pulls_reader_in: false, entry_compulsion_score: 3, strengths: [], weaknesses: ["Slow"] },
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     const result = await runReaderSimulation(baseInput());
@@ -174,6 +179,7 @@ describe("runReaderSimulation", () => {
         information_mode: { delivered_mode: "AHEAD", mode_mismatch: true, ahead_mystery_lag: false, explanation: "Mismatch" },
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     const result = await runReaderSimulation(baseInput({ intendedInformationMode: "WITH" }));
@@ -186,6 +192,7 @@ describe("runReaderSimulation", () => {
         information_mode: { delivered_mode: "AHEAD", mode_mismatch: false, ahead_mystery_lag: true, explanation: "Collapsed" },
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     const result = await runReaderSimulation(baseInput());
@@ -211,6 +218,7 @@ describe("runReaderSimulation", () => {
         prologue_epilogue_loop: { loop_pays_off: false, tension_deflated: true, explanation: "Deflated" },
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     const result = await runReaderSimulation(baseInput({ isPrologueEpilogue: true }));
@@ -264,6 +272,7 @@ describe("runSampleReadGate", () => {
         recommendation: "Proceed with confidence",
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 800,
+      fallback_used: false,
     });
 
     const result = await runSampleReadGate("Chapter 1 content... Chapter 2 content...");
@@ -282,6 +291,7 @@ describe("runSampleReadGate", () => {
         recommendation: "",
       }),
       model_used: "gpt-4o", provider: "openai", tokens_used: 500,
+      fallback_used: false,
     });
 
     await runSampleReadGate("sample content");
