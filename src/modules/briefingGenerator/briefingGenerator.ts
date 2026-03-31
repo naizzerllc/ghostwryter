@@ -97,6 +97,17 @@ function buildTier1(chapterNumber: number, projectId: string, seriesBudget: numb
     parts.push(`SERIES MEMORY:\n${seriesSummary}`);
   }
 
+  // Contradiction Core — protagonist and antagonist (~70T each)
+  const allChars = getAllCharacters();
+  const protagonist = allChars.find(c => c.role === "protagonist");
+  const antagonist = allChars.find(c => c.role === "antagonist");
+
+  const protContradiction = protagonist ? buildContradictionCore(protagonist.name, "PROTAGONIST", protagonist.contradiction_matrix as ContradictionMatrix | undefined) : null;
+  if (protContradiction) parts.push(protContradiction);
+
+  const antContradiction = antagonist ? buildContradictionCore(antagonist.name, "ANTAGONIST", antagonist.contradiction_matrix as ContradictionMatrix | undefined) : null;
+  if (antContradiction) parts.push(antContradiction);
+
   return truncateToTokens(parts.join("\n\n"), seriesBudget);
 }
 
