@@ -14,6 +14,7 @@
 import { PROSE_DNA_RUNTIME } from "@/constants/PROSE_DNA_RUNTIME";
 import { getActiveClocksForChapter } from "@/modules/dramaticArchitecture/clockRegistry";
 import { getAllCharacters } from "@/modules/characterDB/characterDB";
+import type { ContradictionMatrix } from "@/modules/characterDB/types";
 import { getChapter, getAllChapters } from "@/modules/outline/outlineSystem";
 import { getLivingState } from "@/modules/livingState/livingState";
 import { getSeriesContext } from "@/modules/seriesMemory/seriesMemory";
