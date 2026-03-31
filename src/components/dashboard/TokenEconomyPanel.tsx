@@ -1,5 +1,5 @@
 import { useSyncExternalStore, useMemo } from "react";
-import { getSessionSummary, subscribe } from "@/api/sessionCostTracker";
+import { getSessionSummary, subscribe, logCost, resetSession } from "@/api/sessionCostTracker";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { getAllChapters } from "@/modules/outline/outlineSystem";
 
@@ -140,7 +140,36 @@ const TokenEconomyPanel = () => {
       })()}
 
       {summary.call_count === 0 && (
-        <p className="text-xs text-muted-foreground">No API calls this session</p>
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">No API calls this session</p>
+          <button
+            onClick={() => {
+              const simData = [
+                { call_type: "generation_protagonist", provider: "anthropic", tokens_used: 12000, cache_read_tokens: 8000, cache_write_tokens: 2000, saved_tokens: 8000 },
+                { call_type: "quality_analysis", provider: "gemini_flash", tokens_used: 3200, cache_read_tokens: 0, cache_write_tokens: 0, saved_tokens: 0 },
+                { call_type: "anti_ai_detection", provider: "gemini_flash", tokens_used: 2800, cache_read_tokens: 0, cache_write_tokens: 0, saved_tokens: 0 },
+                { call_type: "reader_simulation", provider: "openai", tokens_used: 5400, cache_read_tokens: 0, cache_write_tokens: 0, saved_tokens: 0 },
+                { call_type: "generation_antagonist", provider: "gemini_pro", tokens_used: 8500, cache_read_tokens: 0, cache_write_tokens: 0, saved_tokens: 0 },
+                { call_type: "continuity_check", provider: "gemini_flash", tokens_used: 1800, cache_read_tokens: 0, cache_write_tokens: 0, saved_tokens: 0 },
+                { call_type: "generation_protagonist", provider: "anthropic", tokens_used: 11000, cache_read_tokens: 9500, cache_write_tokens: 500, saved_tokens: 9500 },
+                { call_type: "anti_ai_detection_secondary", provider: "anthropic", tokens_used: 4000, cache_read_tokens: 3000, cache_write_tokens: 0, saved_tokens: 3000 },
+              ];
+              simData.forEach((d) => logCost(d));
+            }}
+            className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-border text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors"
+          >
+            Inject Debug Data
+          </button>
+        </div>
+      )}
+
+      {summary.call_count > 0 && (
+        <button
+          onClick={() => resetSession()}
+          className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-border text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors"
+        >
+          Reset Session
+        </button>
       )}
 
       {/* Cost burn-down chart */}
