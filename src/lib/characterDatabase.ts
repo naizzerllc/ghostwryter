@@ -122,6 +122,10 @@ export function validateCharacter(record: Partial<FullCharacterRecord>): Charact
     }
   }
 
+  // Contradiction matrix validation (v2.0)
+  const cmErrors = validateContradictionMatrix(record);
+  errors.push(...cmErrors);
+
   return errors;
 }
 
