@@ -90,6 +90,18 @@ export interface OpeningCheck {
   explanation: string;
 }
 
+export type ResonanceConfidence = "HIGH" | "MEDIUM" | "LOW";
+export type ResonanceFlag = "RESONANCE_ABSENT" | "RESONANCE_WEAK" | null;
+
+export interface EmotionalResonanceAssessment {
+  active: boolean;
+  target: string | null;
+  resonance_delivered: boolean;
+  resonance_confidence: ResonanceConfidence;
+  resonance_note: string;
+  flag: ResonanceFlag;
+}
+
 export interface DevEditorResult {
   chapter_number: number;
   scene_purpose_check: ScenePurposeCheck;
@@ -99,6 +111,7 @@ export interface DevEditorResult {
   goal_desire_arc_check: GoalDesireArcCheck | null;
   arc_delivery_check: ArcDeliveryCheck | null;
   opening_check: OpeningCheck;
+  emotional_resonance_assessment: EmotionalResonanceAssessment;
   flags: DevEditorFlag[];
   score: number;
   veto_scene_purpose: boolean;
@@ -150,6 +163,7 @@ function buildSystemPrompt(
   isConsequenceChapter: boolean,
   consecutiveReactiveCount: number,
   consecutiveNeutralCount: number,
+  emotionalResonanceTarget?: string | null,
 ): string {
   const conditionalChecks: string[] = [];
 
@@ -176,6 +190,35 @@ Is the arc transformation visible (shown, not stated)?
 Is the outcome earned by prior chapter events?
 If not visible → ARC_DELIVERY_STATED_NOT_SHOWN WARNING
 If not earned → ARC_DELIVERY_UNEARNED CRITICAL`);
+  }
+
+  if (emotionalResonanceTarget) {
+    conditionalChecks.push(`
+EMOTIONAL RESONANCE ASSESSMENT:
+The chapter's emotional_resonance_target is: "${emotionalResonanceTarget}"
+Evaluate whether the chapter created the conditions for a reader to experience the
+universal human feeling named in the target. Do not assess whether the character felt
+this. Assess whether a reader carrying this experience in their own life would have
+found a moment of recognition in this chapter.
+
+The Leila Rex register is clinical and dissociative — the narrator does not name her
+emotions. Resonance is achieved through circumstantial precision, not emotional
+declaration. A chapter can achieve HIGH resonance confidence without a single named
+emotion if the specifics of the narrator's situation are rendered with enough accuracy
+that the reader's own emotional memory supplies the feeling.
+
+Ask yourself: Is there a specific moment, image, decision, or detail in this chapter
+that could produce the target feeling in a reader? One is enough for HIGH confidence.
+None means RESONANCE_ABSENT.
+
+Return in your JSON:
+"emotional_resonance_assessment": {
+  "resonance_delivered": boolean,
+  "resonance_confidence": "HIGH"|"MEDIUM"|"LOW",
+  "resonance_note": "one sentence"
+}
+
+Set flags according to act and confidence as specified in the MIC schema.`);
   }
 
   return `You are a developmental editor for commercial psychological thrillers. Analyze the chapter structurally.
@@ -257,6 +300,7 @@ export interface DevEditorInput {
   isConsequenceChapter: boolean;
   consecutiveReactiveCount: number;
   consecutiveNeutralCount: number;
+  emotionalResonanceTarget?: string | null;
 }
 
 const MAX_RETRIES = 2;
@@ -271,6 +315,7 @@ export async function runDevelopmentalEditor(
     input.isConsequenceChapter,
     input.consecutiveReactiveCount,
     input.consecutiveNeutralCount,
+    input.emotionalResonanceTarget,
   );
 
   const fullPrompt = `${systemPrompt}\n\n--- CHAPTER CONTENT ---\n\n${input.chapterContent}`;
@@ -482,6 +527,54 @@ function assembleResult(
     score -= 2;
   }
 
+  // ── Emotional Resonance Assessment (S24C) ──
+  let emotionalResonanceAssessment: EmotionalResonanceAssessment;
+  const resonanceTarget = input.emotionalResonanceTarget ?? null;
+
+  if (resonanceTarget && data.emotional_resonance_assessment) {
+    const era = data.emotional_resonance_assessment as Record<string, unknown>;
+    const delivered = (era.resonance_delivered as boolean) ?? false;
+    const confidence = (era.resonance_confidence as ResonanceConfidence) ?? "LOW";
+
+    let resonanceFlag: ResonanceFlag = null;
+    if (!delivered && (input.act === 1 || input.act === 3)) {
+      resonanceFlag = "RESONANCE_ABSENT";
+      flags.push({
+        code: "RESONANCE_ABSENT",
+        severity: "CRITICAL",
+        message: `Emotional resonance target not delivered in Act ${input.act} chapter. Target: "${resonanceTarget}". The reader will feel the technical quality of the prose but will not feel personally implicated.`,
+        instruction: "Revise to include at least one specific moment, image, decision, or detail that could produce the target feeling in a reader.",
+      });
+      score -= 2;
+    } else if (!delivered || confidence === "LOW") {
+      resonanceFlag = "RESONANCE_WEAK";
+      flags.push({
+        code: "RESONANCE_WEAK",
+        severity: "WARNING",
+        message: `Emotional resonance delivery is weak or low-confidence. Target: "${resonanceTarget}".`,
+      });
+      score -= 1;
+    }
+
+    emotionalResonanceAssessment = {
+      active: true,
+      target: resonanceTarget,
+      resonance_delivered: delivered,
+      resonance_confidence: confidence,
+      resonance_note: (era.resonance_note as string) ?? "",
+      flag: resonanceFlag,
+    };
+  } else {
+    emotionalResonanceAssessment = {
+      active: false,
+      target: null,
+      resonance_delivered: false,
+      resonance_confidence: "LOW",
+      resonance_note: "",
+      flag: null,
+    };
+  }
+
   // Clamp score
   score = Math.max(0, Math.min(10, Math.round(score * 10) / 10));
 
@@ -494,6 +587,7 @@ function assembleResult(
     goal_desire_arc_check: goalDesireArcCheck,
     arc_delivery_check: arcDeliveryCheck,
     opening_check: openingCheck,
+    emotional_resonance_assessment: emotionalResonanceAssessment,
     flags,
     score,
     veto_scene_purpose: !scenePurposeCheck.scene_purpose_delivered,
