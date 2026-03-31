@@ -30,29 +30,31 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/generate" element={<Generate />} />
-            <Route path="/review" element={<Review />} />
-            <Route path="/archive" element={<ArchivePage />} />
-            <Route path="/editorial" element={<EditorialPage />} />
-            <Route path="/analytics" element={<AnalyticsPage />} />
-            <Route path="/manuscript-health" element={<ManuscriptHealthPage />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/dna-intake" element={<DnaIntake />} />
-            <Route path="/outline-import" element={<OutlineImport />} />
-            <Route path="/outline" element={<OutlinePage />} />
-            <Route path="/characters" element={<CharacterDBPage />} />
-            <Route path="/voice-corpus" element={<VoiceCorpus />} />
-            <Route path="/catalogue" element={<CatalogueRegistryPage />} />
-            <Route path="/calibration" element={<CalibrationRunPage />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <PasswordGate>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/generate" element={<Generate />} />
+              <Route path="/review" element={<Review />} />
+              <Route path="/archive" element={<ArchivePage />} />
+              <Route path="/editorial" element={<EditorialPage />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
+              <Route path="/manuscript-health" element={<ManuscriptHealthPage />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/dna-intake" element={<DnaIntake />} />
+              <Route path="/outline-import" element={<OutlineImport />} />
+              <Route path="/outline" element={<OutlinePage />} />
+              <Route path="/characters" element={<CharacterDBPage />} />
+              <Route path="/voice-corpus" element={<VoiceCorpus />} />
+              <Route path="/catalogue" element={<CatalogueRegistryPage />} />
+              <Route path="/calibration" element={<CalibrationRunPage />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </PasswordGate>
     </TooltipProvider>
   </QueryClientProvider>
 );
