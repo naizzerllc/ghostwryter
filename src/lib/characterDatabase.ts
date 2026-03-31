@@ -1,12 +1,13 @@
 /**
- * Character Database — full CRUD with MIC v1.9 fields, GitHub persistence.
- * GHOSTLY v2.2 · S08
+ * Character Database — full CRUD with MIC v2.0 fields, GitHub persistence.
+ * GHOSTLY v2.2 · S24
  *
- * Extends the Prompt 02 characterDB module with per-project storage
- * and 7-dimension psychological sliders.
+ * Extends the Prompt 02 characterDB module with per-project storage,
+ * 7-dimension psychological sliders, and contradiction matrix validation.
  */
 
 import { githubStorage } from "@/storage/githubStorage";
+import type { ContradictionMatrix } from "@/modules/characterDB/types";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -50,6 +51,9 @@ export interface FullCharacterRecord {
   external_goal: string;
   internal_desire: string;
   goal_desire_gap: string;
+
+  // v2.0 addition — contradiction matrix
+  contradiction_matrix?: ContradictionMatrix;
 
   // Psychological sliders (7 dimensions, -10 to +10)
   psychological_sliders?: PsychologicalSliders;
@@ -117,6 +121,42 @@ export function validateCharacter(record: Partial<FullCharacterRecord>): Charact
       }
     }
   }
+
+  // Contradiction matrix validation (v2.0)
+  const cmErrors = validateContradictionMatrix(record);
+  errors.push(...cmErrors);
+
+  return errors;
+}
+
+// ── Contradiction Matrix Validation (v2.0) ──────────────────────────────
+
+export function validateContradictionMatrix(record: Partial<FullCharacterRecord>): CharacterValidationError[] {
+  const role = record.role;
+  const matrix = record.contradiction_matrix;
+  const errors: CharacterValidationError[] = [];
+
+  if (role === "protagonist" || role === "antagonist") {
+    if (!matrix?.behavioural?.stated_belief || !matrix?.behavioural?.actual_behaviour) {
+      errors.push({ field: "contradiction_matrix.behavioural", message: `[${role}] stated_belief and actual_behaviour required` });
+    }
+    if (!matrix?.moral?.stated_principle || !matrix?.moral?.collapse_condition) {
+      errors.push({ field: "contradiction_matrix.moral", message: `[${role}] stated_principle and collapse_condition required` });
+    }
+    if (!matrix?.historical?.past_action || !matrix?.historical?.self_narrative) {
+      errors.push({ field: "contradiction_matrix.historical", message: `[${role}] past_action and self_narrative required` });
+    }
+    if (role === "protagonist") {
+      if (!matrix?.historical?.gap) {
+        errors.push({ field: "contradiction_matrix.historical.gap", message: "[protagonist] historical.gap required" });
+      }
+      if (!matrix?.competence?.exceptional_at || !matrix?.competence?.humiliated_by) {
+        errors.push({ field: "contradiction_matrix.competence", message: "[protagonist] exceptional_at and humiliated_by required" });
+      }
+    }
+  }
+
+  // Supporting characters: no hard requirements via validator (warnings only in UI)
 
   return errors;
 }

@@ -14,6 +14,7 @@
 import { PROSE_DNA_RUNTIME } from "@/constants/PROSE_DNA_RUNTIME";
 import { getActiveClocksForChapter } from "@/modules/dramaticArchitecture/clockRegistry";
 import { getAllCharacters } from "@/modules/characterDB/characterDB";
+import type { ContradictionMatrix } from "@/modules/characterDB/types";
 import { getChapter, getAllChapters } from "@/modules/outline/outlineSystem";
 import { getLivingState } from "@/modules/livingState/livingState";
 import { getSeriesContext } from "@/modules/seriesMemory/seriesMemory";
@@ -63,6 +64,57 @@ function truncateToTokens(text: string, maxTokens: number): string {
   return text.slice(0, maxChars);
 }
 
+// ── Contradiction Core Builders ─────────────────────────────────────────
+
+function buildContradictionCore(name: string, roleLabel: string, cm?: ContradictionMatrix): string | null {
+  if (!cm) return null;
+  const lines: string[] = [`${roleLabel} CONTRADICTION CORE:`];
+
+  if (cm.behavioural?.stated_belief && cm.behavioural?.actual_behaviour) {
+    lines.push(`${name} believes ${cm.behavioural.stated_belief} — ${cm.behavioural.actual_behaviour}.`);
+    if (cm.behavioural.blind_spot) {
+      lines.push("She cannot see this contradiction. The reader will.");
+    }
+  }
+
+  if (cm.moral?.stated_principle && cm.moral?.collapse_condition) {
+    lines.push(`She holds: ${cm.moral.stated_principle} — it collapses when ${cm.moral.collapse_condition}.`);
+  }
+  if (cm.moral?.guilt_residue) {
+    lines.push(`Guilt residue: ${cm.moral.guilt_residue}`);
+  }
+
+  if (cm.historical?.past_action && cm.historical?.self_narrative) {
+    lines.push(`She did: ${cm.historical.past_action}`);
+    lines.push(`She tells herself: ${cm.historical.self_narrative}`);
+    if (cm.historical?.gap) {
+      lines.push(`The gap: ${cm.historical.gap}`);
+    }
+  }
+
+  if (cm.competence?.exceptional_at && cm.competence?.humiliated_by) {
+    lines.push(`Exceptional at: ${cm.competence.exceptional_at}`);
+    lines.push(`Cannot: ${cm.competence.humiliated_by}`);
+  }
+
+  return lines.length > 1 ? lines.join("\n") : null;
+}
+
+function buildSupportingContradictionNote(name: string, cm: ContradictionMatrix): string | null {
+  const lines: string[] = [`${name} (contradiction note):`];
+
+  if (cm.historical?.past_action) {
+    lines.push(cm.historical.past_action);
+  }
+  if (cm.moral?.stated_principle && cm.moral?.collapse_condition) {
+    lines.push(`Holds: ${cm.moral.stated_principle} — collapses when ${cm.moral.collapse_condition}.`);
+  } else if (cm.behavioural?.stated_belief) {
+    lines.push(`${cm.behavioural.stated_belief} — ${cm.behavioural.actual_behaviour}.`);
+  }
+
+  return lines.length > 1 ? lines.join(" ") : null;
+}
+
 // ── Tier Builders ───────────────────────────────────────────────────────
 
 function buildTier0(): string {
@@ -95,6 +147,17 @@ function buildTier1(chapterNumber: number, projectId: string, seriesBudget: numb
       .join("\n");
     parts.push(`SERIES MEMORY:\n${seriesSummary}`);
   }
+
+  // Contradiction Core — protagonist and antagonist (~70T each)
+  const allChars = getAllCharacters();
+  const protagonist = allChars.find(c => c.role === "protagonist");
+  const antagonist = allChars.find(c => c.role === "antagonist");
+
+  const protContradiction = protagonist ? buildContradictionCore(protagonist.name, "PROTAGONIST", protagonist.contradiction_matrix as ContradictionMatrix | undefined) : null;
+  if (protContradiction) parts.push(protContradiction);
+
+  const antContradiction = antagonist ? buildContradictionCore(antagonist.name, "ANTAGONIST", antagonist.contradiction_matrix as ContradictionMatrix | undefined) : null;
+  if (antContradiction) parts.push(antContradiction);
 
   return truncateToTokens(parts.join("\n\n"), seriesBudget);
 }
@@ -132,6 +195,21 @@ Voice: ${character.compressed_voice_dna.slice(0, 200)}
 Goal: ${character.external_goal} | Desire: ${character.internal_desire}`;
 
     const entryTokens = countTokens(entry);
+
+    // Supporting character contradiction note (Tier 2)
+    const cm = character.contradiction_matrix as ContradictionMatrix | undefined;
+    if (cm && character.role !== "protagonist" && character.role !== "antagonist") {
+      const contradictionNote = buildSupportingContradictionNote(character.name, cm);
+      if (contradictionNote) {
+        const noteTokens = countTokens(contradictionNote);
+        if (usedTokens + entryTokens + noteTokens <= budget) {
+          parts.push(entry + "\n" + contradictionNote);
+          usedTokens += entryTokens + noteTokens;
+          continue;
+        }
+      }
+    }
+
     if (usedTokens + entryTokens > budget) {
       truncated.push(character.name);
       continue;

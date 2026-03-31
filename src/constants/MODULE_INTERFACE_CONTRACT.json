@@ -1,6 +1,6 @@
 {
-  "version": "2.1.4",
-  "fields_version": "v2.0",
+  "version": "2.1.5",
+  "fields_version": "v2.0 (S24 — contradiction_matrix added to character_record)",
   "description": "Canonical schema definitions for all inter-module data exchange. No module may exchange data using undocumented schemas.",
 
   "schemas": {
@@ -119,6 +119,29 @@
         "external_goal": { "type": "string", "required": true, "description": "v1.9 addition — visible objective" },
         "internal_desire": { "type": "string", "required": true, "description": "v1.9 addition — hidden emotional need" },
         "goal_desire_gap": { "type": "string", "required": true, "description": "v1.9 addition — tension between external_goal and internal_desire" },
+        "contradiction_matrix": {
+          "_note": "v2.0 addition. Four contradiction types encode the specific internal incoherence that makes a character feel real. Required for protagonist and antagonist. Minimum two types for major supporting. Minimum historical.past_action for minor supporting with 3+ scenes.",
+          "behavioural": {
+            "stated_belief": { "type": "string", "description": "What this character genuinely believes about how they behave. One sentence." },
+            "actual_behaviour": { "type": "string", "description": "The specific recurring behaviour that contradicts stated_belief. Observable in prose." },
+            "blind_spot": { "type": "boolean", "description": "true for protagonist (she cannot see the contradiction; the reader can)." }
+          },
+          "moral": {
+            "stated_principle": { "type": "string", "description": "The principle this character holds. Specific, not generic." },
+            "collapse_condition": { "type": "string", "description": "The specific circumstance under which the stated_principle fails." },
+            "guilt_residue": { "type": "string | null", "description": "What this character carries from a previous collapse. null if first test." }
+          },
+          "historical": {
+            "past_action": { "type": "string", "description": "What they did. One sentence. Specific." },
+            "self_narrative": { "type": "string", "description": "What they tell themselves about the past_action. The rationalisation." },
+            "gap": { "type": "string | null", "description": "The part of the truth the self_narrative cannot accommodate. Required for protagonist." }
+          },
+          "competence": {
+            "exceptional_at": { "type": "string", "description": "What this character is extraordinary at. Story-adjacent." },
+            "humiliated_by": { "type": "string", "description": "The specific thing they cannot do." },
+            "origin": { "type": "string | null", "description": "Why. null if unknown to character." }
+          }
+        },
         "psychological_sliders": { "type": "object", "fields": { "openness": "number", "conscientiousness": "number", "extraversion": "number", "agreeableness": "number", "neuroticism": "number" } },
         "voice_corpus_status": { "type": "enum", "values": ["PENDING", "APPROVED", "REJECTED"], "default": "PENDING" },
         "voice_reliability": { "type": "enum", "values": ["HIGH", "MISSING"], "default": "MISSING" },
@@ -222,7 +245,7 @@
     },
 
     "developmental_editor_output": {
-      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance + S24D relationship pivot",
+      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance + S24D relationship pivot + S24 contradiction surface check",
       "fields": {
         "scene_purpose_check": { "type": "object", "required": true },
         "false_progression_check": { "type": "object", "required": true },
@@ -258,7 +281,24 @@
             "PIVOT_WEAK": "subtext_traceable: true but change_permanent: false, or vice versa — WARNING."
           }
         },
-        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT, RESONANCE_WEAK (S24C), PIVOT_ABSENT, PIVOT_WEAK (S24D)" },
+        "contradiction_surface_check": {
+          "note": "S24 — Active when protagonist has contradiction_matrix. Assesses whether contradictions surface in prose.",
+          "active": { "type": "boolean", "description": "false when no contradiction_matrix present" },
+          "behavioural_visible": { "type": "boolean", "description": "Is the gap between stated_belief and actual_behaviour observable in prose?" },
+          "behavioural_assessment": { "type": "string", "description": "one sentence: how it manifested, or why absent" },
+          "moral_tested": { "type": "boolean", "description": "has the collapse_condition been approached in this or preceding 5 chapters?" },
+          "moral_assessment": { "type": "string | null" },
+          "historical_gap_maintained": { "type": "boolean", "description": "is the self_narrative still intact?" },
+          "historical_assessment": { "type": "string | null" },
+          "competence_surfaced_recently": { "type": "boolean", "description": "has competence contradiction appeared in last 5 chapters?" },
+          "competence_note": { "type": "string | null" },
+          "contradiction_flag": {
+            "type": { "type": "enum", "values": ["CONTRADICTION_ABSENT", "HISTORICAL_GAP_COLLAPSED", "NONE"] },
+            "severity": { "type": "enum | null", "values": ["WARNING", "CRITICAL", null] },
+            "revision_instruction": { "type": "string | null" }
+          }
+        },
+        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT, RESONANCE_WEAK (S24C), PIVOT_ABSENT, PIVOT_WEAK (S24D), CONTRADICTION_ABSENT, HISTORICAL_GAP_COLLAPSED (S24)" },
         "score": { "type": "number" },
         "veto_scene_purpose": { "type": "boolean" }
       }

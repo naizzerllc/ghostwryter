@@ -115,6 +115,29 @@ export interface RelationshipPivotAssessment {
   flag: PivotFlag;
 }
 
+// ── Contradiction Surface Check (S24) ───────────────────────────────────
+
+export type ContradictionFlagType = "CONTRADICTION_ABSENT" | "HISTORICAL_GAP_COLLAPSED" | "NONE";
+
+export interface ContradictionFlag {
+  type: ContradictionFlagType;
+  severity: FlagSeverity | null;
+  revision_instruction: string | null;
+}
+
+export interface ContradictionSurfaceCheck {
+  active: boolean;
+  behavioural_visible: boolean;
+  behavioural_assessment: string;
+  moral_tested: boolean;
+  moral_assessment: string | null;
+  historical_gap_maintained: boolean;
+  historical_assessment: string | null;
+  competence_surfaced_recently: boolean;
+  competence_note: string | null;
+  contradiction_flag: ContradictionFlag;
+}
+
 export interface DevEditorResult {
   chapter_number: number;
   scene_purpose_check: ScenePurposeCheck;
@@ -126,6 +149,7 @@ export interface DevEditorResult {
   opening_check: OpeningCheck;
   emotional_resonance_assessment: EmotionalResonanceAssessment;
   relationship_pivot_assessment: RelationshipPivotAssessment;
+  contradiction_surface_check: ContradictionSurfaceCheck;
   flags: DevEditorFlag[];
   score: number;
   veto_scene_purpose: boolean;
@@ -179,6 +203,7 @@ function buildSystemPrompt(
   consecutiveNeutralCount: number,
   emotionalResonanceTarget?: string | null,
   relationshipPivot?: RelationshipPivotInput,
+  contradictionInput?: ContradictionSurfaceInput,
 ): string {
   const conditionalChecks: string[] = [];
 
@@ -265,6 +290,49 @@ pivot_delivered requires both subtext_traceable: true AND change_permanent: true
 Set flags: PIVOT_ABSENT if pivot_delivered false, PIVOT_WEAK if only one of the two is true.`);
   }
 
+  // Contradiction Surface Check (S24)
+  if (contradictionInput?.hasMatrix) {
+    const cmParts: string[] = [];
+    if (contradictionInput.behavioural) {
+      cmParts.push(`Stated belief: "${contradictionInput.behavioural.stated_belief}"\nActual behaviour: "${contradictionInput.behavioural.actual_behaviour}"\nBlind spot: ${contradictionInput.behavioural.blind_spot}`);
+    }
+    if (contradictionInput.moral) {
+      cmParts.push(`Stated principle: "${contradictionInput.moral.stated_principle}"\nCollapse condition: "${contradictionInput.moral.collapse_condition}"`);
+    }
+    if (contradictionInput.historical) {
+      cmParts.push(`Past action: "${contradictionInput.historical.past_action}"\nSelf narrative: "${contradictionInput.historical.self_narrative}"${contradictionInput.historical.gap ? `\nGap: "${contradictionInput.historical.gap}"` : ""}`);
+    }
+    if (contradictionInput.competence) {
+      cmParts.push(`Exceptional at: "${contradictionInput.competence.exceptional_at}"\nHumiliated by: "${contradictionInput.competence.humiliated_by}"`);
+    }
+
+    conditionalChecks.push(`
+CONTRADICTION SURFACE CHECK — evaluate for every chapter:
+
+The protagonist has a contradiction_matrix:
+${cmParts.join("\n\n")}
+
+Your task:
+1. BEHAVIOURAL: Is the gap between stated_belief and actual_behaviour visible in this chapter? Not stated — visible. Look for: actions that contradict self-description, dialogue that reveals the gap, decisions that confirm the behaviour without acknowledging it. True/false + one sentence.
+2. MORAL: Has the collapse_condition been approached or triggered in this chapter or the last five chapters? If yes: did she hold her principle or fail? One sentence. Null if not yet approached.
+3. HISTORICAL: Is the self_narrative still intact? Has anything in this chapter disclosed the past_action in a way that collapses the gap? True = gap intact. False = gap collapsed — flag immediately.
+4. COMPETENCE: Has the competence contradiction appeared in any of the last 5 chapters? Yes/no. If no: note whether the plot would benefit from activation.
+
+Do not name the contradiction in your evaluation. Describe what you saw in the prose.
+
+Return in your JSON:
+"contradiction_surface_check": {
+  "behavioural_visible": boolean,
+  "behavioural_assessment": "one sentence",
+  "moral_tested": boolean,
+  "moral_assessment": "one sentence or null",
+  "historical_gap_maintained": boolean,
+  "historical_assessment": "one sentence or null",
+  "competence_surfaced_recently": boolean,
+  "competence_note": "one sentence or null"
+}`);
+  }
+
   return `You are a developmental editor for commercial psychological thrillers. Analyze the chapter structurally.
 
 DECLARED SCENE PURPOSE: "${scenePurpose}"
@@ -343,6 +411,14 @@ export interface RelationshipPivotInput {
   whatChanges?: string;
 }
 
+export interface ContradictionSurfaceInput {
+  hasMatrix: boolean;
+  behavioural?: { stated_belief: string; actual_behaviour: string; blind_spot: boolean };
+  moral?: { stated_principle: string; collapse_condition: string };
+  historical?: { past_action: string; self_narrative: string; gap?: string | null };
+  competence?: { exceptional_at: string; humiliated_by: string };
+}
+
 export interface DevEditorInput {
   chapterNumber: number;
   chapterContent: string;
@@ -353,6 +429,7 @@ export interface DevEditorInput {
   consecutiveNeutralCount: number;
   emotionalResonanceTarget?: string | null;
   relationshipPivot?: RelationshipPivotInput;
+  contradictionInput?: ContradictionSurfaceInput;
 }
 
 const MAX_RETRIES = 2;
@@ -369,6 +446,7 @@ export async function runDevelopmentalEditor(
     input.consecutiveNeutralCount,
     input.emotionalResonanceTarget,
     input.relationshipPivot,
+    input.contradictionInput,
   );
 
   const fullPrompt = `${systemPrompt}\n\n--- CHAPTER CONTENT ---\n\n${input.chapterContent}`;
@@ -681,6 +759,75 @@ function assembleResult(
     };
   }
 
+  // ── Contradiction Surface Check (S24) ──
+  let contradictionSurfaceCheck: ContradictionSurfaceCheck;
+  const cInput = input.contradictionInput;
+
+  if (cInput?.hasMatrix && data.contradiction_surface_check) {
+    const csc = data.contradiction_surface_check as Record<string, unknown>;
+    const behaviouralVisible = (csc.behavioural_visible as boolean) ?? false;
+    const historicalGapMaintained = (csc.historical_gap_maintained as boolean) ?? true;
+
+    let contradictionFlag: ContradictionFlag = { type: "NONE", severity: null, revision_instruction: null };
+
+    if (!historicalGapMaintained) {
+      const severity: FlagSeverity = input.act < 3 ? "CRITICAL" : "WARNING";
+      contradictionFlag = {
+        type: "HISTORICAL_GAP_COLLAPSED",
+        severity,
+        revision_instruction: severity === "CRITICAL"
+          ? "Narrator has accurately disclosed past_action collapsing the self_narrative. Pre-revelation: requires revision."
+          : "Historical gap collapsed — confirm this is intentional arc delivery.",
+      };
+      flags.push({
+        code: "HISTORICAL_GAP_COLLAPSED",
+        severity,
+        message: `Historical gap collapsed — self_narrative no longer intact.`,
+        instruction: contradictionFlag.revision_instruction ?? undefined,
+      });
+      score -= severity === "CRITICAL" ? 2 : 0.5;
+    } else if (!behaviouralVisible) {
+      // Only flag CONTRADICTION_ABSENT — would need consecutive chapter tracking for 3+ threshold
+      contradictionFlag = {
+        type: "CONTRADICTION_ABSENT",
+        severity: "WARNING",
+        revision_instruction: "Behavioural contradiction has been invisible in prose. Consider surfacing the gap between stated_belief and actual_behaviour.",
+      };
+      flags.push({
+        code: "CONTRADICTION_ABSENT",
+        severity: "WARNING",
+        message: "Behavioural contradiction not visible in this chapter.",
+      });
+      score -= 0.5;
+    }
+
+    contradictionSurfaceCheck = {
+      active: true,
+      behavioural_visible: behaviouralVisible,
+      behavioural_assessment: (csc.behavioural_assessment as string) ?? "",
+      moral_tested: (csc.moral_tested as boolean) ?? false,
+      moral_assessment: (csc.moral_assessment as string) ?? null,
+      historical_gap_maintained: historicalGapMaintained,
+      historical_assessment: (csc.historical_assessment as string) ?? null,
+      competence_surfaced_recently: (csc.competence_surfaced_recently as boolean) ?? false,
+      competence_note: (csc.competence_note as string) ?? null,
+      contradiction_flag: contradictionFlag,
+    };
+  } else {
+    contradictionSurfaceCheck = {
+      active: false,
+      behavioural_visible: false,
+      behavioural_assessment: "",
+      moral_tested: false,
+      moral_assessment: null,
+      historical_gap_maintained: true,
+      historical_assessment: null,
+      competence_surfaced_recently: false,
+      competence_note: null,
+      contradiction_flag: { type: "NONE", severity: null, revision_instruction: null },
+    };
+  }
+
   // Clamp score
   score = Math.max(0, Math.min(10, Math.round(score * 10) / 10));
 
@@ -695,6 +842,7 @@ function assembleResult(
     opening_check: openingCheck,
     emotional_resonance_assessment: emotionalResonanceAssessment,
     relationship_pivot_assessment: relationshipPivotAssessment,
+    contradiction_surface_check: contradictionSurfaceCheck,
     flags,
     score,
     veto_scene_purpose: !scenePurposeCheck.scene_purpose_delivered,

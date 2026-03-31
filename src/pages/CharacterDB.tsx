@@ -35,6 +35,7 @@ const EMPTY_RECORD: Omit<FullCharacterRecord, "id"> = {
   compressed_voice_dna: "", external_goal: "", internal_desire: "",
   goal_desire_gap: "", voice_corpus_status: "MISSING",
   voice_reliability: "MISSING", corpus_approved: false,
+  contradiction_matrix: undefined,
 };
 
 const CharacterDBPage = () => {
@@ -111,6 +112,19 @@ const CharacterDBPage = () => {
           agreeableness: 0, neuroticism: 0, machiavellianism: 0, empathy: 0,
           ...editing.psychological_sliders,
           [sliderKey]: value,
+        },
+      });
+    } else if (field.startsWith("contradiction_matrix.")) {
+      const parts = field.split(".");
+      const category = parts[1]; // behavioural, moral, historical, competence
+      const subField = parts[2]; // stated_belief, etc.
+      const cm = editing.contradiction_matrix ?? {};
+      const existing = (cm as Record<string, Record<string, unknown>>)[category] ?? {};
+      setEditing({
+        ...editing,
+        contradiction_matrix: {
+          ...cm,
+          [category]: { ...existing, [subField]: value },
         },
       });
     } else {
@@ -288,6 +302,54 @@ const CharacterDBPage = () => {
                 <Field label="Goal/Desire Gap" field="goal_desire_gap" value={activeRecord.goal_desire_gap} editing={!!editing} onChange={updateField} multiline />
               </div>
 
+              {/* Contradiction Matrix (v2.0) */}
+              <SectionHeader title="Contradiction Matrix (v2.0)" />
+              <p className="text-[10px] text-muted-foreground font-mono mb-2">
+                Two things that should not coexist — and do. What makes the reader feel they know a real person.
+              </p>
+
+              <CollapsibleSection title="Behavioural" defaultOpen={activeRecord.role === "protagonist" || activeRecord.role === "antagonist"}>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Stated Belief" field="contradiction_matrix.behavioural.stated_belief" value={activeRecord.contradiction_matrix?.behavioural?.stated_belief} editing={!!editing} onChange={updateField} multiline />
+                  <Field label="Actual Behaviour" field="contradiction_matrix.behavioural.actual_behaviour" value={activeRecord.contradiction_matrix?.behavioural?.actual_behaviour} editing={!!editing} onChange={updateField} multiline />
+                </div>
+                <div className="mt-2">
+                  <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono block mb-1">Blind Spot</label>
+                  {editing ? (
+                    <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
+                      <input type="checkbox" checked={activeRecord.contradiction_matrix?.behavioural?.blind_spot ?? true} onChange={e => updateField("contradiction_matrix.behavioural.blind_spot", e.target.checked)} />
+                      <span className="text-[10px] font-mono">Protagonist cannot see this contradiction</span>
+                    </label>
+                  ) : (
+                    <p className="text-sm text-foreground">{activeRecord.contradiction_matrix?.behavioural?.blind_spot ? "Yes" : "No"}</p>
+                  )}
+                </div>
+              </CollapsibleSection>
+
+              <CollapsibleSection title="Moral" defaultOpen={activeRecord.role === "protagonist" || activeRecord.role === "antagonist"}>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Stated Principle" field="contradiction_matrix.moral.stated_principle" value={activeRecord.contradiction_matrix?.moral?.stated_principle} editing={!!editing} onChange={updateField} multiline />
+                  <Field label="Collapse Condition" field="contradiction_matrix.moral.collapse_condition" value={activeRecord.contradiction_matrix?.moral?.collapse_condition} editing={!!editing} onChange={updateField} multiline />
+                </div>
+                <Field label="Guilt Residue" field="contradiction_matrix.moral.guilt_residue" value={activeRecord.contradiction_matrix?.moral?.guilt_residue ?? ""} editing={!!editing} onChange={updateField} multiline fullWidth />
+              </CollapsibleSection>
+
+              <CollapsibleSection title="Historical" defaultOpen={activeRecord.role === "protagonist" || activeRecord.role === "antagonist"}>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Past Action" field="contradiction_matrix.historical.past_action" value={activeRecord.contradiction_matrix?.historical?.past_action} editing={!!editing} onChange={updateField} multiline />
+                  <Field label="Self-Narrative" field="contradiction_matrix.historical.self_narrative" value={activeRecord.contradiction_matrix?.historical?.self_narrative} editing={!!editing} onChange={updateField} multiline />
+                </div>
+                <Field label="Gap" field="contradiction_matrix.historical.gap" value={activeRecord.contradiction_matrix?.historical?.gap ?? ""} editing={!!editing} onChange={updateField} multiline fullWidth />
+              </CollapsibleSection>
+
+              <CollapsibleSection title="Competence" defaultOpen={activeRecord.role === "protagonist"}>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Exceptional At" field="contradiction_matrix.competence.exceptional_at" value={activeRecord.contradiction_matrix?.competence?.exceptional_at} editing={!!editing} onChange={updateField} multiline />
+                  <Field label="Humiliated By" field="contradiction_matrix.competence.humiliated_by" value={activeRecord.contradiction_matrix?.competence?.humiliated_by} editing={!!editing} onChange={updateField} multiline />
+                </div>
+                <Field label="Origin" field="contradiction_matrix.competence.origin" value={activeRecord.contradiction_matrix?.competence?.origin ?? ""} editing={!!editing} onChange={updateField} multiline fullWidth />
+              </CollapsibleSection>
+
               <SectionHeader title="Voice DNA" />
               <Field
                 label={`Compressed Voice DNA (max 150T · ${activeRecord.compressed_voice_dna?.length ?? 0} chars)`}
@@ -353,6 +415,19 @@ const CharacterDBPage = () => {
 };
 
 // ── Sub-components ──────────────────────────────────────────────────────
+
+function CollapsibleSection({ title, defaultOpen = false, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border border-border">
+      <button onClick={() => setOpen(!open)} className="w-full text-left px-3 py-2 flex items-center justify-between hover:bg-muted/30 transition-colors">
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">{title}</span>
+        <span className="text-[10px] font-mono text-muted-foreground">{open ? "▾" : "▸"}</span>
+      </button>
+      {open && <div className="px-3 pb-3 space-y-2">{children}</div>}
+    </div>
+  );
+}
 
 function SectionHeader({ title }: { title: string }) {
   return (
