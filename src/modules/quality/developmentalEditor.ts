@@ -368,6 +368,7 @@ export async function runDevelopmentalEditor(
     input.consecutiveReactiveCount,
     input.consecutiveNeutralCount,
     input.emotionalResonanceTarget,
+    input.relationshipPivot,
   );
 
   const fullPrompt = `${systemPrompt}\n\n--- CHAPTER CONTENT ---\n\n${input.chapterContent}`;
