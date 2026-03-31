@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const LS_KEYS = {
   anthropic: "ghostly_anthropic_key",
@@ -235,7 +236,7 @@ const Settings = () => {
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Build</p>
-            <p className="text-sm font-mono">1 / 28</p>
+            <p className="text-sm font-mono">28 / 28</p>
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">MIC</p>
@@ -250,6 +251,19 @@ const Settings = () => {
             <p className="text-sm font-mono">v2.3 (17)</p>
           </div>
         </div>
+      </Panel>
+
+      {/* CALIBRATION */}
+      <Panel title="Module Weight Calibration">
+        <p className="text-[10px] font-mono text-muted-foreground mb-3">
+          After 5 approved chapters, calibrate quality gate module weights against your editorial judgement.
+        </p>
+        <Link
+          to="/calibration"
+          className="px-3 py-2 border border-border text-xs font-mono uppercase tracking-wider text-foreground hover:border-primary hover:text-primary transition-colors inline-block"
+        >
+          Open Calibration
+        </Link>
       </Panel>
     </div>
   );

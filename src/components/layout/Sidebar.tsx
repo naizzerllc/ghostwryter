@@ -38,7 +38,7 @@ const NAV_ITEMS = [
 const MODULE_SLOTS = Array.from({ length: 28 }, (_, i) => ({
   id: i + 1,
   label: `S${String(i + 1).padStart(2, "0")}`,
-  status: i === 0 ? "active" : "pending",
+  status: "active" as const,
 }));
 
 const Sidebar = () => {

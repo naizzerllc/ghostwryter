@@ -18,6 +18,7 @@ import OutlinePage from "./pages/OutlinePage";
 import CharacterDBPage from "./pages/CharacterDB";
 import VoiceCorpus from "./pages/VoiceCorpus";
 import CatalogueRegistryPage from "./pages/CatalogueRegistry";
+import CalibrationRunPage from "./pages/CalibrationRunPage";
 import NotFound from "./pages/NotFound";
 import ProjectsPage from "./pages/ProjectsPage";
 
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/characters" element={<CharacterDBPage />} />
             <Route path="/voice-corpus" element={<VoiceCorpus />} />
             <Route path="/catalogue" element={<CatalogueRegistryPage />} />
+            <Route path="/calibration" element={<CalibrationRunPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

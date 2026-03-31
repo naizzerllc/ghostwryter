@@ -1,6 +1,6 @@
 /**
  * StartupValidatorPanel — Displays 25-item startup validation results.
- * GHOSTLY v2.2 · Session 5 · MSG-4
+ * GHOSTLY v2.2 · Session 28
  */
 
 import { useState, useCallback } from "react";
@@ -19,7 +19,6 @@ const StartupValidatorPanel = () => {
 
   const handleRun = useCallback(() => {
     setRunning(true);
-    // Small delay for visual feedback
     setTimeout(() => {
       setResult(runStartupValidation());
       setRunning(false);
@@ -45,6 +44,22 @@ const StartupValidatorPanel = () => {
 
       {result && (
         <>
+          {/* Platform status badge */}
+          <div className="flex items-center gap-3">
+            <span
+              className={`text-[10px] font-mono px-3 py-1 uppercase tracking-wider ${
+                result.platformReady
+                  ? "bg-success/20 text-success"
+                  : "bg-destructive/20 text-destructive"
+              }`}
+            >
+              {result.platformReady ? "PRODUCTION READY" : "NOT READY"}
+            </span>
+            <span className="text-[10px] font-mono text-muted-foreground">
+              {result.total} items checked
+            </span>
+          </div>
+
           {/* Summary counters */}
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -83,6 +98,7 @@ const StartupValidatorPanel = () => {
               <DialogHeader>
                 <DialogTitle className="font-mono text-sm uppercase tracking-widest">
                   Startup Validation — {result.passed}/{result.total} Passed
+                  {result.platformReady ? " · PRODUCTION READY" : ""}
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-1">
@@ -96,7 +112,9 @@ const StartupValidatorPanel = () => {
                     </span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2">
-                        <span className="text-xs font-mono text-foreground">{c.label}</span>
+                        <span className="text-xs font-mono text-foreground">
+                          {c.id}. {c.label}
+                        </span>
                         <span className="text-[10px] font-mono text-muted-foreground shrink-0">
                           {c.category}
                         </span>
