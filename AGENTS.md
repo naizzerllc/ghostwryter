@@ -44,7 +44,7 @@ Prose DNA version: v2.4 (18 rules)
 | S24B | ✅ Complete | briefingGenerator.ts (proximity tension injection + PROXIMITY_ABSENT warning) |
 | S24C | ✅ Complete | developmentalEditor.ts (emotional resonance assessment) · MODULE_INTERFACE_CONTRACT.json v2.1.2 |
 | S24D | ✅ Complete | outlineSystem.ts (validateRelationshipArchitecture gate) · developmentalEditor.ts (relationship pivot assessment) · MODULE_INTERFACE_CONTRACT.json v2.1.3 · OutlinePage.tsx (pivot fields) |
-| S25 | ✅ Complete | texturePass.ts · llmRouter.ts (prose_texture_revision task type) · chapterPipeline.ts (texture pass wired) · HumanReview.tsx (status indicator) · MODULE_INTERFACE_CONTRACT.json v2.1.4 |
+| S25 | ✅ Complete | texturePass.ts · calibrationAnchorStore.ts (anchor recording from tells) · llmRouter.ts (prose_texture_revision task type) · chapterPipeline.ts refactored → pipelineTypes.ts + pipelineStateManager.ts + approvedRecordFactory.ts + postApprovalHooks.ts + chapterPipeline.ts (slim orchestrator) · Texture pass wired to real outline/livingState data · HumanReview.tsx (status indicator) · MODULE_INTERFACE_CONTRACT.json v2.1.4 |
 | S26–S28 | ⏳ Pending | — |
 
 ---
