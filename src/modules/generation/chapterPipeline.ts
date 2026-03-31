@@ -14,6 +14,7 @@ import { proposeUpdate } from "@/modules/memoryCore/memoryCore";
 import { githubStorage } from "@/storage/githubStorage";
 import { runMedicalFactCheck, type MedicalFactCheckResult } from "@/modules/quality/medicalFactChecker";
 import { runTexturePass, type TexturePassRecord } from "@/modules/texturePass/texturePass";
+import { loadCalibrationAnchors, recordAnchorsFromTells } from "@/modules/texturePass/calibrationAnchorStore";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
