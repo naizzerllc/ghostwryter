@@ -68,3 +68,12 @@ export const R18_CHARACTER_ENTRY = {
   test: 'first_action_alone → reader_draws_specific_inference → yes=pass no=rewrite',
   r12_bridge: 'R12_TYPE_1_MID_ACTION_SATISFIES_BOTH_RULES_SIMULTANEOUSLY'
 };
+
+// RULE 12 PROXIMITY TENSION CLAUSE — S24B
+export const R12_PROXIMITY_TENSION = {
+  applies_when: 'tension_score_target >= 7',
+  requirement: 'forward_movement_imperative_within_150_words',
+  definition: 'character needs X + visible clock or cost threatening that need',
+  test: 'reader_can_name_what_character_needs_AND_what_threatens_it_within_150_words',
+  exemptions: ['false_calm_1_to_4', 'decompression', 'introspective_by_design']
+};
