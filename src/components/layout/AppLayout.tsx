@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import StatusBar from "./StatusBar";
+import ModelDriftBanner from "./ModelDriftBanner";
 
 // ── Generation pause state (exported for use by generation modules) ─────
 let generationPaused = false;
@@ -275,6 +276,7 @@ const AppLayout = () => {
       <Sidebar />
       <div className="flex flex-col flex-1 min-w-0">
         <DisconnectionBanner />
+        <ModelDriftBanner />
         <GenerationPauseModal />
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />

@@ -483,6 +483,73 @@ export async function callWithFallback(
 }
 
 // ---------------------------------------------------------------------------
+// Model version drift detection
+// ---------------------------------------------------------------------------
+
+const LS_LAST_ANTHROPIC_MODEL = "ghostly_last_anthropic_model";
+
+export type DriftSeverity = "none" | "minor" | "major";
+
+export interface DriftResult {
+  severity: DriftSeverity;
+  currentModel: string;
+  previousModel: string | null;
+}
+
+/**
+ * Extract model family prefix: "claude-3.5-sonnet" from "claude-3.5-sonnet-20241022",
+ * or "claude-sonnet" from "claude-sonnet-latest".
+ * Strips trailing date stamps (8-digit suffix) and "-latest".
+ */
+function modelPrefix(model: string): string {
+  return model.replace(/-\d{8}$/, "").replace(/-latest$/, "");
+}
+
+/**
+ * Compare current resolved Anthropic model against stored last_anthropic_model.
+ * Major drift: prefix differs (e.g. claude-3.5-sonnet → claude-4-sonnet).
+ * Minor drift: same prefix but full string differs (version bump).
+ */
+export function checkModelDrift(): DriftResult {
+  const current = resolveModelString("anthropic");
+  const previous = typeof window !== "undefined"
+    ? localStorage.getItem(LS_LAST_ANTHROPIC_MODEL)
+    : null;
+
+  if (!previous) {
+    // First run — record and move on
+    if (typeof window !== "undefined") {
+      localStorage.setItem(LS_LAST_ANTHROPIC_MODEL, current);
+    }
+    return { severity: "none", currentModel: current, previousModel: null };
+  }
+
+  if (current === previous) {
+    return { severity: "none", currentModel: current, previousModel: previous };
+  }
+
+  const currentPrefix = modelPrefix(current);
+  const previousPrefix = modelPrefix(previous);
+  const severity: DriftSeverity = currentPrefix !== previousPrefix ? "major" : "minor";
+
+  console.warn(
+    `[LLM Router] Model drift detected: ${previous} → ${current} [${severity.toUpperCase()}]`
+  );
+
+  return { severity, currentModel: current, previousModel: previous };
+}
+
+/**
+ * Called after a successful generation to record the model used.
+ */
+export function recordAnthropicModel(): void {
+  if (typeof window !== "undefined") {
+    const current = resolveModelString("anthropic");
+    localStorage.setItem(LS_LAST_ANTHROPIC_MODEL, current);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Expose for console testing
 // ---------------------------------------------------------------------------
 
@@ -494,5 +561,7 @@ if (typeof window !== "undefined") {
     callWithFallback,
     callAnthropic,
     setPlatformConfig,
+    checkModelDrift,
+    recordAnthropicModel,
   };
 }
