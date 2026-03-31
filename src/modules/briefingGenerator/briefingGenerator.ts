@@ -143,6 +143,20 @@ Want: ${character.want} | Need: ${character.need}
 Voice: ${character.compressed_voice_dna.slice(0, 200)}
 Goal: ${character.external_goal} | Desire: ${character.internal_desire}`;
 
+    // Supporting character contradiction note (Tier 2)
+    const cm = character.contradiction_matrix as ContradictionMatrix | undefined;
+    if (cm && character.role !== "protagonist" && character.role !== "antagonist") {
+      const contradictionNote = buildSupportingContradictionNote(character.name, cm);
+      if (contradictionNote) {
+        const noteTokens = countTokens(contradictionNote);
+        if (usedTokens + entryTokens + noteTokens <= budget) {
+          parts.push(entry + "\n" + contradictionNote);
+          usedTokens += entryTokens + noteTokens;
+          continue;
+        }
+      }
+    }
+
     const entryTokens = countTokens(entry);
     if (usedTokens + entryTokens > budget) {
       truncated.push(character.name);
