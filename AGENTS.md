@@ -8,10 +8,10 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S25 (pending)
-Last completed:    S24D ✅ (Relationship Architecture · approval gate · pivot assessment)
-Prompts pending:   S25–S28
-MIC version:       2.1.3
+Active prompt:     S26 (pending)
+Last completed:    S25 ✅ (Prose Texture Pass · pipeline wired · MIC v2.1.4)
+Prompts pending:   S26–S28
+MIC version:       2.1.4
 Schema version:    2.10 (outline format)
 Prose DNA version: v2.4 (18 rules)
 ```
@@ -44,7 +44,8 @@ Prose DNA version: v2.4 (18 rules)
 | S24B | ✅ Complete | briefingGenerator.ts (proximity tension injection + PROXIMITY_ABSENT warning) |
 | S24C | ✅ Complete | developmentalEditor.ts (emotional resonance assessment) · MODULE_INTERFACE_CONTRACT.json v2.1.2 |
 | S24D | ✅ Complete | outlineSystem.ts (validateRelationshipArchitecture gate) · developmentalEditor.ts (relationship pivot assessment) · MODULE_INTERFACE_CONTRACT.json v2.1.3 · OutlinePage.tsx (pivot fields) |
-| S25–S28 | ⏳ Pending | — |
+| S25 | ✅ Complete | texturePass.ts · llmRouter.ts (prose_texture_revision task type) · chapterPipeline.ts (texture pass wired) · HumanReview.tsx (status indicator) · MODULE_INTERFACE_CONTRACT.json v2.1.4 |
+| S26–S28 | ⏳ Pending | — |
 
 ---
 

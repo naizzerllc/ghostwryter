@@ -113,6 +113,7 @@ export default function Review() {
             onFlagged={handleFlagged}
             medicalFactCheckResult={null}
             medicalAdvisoryRequired={false}
+            texturePassRecord={null}
             onMedicalClaimDecision={() => {}}
           />
         </div>

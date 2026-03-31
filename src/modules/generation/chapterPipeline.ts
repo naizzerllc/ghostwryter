@@ -13,6 +13,7 @@ import { updateLivingState } from "@/modules/livingState/livingState";
 import { proposeUpdate } from "@/modules/memoryCore/memoryCore";
 import { githubStorage } from "@/storage/githubStorage";
 import { runMedicalFactCheck, type MedicalFactCheckResult } from "@/modules/quality/medicalFactChecker";
+import { runTexturePass, type TexturePassRecord } from "@/modules/texturePass/texturePass";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -63,6 +64,7 @@ export interface PipelineState {
   quality_score: number | null;
   medical_fact_check_result: MedicalFactCheckResult | null;
   medical_advisory_required: boolean;
+  texture_pass_record: TexturePassRecord | null;
   error: string | null;
   started_at: string;
   completed_at: string | null;
@@ -156,6 +158,7 @@ export async function runChapterPipeline(
     quality_score: null,
     medical_fact_check_result: null,
     medical_advisory_required: false,
+    texture_pass_record: null,
     error: null,
     started_at: new Date().toISOString(),
     completed_at: null,
@@ -190,6 +193,32 @@ export async function runChapterPipeline(
 
   // Narrow type after blocked check
   const successResult = generationResult as GenerationSuccess;
+
+  // ── Prose Texture Pass (after forbidden words, before quality check) ──
+  console.log(`[Pipeline] Chapter ${chapterNumber}: TEXTURE_PASS`);
+  try {
+    const forbiddenWordsLog = successResult.forbidden_word_violations.violations.map(v => v.word);
+    const { revisedText, texturePassRecord } = await runTexturePass({
+      chapterText: successResult.content,
+      chapterNumber,
+      chapterType: "standard", // TODO: derive from outline
+      emotionalArc: "escalating", // TODO: derive from outline/living state
+      scenePurpose: "generation scene", // scene purpose tracked in outline, not brief
+      currentPressureState: "active", // TODO: derive from living state
+      forbiddenWordsLog,
+    });
+    state.texture_pass_record = texturePassRecord;
+
+    // Anti-AI Detector and all downstream quality modules receive revisedText
+    if (texturePassRecord.pass_status === "COMPLETED") {
+      successResult.content = revisedText;
+      console.log(`[Pipeline] Chapter ${chapterNumber}: Texture pass COMPLETED (${texturePassRecord.token_cost} tokens)`);
+    } else {
+      console.warn(`[Pipeline] Chapter ${chapterNumber}: Texture pass FAILED — raw text proceeds`);
+    }
+  } catch (error) {
+    console.warn(`[Pipeline] Texture pass error (non-blocking):`, error);
+  }
 
   // ── Stage 2: QUALITY_CHECK (stubbed — Sessions 19–22) ───────────
   state.stage = "QUALITY_CHECK";

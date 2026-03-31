@@ -1,6 +1,6 @@
 {
-  "version": "2.1.3",
-  "fields_version": "v1.9",
+  "version": "2.1.4",
+  "fields_version": "v2.0",
   "description": "Canonical schema definitions for all inter-module data exchange. No module may exchange data using undocumented schemas.",
 
   "schemas": {
@@ -144,6 +144,19 @@
             "notes": "string"
           },
           "required": true
+        },
+        "texture_pass_record": {
+          "type": "object",
+          "note": "S25 — Prose Texture Pass result. Added after anti_ai_detector_output.",
+          "fields": {
+            "ran": { "type": "boolean", "description": "true if texture pass was attempted" },
+            "provider": { "type": "string", "description": "gemini_pro or openai_fallback" },
+            "chapter_number": { "type": "number" },
+            "calibration_anchors_injected": { "type": "boolean", "description": "true if genre tell examples were available and injected" },
+            "pass_status": { "type": "enum", "values": ["COMPLETED", "FAILED"] },
+            "failure_reason": { "type": "string | null" },
+            "token_cost": { "type": "number" }
+          }
         }
       }
     },

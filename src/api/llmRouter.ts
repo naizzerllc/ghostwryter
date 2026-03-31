@@ -24,7 +24,8 @@ export type TaskType =
   | "reader_simulation"
   | "dna_extraction"
   | "dna_gap_options"
-  | "quality_medical_fact_check";
+  | "quality_medical_fact_check"
+  | "prose_texture_revision";
 
 export interface TaskRoute {
   provider: Provider;
@@ -83,12 +84,14 @@ export const TASK_ROUTING: Record<TaskType, TaskRoute> = {
   dna_extraction:              { provider: "anthropic",    inject_prose_dna: true  },
   dna_gap_options:             { provider: "anthropic",    inject_prose_dna: false },
   quality_medical_fact_check:  { provider: "gemini_flash", inject_prose_dna: false },
+  prose_texture_revision:     { provider: "gemini_pro",   inject_prose_dna: true  },
 };
 
 export const TASK_FALLBACK_OVERRIDES: Partial<Record<TaskType, Provider[]>> = {
   generation_antagonist:  ["openai"],     // NEVER anthropic — voice homogeneity failure
   generation_supporting:  ["openai"],     // NEVER anthropic — voice homogeneity failure
   reader_simulation:      ["gemini_pro"], // Degraded mode — logs generator-evaluator overlap warning
+  prose_texture_revision: ["openai"],     // NEVER anthropic — separate model for texture revision
 };
 
 // ---------------------------------------------------------------------------

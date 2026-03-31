@@ -24,6 +24,7 @@ import type { GenerationSuccess } from "@/modules/generation/generationCore";
 import type { ForbiddenWordsResult } from "@/utils/forbiddenWordsChecker";
 import type { BoundaryViolation } from "@/modules/knowledgeBoundary/knowledgeBoundaryMap";
 import type { MedicalFactCheckResult, WriterDecision } from "@/modules/quality/medicalFactChecker";
+import type { TexturePassRecord } from "@/modules/texturePass/texturePass";
 import ClinicalAccuracyTab from "./ClinicalAccuracyTab";
 
 // ── Types ───────────────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ interface HumanReviewProps {
   qualityGateRejected: boolean;
   medicalFactCheckResult: MedicalFactCheckResult | null;
   medicalAdvisoryRequired: boolean;
+  texturePassRecord: TexturePassRecord | null;
   onApproved: (record: ApprovedChapterRecord) => void;
   onFlagged: (flagType: FlagType, notes: string) => void;
   onMedicalClaimDecision: (claimId: string, decision: WriterDecision, reasoning?: string) => void;
@@ -87,6 +89,7 @@ export default function HumanReview({
   qualityGateRejected,
   medicalFactCheckResult,
   medicalAdvisoryRequired,
+  texturePassRecord,
   onApproved,
   onFlagged,
   onMedicalClaimDecision,
@@ -232,7 +235,27 @@ export default function HumanReview({
         )}
       </div>
 
-      {/* Forbidden Word Violations */}
+      {/* Texture Pass Status (S25) */}
+      {texturePassRecord && (
+        <div className={`flex items-center gap-2 px-4 py-2 border text-xs font-mono ${
+          texturePassRecord.pass_status === "COMPLETED"
+            ? "border-success/40 bg-success/10 text-success"
+            : "border-warning/40 bg-warning/10 text-warning"
+        }`}>
+          <span>{texturePassRecord.pass_status === "COMPLETED" ? "✓" : "⚠"}</span>
+          <span>
+            Texture Pass: {texturePassRecord.pass_status === "COMPLETED" ? "Complete" : "Failed — evaluated from raw generation"}
+          </span>
+          {texturePassRecord.calibration_anchors_injected && (
+            <span className="ml-2 text-muted-foreground">⚓ Calibrated</span>
+          )}
+          {texturePassRecord.token_cost > 0 && (
+            <span className="ml-auto text-muted-foreground">{texturePassRecord.token_cost}T</span>
+          )}
+        </div>
+      )}
+
+
       {(forbiddenWordResult.hardBanCount > 0 || forbiddenWordResult.violations.length > 0) && (
         <div className="border border-warning bg-warning/10 p-4 space-y-2">
           <h3 className="text-sm font-mono text-warning uppercase tracking-wider">
