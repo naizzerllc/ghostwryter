@@ -308,5 +308,10 @@ export async function generateChapter(
     boundary_violations: boundaryViolations,
     brief,
     validation,
+    generation_config: {
+      prose_dna_version: "v2.4",
+      tell_suppression_active: TELL_SUPPRESSION_CONFIG.active,
+      tell_suppression_version: TELL_SUPPRESSION_CONFIG.version,
+    },
   };
 }
