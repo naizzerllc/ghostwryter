@@ -146,19 +146,19 @@ describe("postApprovalHooks", () => {
   });
 
   describe("runCalibrationAnchorRecording", () => {
-    it("skips when no anti_ai_result", () => {
-      const { recordAnchorsFromTells } = require("@/modules/texturePass/calibrationAnchorStore");
+    it("skips when no anti_ai_result", async () => {
+      const store = await import("@/modules/texturePass/calibrationAnchorStore");
       runCalibrationAnchorRecording(makeState({ anti_ai_result: null }), "text", 1, "proj");
-      expect(recordAnchorsFromTells).not.toHaveBeenCalled();
+      expect(store.recordAnchorsFromTells).not.toHaveBeenCalled();
     });
 
-    it("skips when tells_detected is empty", () => {
-      const { recordAnchorsFromTells } = require("@/modules/texturePass/calibrationAnchorStore");
+    it("skips when tells_detected is empty", async () => {
+      const store = await import("@/modules/texturePass/calibrationAnchorStore");
       const state = makeState({
         anti_ai_result: { tells_detected: [], composite_score: 9, pass: true } as any,
       });
       runCalibrationAnchorRecording(state, "text", 1, "proj");
-      expect(recordAnchorsFromTells).not.toHaveBeenCalled();
+      expect(store.recordAnchorsFromTells).not.toHaveBeenCalled();
     });
 
     it("records anchors and syncs when tells exist", async () => {
