@@ -1,5 +1,5 @@
 import { useSyncExternalStore, useMemo } from "react";
-import { getSessionSummary, subscribe, logCost, resetSession } from "@/api/sessionCostTracker";
+import { getSessionSummary, subscribe } from "@/api/sessionCostTracker";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { getAllChapters } from "@/modules/outline/outlineSystem";
 
