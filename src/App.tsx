@@ -8,7 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Generate from "./pages/Generate";
 import Review from "./pages/Review";
 import ArchivePage from "./pages/Archive";
-import Editorial from "./pages/Editorial";
+import EditorialPage from "./pages/EditorialPage";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import DnaIntake from "./pages/DnaIntake";
