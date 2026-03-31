@@ -291,6 +291,20 @@ export function assembleBrief(chapterNumber: number, projectId: string): Generat
   const { content: tier2Content, truncated: tier2Truncated } = buildTier2(chapterNumber, projectId, 2000);
   const tier3Content = buildTier3(chapterNumber);
 
+  // GAP3 — Editorial annotation injection into Tier 2 (synchronous, from localStorage)
+  const pendingAnnotations = getAnnotationsForBriefInjection(chapterNumber);
+  let annotationInjection = "";
+  for (const ann of pendingAnnotations) {
+    if (ann.annotation_text && ann.annotation_target) {
+      annotationInjection += `\n\n## EDITORIAL CALIBRATION NOTE — carry forward from Chapter ${ann.annotation_chapter}\n\nThe platform owner reviewed Chapter ${ann.annotation_chapter} and noted:\n"${ann.annotation_text}"\n\nTarget area: ${ann.annotation_target}\nSignificance: ${ann.annotation_severity}\n\nAddress this observation in the current chapter's generation.`;
+    }
+  }
+  const tier2WithAnnotations = annotationInjection ? tier2Content + annotationInjection : tier2Content;
+  if (pendingAnnotations.length > 0) {
+    markAnnotationsInjected(pendingAnnotations, chapterNumber);
+    console.log(`[BriefingGenerator] Injected ${pendingAnnotations.length} editorial annotation(s) into chapter ${chapterNumber} brief`);
+  }
+
   if (tier2Truncated.length > 0) {
     truncationLog.push(`Characters truncated from Tier 2: ${tier2Truncated.join(", ")}`);
   }
