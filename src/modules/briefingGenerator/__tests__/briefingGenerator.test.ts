@@ -157,9 +157,8 @@ describe("assembleBrief", () => {
 // ── Series budget adjustment ────────────────────────────────────────────
 
 describe("assembleBrief — series active", () => {
-  it("reduces Tier 1 budget to 1000T when series is active", async () => {
-    const { getSeriesContext } = await import("@/modules/seriesMemory/seriesMemory");
-    vi.mocked(getSeriesContext).mockReturnValueOnce({
+  it("reduces Tier 1 budget to 1000T when series is active", () => {
+    mockGetSeriesContext.mockReturnValueOnce({
       active: true,
       previous_titles: [
         {
@@ -176,7 +175,7 @@ describe("assembleBrief — series active", () => {
           updated_at: "",
         },
       ],
-    } as any);
+    });
 
     const brief = assembleBrief(1, "proj");
     expect(brief.tiers[1].budget).toBe(1000);
