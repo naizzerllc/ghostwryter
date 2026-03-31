@@ -306,6 +306,13 @@ function validateDevEditorResponse(data: unknown): boolean {
 
 // ── Main Function ───────────────────────────────────────────────────────
 
+export interface RelationshipPivotInput {
+  isPivot: boolean;
+  pivotPair?: PivotPair;
+  subtextExchange?: string;
+  whatChanges?: string;
+}
+
 export interface DevEditorInput {
   chapterNumber: number;
   chapterContent: string;
@@ -315,6 +322,7 @@ export interface DevEditorInput {
   consecutiveReactiveCount: number;
   consecutiveNeutralCount: number;
   emotionalResonanceTarget?: string | null;
+  relationshipPivot?: RelationshipPivotInput;
 }
 
 const MAX_RETRIES = 2;
