@@ -34,7 +34,7 @@ vi.mock("@/modules/outline/outlineSystem", () => ({
 }));
 
 vi.mock("@/modules/livingState/livingState", () => ({
-  getLivingState: vi.fn(() => ({ emotional_state_at_chapter_end: "tense" })),
+  getLivingState: vi.fn(() => ({ emotional_state_at_chapter_end: "tense", character_sliders: [] })),
 }));
 
 const mockGetSeriesContext = vi.fn<() => { active: boolean; previous_titles: unknown[] }>(() => ({ active: false, previous_titles: [] }));
