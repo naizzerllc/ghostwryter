@@ -35,6 +35,7 @@ const EMPTY_RECORD: Omit<FullCharacterRecord, "id"> = {
   compressed_voice_dna: "", external_goal: "", internal_desire: "",
   goal_desire_gap: "", voice_corpus_status: "MISSING",
   voice_reliability: "MISSING", corpus_approved: false,
+  contradiction_matrix: undefined,
 };
 
 const CharacterDBPage = () => {
