@@ -22,6 +22,10 @@ import {
 
 const mockedCall = vi.mocked(callWithFallback);
 
+function llm(content: string) {
+  return { content, model_used: "gpt-4o", provider: "openai" as const, tokens_used: 500, fallback_used: false };
+}
+
 function validLLMResponse(overrides: Record<string, unknown> = {}) {
   return JSON.stringify({
     hook_compulsion: { would_continue: true, score: 8, reasoning: "Strong hook" },

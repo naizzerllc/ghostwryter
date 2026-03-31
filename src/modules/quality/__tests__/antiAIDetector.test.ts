@@ -20,6 +20,13 @@ import {
 
 const mockedCall = vi.mocked(callWithFallback);
 
+function flash(content: string) {
+  return { content, model_used: "gemini-2.0-flash", provider: "gemini_flash" as const, tokens_used: 600, fallback_used: false };
+}
+function claude(content: string) {
+  return { content, model_used: "claude-sonnet", provider: "anthropic" as const, tokens_used: 500, fallback_used: false };
+}
+
 function primaryResponse(overrides: Record<string, unknown> = {}) {
   return JSON.stringify({
     rhythm_uniformity: { detected: false, score: 8, details: "Good variation" },
