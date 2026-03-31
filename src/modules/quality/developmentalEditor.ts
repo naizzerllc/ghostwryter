@@ -102,6 +102,19 @@ export interface EmotionalResonanceAssessment {
   flag: ResonanceFlag;
 }
 
+export type PivotPair = "PAIR_1" | "PAIR_2" | "PAIR_3";
+export type PivotFlag = "PIVOT_ABSENT" | "PIVOT_WEAK" | null;
+
+export interface RelationshipPivotAssessment {
+  active: boolean;
+  pivot_pair: PivotPair | null;
+  subtext_traceable: boolean;
+  change_permanent: boolean;
+  pivot_delivered: boolean;
+  pivot_note: string;
+  flag: PivotFlag;
+}
+
 export interface DevEditorResult {
   chapter_number: number;
   scene_purpose_check: ScenePurposeCheck;
@@ -112,6 +125,7 @@ export interface DevEditorResult {
   arc_delivery_check: ArcDeliveryCheck | null;
   opening_check: OpeningCheck;
   emotional_resonance_assessment: EmotionalResonanceAssessment;
+  relationship_pivot_assessment: RelationshipPivotAssessment;
   flags: DevEditorFlag[];
   score: number;
   veto_scene_purpose: boolean;
@@ -164,6 +178,7 @@ function buildSystemPrompt(
   consecutiveReactiveCount: number,
   consecutiveNeutralCount: number,
   emotionalResonanceTarget?: string | null,
+  relationshipPivot?: RelationshipPivotInput,
 ): string {
   const conditionalChecks: string[] = [];
 
@@ -219,6 +234,35 @@ Return in your JSON:
 }
 
 Set flags according to act and confidence as specified in the MIC schema.`);
+  }
+
+  if (relationshipPivot?.isPivot && relationshipPivot.subtextExchange) {
+    conditionalChecks.push(`
+RELATIONSHIP PIVOT ASSESSMENT:
+This chapter is a designated relationship pivot for ${relationshipPivot.pivotPair ?? 'unknown pair'}.
+Expected subtext exchange: "${relationshipPivot.subtextExchange}"
+Expected permanent change: "${relationshipPivot.whatChanges ?? 'unspecified'}"
+
+Assess two things independently:
+
+1. SUBTEXT TRACEABILITY: Read this chapter's dialogue knowing the subtext_exchange.
+   Can you point to specific lines where each character is pursuing their unstated
+   want? Yes = subtext_traceable: true. If the dialogue is competent but generic —
+   if it could belong to a scene with no specific subtext — set subtext_traceable: false.
+
+2. PERMANENT CHANGE: Find the specific moment after which this relationship cannot
+   return to what it was before. Name it in your pivot_note. If no such moment
+   exists — only a general impression that something shifted — set change_permanent: false.
+
+Return in your JSON:
+"relationship_pivot_assessment": {
+  "subtext_traceable": boolean,
+  "change_permanent": boolean,
+  "pivot_note": "one sentence naming the specific pivot moment or explaining its absence"
+}
+
+pivot_delivered requires both subtext_traceable: true AND change_permanent: true.
+Set flags: PIVOT_ABSENT if pivot_delivered false, PIVOT_WEAK if only one of the two is true.`);
   }
 
   return `You are a developmental editor for commercial psychological thrillers. Analyze the chapter structurally.
@@ -292,6 +336,13 @@ function validateDevEditorResponse(data: unknown): boolean {
 
 // ── Main Function ───────────────────────────────────────────────────────
 
+export interface RelationshipPivotInput {
+  isPivot: boolean;
+  pivotPair?: PivotPair;
+  subtextExchange?: string;
+  whatChanges?: string;
+}
+
 export interface DevEditorInput {
   chapterNumber: number;
   chapterContent: string;
@@ -301,6 +352,7 @@ export interface DevEditorInput {
   consecutiveReactiveCount: number;
   consecutiveNeutralCount: number;
   emotionalResonanceTarget?: string | null;
+  relationshipPivot?: RelationshipPivotInput;
 }
 
 const MAX_RETRIES = 2;
@@ -316,6 +368,7 @@ export async function runDevelopmentalEditor(
     input.consecutiveReactiveCount,
     input.consecutiveNeutralCount,
     input.emotionalResonanceTarget,
+    input.relationshipPivot,
   );
 
   const fullPrompt = `${systemPrompt}\n\n--- CHAPTER CONTENT ---\n\n${input.chapterContent}`;
@@ -575,6 +628,59 @@ function assembleResult(
     };
   }
 
+  // ── Relationship Pivot Assessment (S24D) ──
+  let relationshipPivotAssessment: RelationshipPivotAssessment;
+  const pivotInput = input.relationshipPivot;
+
+  if (pivotInput?.isPivot && data.relationship_pivot_assessment) {
+    const rpa = data.relationship_pivot_assessment as Record<string, unknown>;
+    const subtextTraceable = (rpa.subtext_traceable as boolean) ?? false;
+    const changePermanent = (rpa.change_permanent as boolean) ?? false;
+    const pivotDelivered = subtextTraceable && changePermanent;
+
+    let pivotFlag: PivotFlag = null;
+    if (!pivotDelivered) {
+      if (!subtextTraceable && !changePermanent) {
+        pivotFlag = "PIVOT_ABSENT";
+        flags.push({
+          code: "PIVOT_ABSENT",
+          severity: "CRITICAL",
+          message: `Relationship pivot not delivered for ${pivotInput.pivotPair ?? 'unknown pair'}. Neither subtext nor permanent change detected. Structural hole in relationship architecture.`,
+          instruction: "This chapter was designated as a relationship pivot. Revise to include traceable subtext exchange and an irreversible relational shift.",
+        });
+        score -= 2;
+      } else {
+        pivotFlag = "PIVOT_WEAK";
+        flags.push({
+          code: "PIVOT_WEAK",
+          severity: "WARNING",
+          message: `Relationship pivot partially delivered for ${pivotInput.pivotPair ?? 'unknown pair'}. Subtext: ${subtextTraceable}, Permanent change: ${changePermanent}.`,
+        });
+        score -= 1;
+      }
+    }
+
+    relationshipPivotAssessment = {
+      active: true,
+      pivot_pair: pivotInput.pivotPair ?? null,
+      subtext_traceable: subtextTraceable,
+      change_permanent: changePermanent,
+      pivot_delivered: pivotDelivered,
+      pivot_note: (rpa.pivot_note as string) ?? "",
+      flag: pivotFlag,
+    };
+  } else {
+    relationshipPivotAssessment = {
+      active: false,
+      pivot_pair: null,
+      subtext_traceable: false,
+      change_permanent: false,
+      pivot_delivered: false,
+      pivot_note: "",
+      flag: null,
+    };
+  }
+
   // Clamp score
   score = Math.max(0, Math.min(10, Math.round(score * 10) / 10));
 
@@ -588,6 +694,7 @@ function assembleResult(
     arc_delivery_check: arcDeliveryCheck,
     opening_check: openingCheck,
     emotional_resonance_assessment: emotionalResonanceAssessment,
+    relationship_pivot_assessment: relationshipPivotAssessment,
     flags,
     score,
     veto_scene_purpose: !scenePurposeCheck.scene_purpose_delivered,

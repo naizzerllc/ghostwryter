@@ -31,11 +31,38 @@ export interface ChapterOutlineRecord {
   act: 1 | 2 | 3;
   scene_type?: string;
   approved?: boolean;
+  emotional_resonance_target?: string | null;
+  relationship_pivot?: boolean;
+  pivot_pair?: "PAIR_1" | "PAIR_2" | "PAIR_3" | null;
+  pivot_act?: 1 | 2 | 3 | null;
   [key: string]: unknown;
+}
+
+export interface RelationshipPivotRecord {
+  chapter: number;
+  surface_event: string;
+  beneath_surface: string;
+  subtext_exchange: string;
+  what_changes: string;
+}
+
+export interface RelationshipPairRecord {
+  characters: string;
+  relationship_type: "TRUST_EROSION_ARC" | "EMOTIONAL_BALLAST" | "THEMATIC_WEIGHT";
+  act_1_pivot: RelationshipPivotRecord;
+  act_2_pivot: RelationshipPivotRecord;
+  act_3_pivot: RelationshipPivotRecord;
+}
+
+export interface RelationshipArchitecture {
+  PAIR_1: RelationshipPairRecord;
+  PAIR_2: RelationshipPairRecord;
+  PAIR_3: RelationshipPairRecord;
 }
 
 interface OutlineData {
   schema_version?: string;
+  relationship_architecture?: RelationshipArchitecture;
   project_config?: {
     genre_mode?: string;
     revelation_chapter?: number;
@@ -165,4 +192,64 @@ export async function loadOutlineFromGitHub(projectId: string): Promise<boolean>
   } catch {
     return false;
   }
+}
+
+// ── Relationship Architecture Approval Gate (S24D) ──────────────────────
+
+export interface OutlineApprovalError {
+  type: string;
+  severity: "BLOCKING" | "WARNING";
+  message: string;
+}
+
+export function validateRelationshipArchitecture(): OutlineApprovalError[] {
+  const errors: OutlineApprovalError[] = [];
+  const data = loadOutlineData();
+  const relArch = data.relationship_architecture;
+
+  if (!relArch) {
+    errors.push({
+      type: "RELATIONSHIP_ARCHITECTURE_ABSENT",
+      severity: "BLOCKING",
+      message: "Outline approval blocked: relationship_architecture block is absent. Complete all three relationship pairs with nine pivot moments before approval.",
+    });
+    return errors;
+  }
+
+  const pairs = ["PAIR_1", "PAIR_2", "PAIR_3"] as const;
+  const acts = ["act_1_pivot", "act_2_pivot", "act_3_pivot"] as const;
+
+  for (const pair of pairs) {
+    const pairData = relArch[pair];
+    if (!pairData) {
+      errors.push({
+        type: "RELATIONSHIP_PIVOT_INCOMPLETE",
+        severity: "BLOCKING",
+        message: `Outline approval blocked: ${pair} is missing entirely.`,
+      });
+      continue;
+    }
+    for (const act of acts) {
+      const pivot = pairData[act];
+      if (!pivot || !pivot.chapter || !pivot.what_changes) {
+        errors.push({
+          type: "RELATIONSHIP_PIVOT_INCOMPLETE",
+          severity: "BLOCKING",
+          message: `Outline approval blocked: ${pair} ${act} is incomplete. All nine pivot moments must be fully specified.`,
+        });
+      }
+    }
+  }
+
+  // Check PAIR_2 Act 2 specifically (emotional ballast priority)
+  const pair2Act2 = relArch.PAIR_2?.act_2_pivot;
+  if (!pair2Act2 || !pair2Act2.chapter) {
+    errors.push({
+      type: "EMOTIONAL_BALLAST_ACT2_ABSENT",
+      severity: "WARNING",
+      message: "No PAIR_2 (emotional ballast) pivot specified for Act 2. This is the act's highest-resonance chapter requirement.",
+    });
+  }
+
+  return errors;
 }

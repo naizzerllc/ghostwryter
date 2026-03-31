@@ -1,5 +1,5 @@
 {
-  "version": "2.1.2",
+  "version": "2.1.3",
   "fields_version": "v1.9",
   "description": "Canonical schema definitions for all inter-module data exchange. No module may exchange data using undocumented schemas.",
 
@@ -23,7 +23,7 @@
     },
 
     "chapter_outline_record": {
-      "description": "Per-chapter outline specification — schema v2.9",
+      "description": "Per-chapter outline specification — schema v2.10",
       "fields": {
         "chapter_number": { "type": "number", "required": true },
         "timeline_id": { "type": "string", "required": true, "description": "Timeline strand identifier" },
@@ -45,6 +45,56 @@
           "required_for_acts": ["1", "3"],
           "recommended_for_acts": ["2"],
           "format": "one sentence describing the texture of the universal experience, not a category emotion word"
+        },
+        "relationship_pivot": {
+          "type": "boolean",
+          "default": false,
+          "note": "S24D — true when this chapter is a designated relationship pivot chapter from the relationship_architecture block. When true, pivot_pair and pivot_act must also be set."
+        },
+        "pivot_pair": {
+          "type": "PAIR_1 | PAIR_2 | PAIR_3 | null",
+          "note": "S24D — which relationship pair this pivot belongs to. Null when relationship_pivot: false."
+        },
+        "pivot_act": {
+          "type": "1 | 2 | 3 | null",
+          "note": "S24D — which act this pivot falls in. Null when relationship_pivot: false."
+        }
+      }
+    },
+
+    "relationship_architecture": {
+      "type": "object",
+      "note": "S24D — Required at outline level. Three relationship pairs with nine pivot moments. Populated at outline creation before chapter records are finalised. Outline approval gate rejects if absent or incomplete.",
+      "pairs": {
+        "PAIR_1": {
+          "characters": "string",
+          "relationship_type": "TRUST_EROSION_ARC",
+          "act_1_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_2_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_3_pivot": { "$ref": "#/definitions/relationship_pivot_record" }
+        },
+        "PAIR_2": {
+          "characters": "string",
+          "relationship_type": "EMOTIONAL_BALLAST",
+          "act_1_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_2_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_3_pivot": { "$ref": "#/definitions/relationship_pivot_record" }
+        },
+        "PAIR_3": {
+          "characters": "string",
+          "relationship_type": "THEMATIC_WEIGHT",
+          "act_1_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_2_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_3_pivot": { "$ref": "#/definitions/relationship_pivot_record" }
+        }
+      },
+      "definitions": {
+        "relationship_pivot_record": {
+          "chapter": "number",
+          "surface_event": "string",
+          "beneath_surface": "string",
+          "subtext_exchange": "string",
+          "what_changes": "string — must describe a permanent, irreversible relational shift"
         }
       }
     },
@@ -159,7 +209,7 @@
     },
 
     "developmental_editor_output": {
-      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance assessment",
+      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance + S24D relationship pivot",
       "fields": {
         "scene_purpose_check": { "type": "object", "required": true },
         "false_progression_check": { "type": "object", "required": true },
@@ -181,7 +231,21 @@
             "RESONANCE_WEAK": "resonance_delivered: false AND act is 2, OR resonance_confidence: LOW — WARNING"
           }
         },
-        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT (CRITICAL) and RESONANCE_WEAK (WARNING) from S24C" },
+        "relationship_pivot_assessment": {
+          "note": "S24D — Active only when chapter_outline_record.relationship_pivot: true. Assesses whether the chapter delivered its designated pivot.",
+          "active": { "type": "boolean", "description": "false when relationship_pivot: false" },
+          "pivot_pair": { "type": "enum | null", "values": ["PAIR_1", "PAIR_2", "PAIR_3", null] },
+          "subtext_traceable": { "type": "boolean", "description": "is the subtext_exchange detectable in the scene dialogue and action?" },
+          "change_permanent": { "type": "boolean", "description": "does the scene contain a moment of irreversible relational shift?" },
+          "pivot_delivered": { "type": "boolean", "description": "both subtext_traceable AND change_permanent" },
+          "pivot_note": { "type": "string", "description": "one sentence on delivery" },
+          "flag": { "type": "enum | null", "values": ["PIVOT_ABSENT", "PIVOT_WEAK", null] },
+          "flag_thresholds": {
+            "PIVOT_ABSENT": "pivot_delivered: false — CRITICAL. Structural hole in relationship architecture.",
+            "PIVOT_WEAK": "subtext_traceable: true but change_permanent: false, or vice versa — WARNING."
+          }
+        },
+        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT, RESONANCE_WEAK (S24C), PIVOT_ABSENT, PIVOT_WEAK (S24D)" },
         "score": { "type": "number" },
         "veto_scene_purpose": { "type": "boolean" }
       }
