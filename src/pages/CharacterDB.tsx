@@ -114,6 +114,19 @@ const CharacterDBPage = () => {
           [sliderKey]: value,
         },
       });
+    } else if (field.startsWith("contradiction_matrix.")) {
+      const parts = field.split(".");
+      const category = parts[1]; // behavioural, moral, historical, competence
+      const subField = parts[2]; // stated_belief, etc.
+      const cm = editing.contradiction_matrix ?? {};
+      const existing = (cm as Record<string, Record<string, unknown>>)[category] ?? {};
+      setEditing({
+        ...editing,
+        contradiction_matrix: {
+          ...cm,
+          [category]: { ...existing, [subField]: value },
+        },
+      });
     } else {
       setEditing({ ...editing, [field]: value });
     }
