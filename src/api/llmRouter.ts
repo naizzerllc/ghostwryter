@@ -377,7 +377,7 @@ export async function callAnthropic(
       recordAnthropicModel();
     }
 
-    return {
+    const response: AnthropicCachedResponse = {
       content,
       model_used: model,
       provider: "anthropic",
@@ -387,6 +387,15 @@ export async function callAnthropic(
       refusal_detected,
       truncation_suspected,
     };
+
+    // Broadcast for status bar
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ghostly:llm-call", {
+        detail: { model, provider: "anthropic", taskType },
+      }));
+    }
+
+    return response;
   } finally {
     clearTimeout(timer);
   }
@@ -420,9 +429,18 @@ export async function callWithFallback(
       saved_tokens: 0,
     });
 
+    const modelUsed = resolveModelString(route.provider);
+
+    // Broadcast for status bar
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ghostly:llm-call", {
+        detail: { model: modelUsed, provider: route.provider, taskType },
+      }));
+    }
+
     return {
       content: result.content,
-      model_used: resolveModelString(route.provider),
+      model_used: modelUsed,
       provider: route.provider,
       tokens_used: result.tokens_used,
       fallback_used: false,
@@ -466,9 +484,18 @@ export async function callWithFallback(
         saved_tokens: 0,
       });
 
+      const fallbackModel = resolveModelString(fallbackProvider);
+
+      // Broadcast for status bar
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("ghostly:llm-call", {
+          detail: { model: fallbackModel, provider: fallbackProvider, taskType },
+        }));
+      }
+
       return {
         content: result.content,
-        model_used: resolveModelString(fallbackProvider),
+        model_used: fallbackModel,
         provider: fallbackProvider,
         tokens_used: result.tokens_used,
         fallback_used: true,

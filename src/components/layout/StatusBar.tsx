@@ -15,14 +15,23 @@ const statusColorMap: Record<StatusItem["status"], string> = {
 
 const StatusBar = () => {
   const [githubConnected, setGithubConnected] = useState(false);
+  const [lastModel, setLastModel] = useState<{ model: string; provider: string } | null>(null);
 
   useEffect(() => {
-    const handler = (e: Event) => {
+    const ghHandler = (e: Event) => {
       const detail = (e as CustomEvent<{ connected: boolean }>).detail;
       setGithubConnected(detail.connected);
     };
-    window.addEventListener("ghostly:github-status", handler);
-    return () => window.removeEventListener("ghostly:github-status", handler);
+    const llmHandler = (e: Event) => {
+      const detail = (e as CustomEvent<{ model: string; provider: string; taskType: string }>).detail;
+      setLastModel({ model: detail.model, provider: detail.provider });
+    };
+    window.addEventListener("ghostly:github-status", ghHandler);
+    window.addEventListener("ghostly:llm-call", llmHandler);
+    return () => {
+      window.removeEventListener("ghostly:github-status", ghHandler);
+      window.removeEventListener("ghostly:llm-call", llmHandler);
+    };
   }, []);
 
   const items: StatusItem[] = [
@@ -35,7 +44,11 @@ const StatusBar = () => {
       value: githubConnected ? "Connected" : "Not connected",
       status: githubConnected ? "connected" : "disconnected",
     },
-    { label: "LAST LLM", value: "—", status: "pending" },
+    {
+      label: "LAST LLM",
+      value: lastModel ? lastModel.model : "—",
+      status: lastModel ? "connected" : "pending",
+    },
   ];
 
   return (
