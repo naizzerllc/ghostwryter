@@ -24,7 +24,8 @@ export type TaskType =
   | "reader_simulation"
   | "dna_extraction"
   | "dna_gap_options"
-  | "quality_medical_fact_check";
+  | "quality_medical_fact_check"
+  | "prose_texture_revision";
 
 export interface TaskRoute {
   provider: Provider;
