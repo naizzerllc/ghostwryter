@@ -54,6 +54,11 @@ export const StyleProfileSection = () => {
     setTimeout(() => setSaved(false), 2000);
   };
 
+  const handleReset = () => {
+    setOverrides(DEFAULTS);
+    localStorage.removeItem(LS_KEY);
+  };
+
   const NumberField = ({
     label,
     field,
