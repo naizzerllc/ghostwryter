@@ -57,6 +57,7 @@ interface HumanReviewProps {
   onApproved: (record: ApprovedChapterRecord) => void;
   onFlagged: (flagType: FlagType, notes: string) => void;
   onMedicalClaimDecision: (claimId: string, decision: WriterDecision, reasoning?: string) => void;
+  onReplaceChapter?: (annotation: EditorialAnnotation) => void;
 }
 
 // ── Sign-off Badge ──────────────────────────────────────────────────────
