@@ -295,6 +295,26 @@ export async function runChapterPipeline(
     console.error(`[Pipeline] Memory Core proposal failed:`, error);
   }
 
+  // ── Post-approval: Record calibration anchors from anti-AI tells ──
+  if (state.anti_ai_result && state.anti_ai_result.tells_detected.length > 0) {
+    try {
+      const newAnchors = recordAnchorsFromTells(
+        chapterNumber,
+        state.anti_ai_result.tells_detected,
+        successResult.content, // texture-revised text (or raw if texture pass failed)
+      );
+      if (newAnchors.length > 0) {
+        console.log(`[Pipeline] Recorded ${newAnchors.length} calibration anchors from chapter ${chapterNumber}`);
+        // Sync to GitHub (non-blocking)
+        syncAnchorsToGitHub(projectId).catch(err =>
+          console.warn("[Pipeline] Calibration anchor GitHub sync failed:", err)
+        );
+      }
+    } catch (error) {
+      console.warn(`[Pipeline] Calibration anchor recording failed (non-blocking):`, error);
+    }
+  }
+
   return { success: true, state };
 }
 
