@@ -281,7 +281,24 @@
             "PIVOT_WEAK": "subtext_traceable: true but change_permanent: false, or vice versa — WARNING."
           }
         },
-        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT, RESONANCE_WEAK (S24C), PIVOT_ABSENT, PIVOT_WEAK (S24D)" },
+        "contradiction_surface_check": {
+          "note": "S24 — Active when protagonist has contradiction_matrix. Assesses whether contradictions surface in prose.",
+          "active": { "type": "boolean", "description": "false when no contradiction_matrix present" },
+          "behavioural_visible": { "type": "boolean", "description": "Is the gap between stated_belief and actual_behaviour observable in prose?" },
+          "behavioural_assessment": { "type": "string", "description": "one sentence: how it manifested, or why absent" },
+          "moral_tested": { "type": "boolean", "description": "has the collapse_condition been approached in this or preceding 5 chapters?" },
+          "moral_assessment": { "type": "string | null" },
+          "historical_gap_maintained": { "type": "boolean", "description": "is the self_narrative still intact?" },
+          "historical_assessment": { "type": "string | null" },
+          "competence_surfaced_recently": { "type": "boolean", "description": "has competence contradiction appeared in last 5 chapters?" },
+          "competence_note": { "type": "string | null" },
+          "contradiction_flag": {
+            "type": { "type": "enum", "values": ["CONTRADICTION_ABSENT", "HISTORICAL_GAP_COLLAPSED", "NONE"] },
+            "severity": { "type": "enum | null", "values": ["WARNING", "CRITICAL", null] },
+            "revision_instruction": { "type": "string | null" }
+          }
+        },
+        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT, RESONANCE_WEAK (S24C), PIVOT_ABSENT, PIVOT_WEAK (S24D), CONTRADICTION_ABSENT, HISTORICAL_GAP_COLLAPSED (S24)" },
         "score": { "type": "number" },
         "veto_scene_purpose": { "type": "boolean" }
       }
