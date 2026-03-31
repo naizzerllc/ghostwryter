@@ -64,6 +64,7 @@ export interface PipelineState {
   quality_score: number | null;
   medical_fact_check_result: MedicalFactCheckResult | null;
   medical_advisory_required: boolean;
+  texture_pass_record: TexturePassRecord | null;
   error: string | null;
   started_at: string;
   completed_at: string | null;
