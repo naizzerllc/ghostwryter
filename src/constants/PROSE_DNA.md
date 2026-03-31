@@ -1,6 +1,8 @@
-# PROSE DNA v2.3 — 17 Universal Laws
-## GHOSTLY · Leila Rex Brand Platform
-## Immovable. Applied to every generation call and quality check.
+# PROSE DNA — GHOSTLY
+Version 2.4 | Hardcoded Universal Craft Laws | Immovable | 18 Rules
+
+**Changelog from v2.3:**
+- Rule 18 (NEW): Character Entry Doctrine — first appearance via decision, not description
 
 ---
 
@@ -57,5 +59,134 @@ Mandatory: (1) clean truth sentence, (2) backward flash ×2 minimum with chapter
 
 ---
 
-*PROSE_DNA.md | v2.3 | 17 rules | GHOSTLY platform constant*
+## RULE 18 — CHARACTER ENTRY DOCTRINE (v2.4 — NEW)
+
+The first appearance of any POV character or any character with a
+named role must introduce them through a choice or decision before
+any physical description, atmospheric observation, or interiority.
+
+The decision reveals. The description follows — only if it sharpens
+what the decision already established.
+
+THE PRINCIPLE:
+Our brains do not connect with people through physical description.
+We connect through action and choice. Character inference — drawing
+conclusions about who someone is from what they do — is the mechanism
+by which readers form bonds faster than any external description can
+create them. An action or decision tells the reader who this person is
+before the writer has to say it. This is not show-don't-tell. This is
+a specific entry architecture.
+
+For the Leila Rex clinical-dissociative narrator specifically: her first
+appearance must show her doing something — making a choice, performing an
+action, executing a decision — that is interpretable without explanation.
+The reader infers her from her behaviour before they are given her thoughts
+about herself. This matters because an unreliable narrator who appears first
+through interiority gives the reader no anchor outside the narrator's own
+account. A narrator who appears first through action gives the reader
+evidence to hold onto when the account starts to fray.
+
+THE DECISION MUST:
+- Be specific and small — not a grand dramatic gesture, a particular
+  choice that reveals through its particularity
+- Carry inferential weight — the reader should be able to draw a
+  conclusion about the character from this decision alone
+- Be interpretable without explanation — the narrative does not explain
+  the decision; the reader makes the inference
+- If the character is the protagonist: hint at the wound, the mistaken
+  belief, or the contradiction — not all three, not explicitly, but
+  the decision should be in tension with something
+
+EXAMPLES OF COMPLIANT ENTRY:
+
+CORRECT — protagonist:
+"She folded the letter twice before she opened it."
+(Inference available: she is delaying, controlling herself, afraid of
+what it contains. No description. No interiority. Action first.)
+
+CORRECT — secondary character:
+"The detective picked up the photograph by its edge, not its face."
+(Inference available: experienced, deliberate, someone who handles
+evidence rather than reacts to it. Physical description can follow
+now that the reader has a frame for it.)
+
+CORRECT — antagonist:
+"He waited until she had taken the first sip before he told her."
+(Inference available: patient, calculating, finds satisfaction in
+sequencing. The reader registers this before they know his name.)
+
+BANNED ENTRY CONSTRUCTIONS — automatic revision triggered:
+
+- Appearance-first entry: any character whose introduction begins
+  with physical attributes (height, hair, eyes, clothing) before any
+  action or choice. Physical appearance has no inferential value without
+  prior action to frame it.
+
+- Atmosphere-first entry: any character who appears through what they
+  observe, feel, or notice before they have done anything. Noticing is
+  not doing. Sensation is not choice.
+
+- Interiority-first entry (protagonist): the narrator reflecting on
+  herself before performing any action. Exception: the narrator's
+  interiority may open a chapter if the interiority is itself a withheld
+  decision — i.e., the narrator is aware of a choice she is about to make
+  or has just made but has not yet disclosed. This is an UNEXPLAINED
+  ACTION micro-mystery (Rule 16) and compliant when the decision is
+  withheld, not when the reflection is substituted for action.
+
+- Generic action entry: an action so expected that it carries no
+  inferential weight. "She poured herself a cup of coffee" reveals
+  nothing. "She poured herself a cup of coffee and then poured it down
+  the sink" reveals something.
+
+THE SECONDARY CHARACTER RULE:
+All named characters with a role in the plot are governed by this rule.
+Unnamed background figures (crowds, passing strangers) are exempt.
+Characters who appear only through dialogue without physical entrance
+are exempt — but their first spoken line must carry the same inferential
+weight as an action entry.
+
+RELATIONSHIP TO RULE 12 (CHAPTER OPENING DOCTRINE):
+When a character's first appearance is also a chapter opening, Rules 12
+and 18 operate simultaneously. The chapter opening doctrine governs the
+first sentence. The character entry doctrine governs what that first
+sentence does. A first sentence that drops into a character's specific
+mid-action physical detail (R12 Type 1) is the highest-leverage entry
+for a new character — it satisfies both rules in one move.
+
+THE TEST:
+Read only the first sentence or action of a character's introduction.
+Could the reader draw at least one specific inference about who this
+person is from that action alone — without reading anything else?
+Yes = compliant. No = rewrite.
+
+THE SECONDARY TEST (protagonist only):
+Does the protagonist's first action hint at the wound, the mistaken belief,
+or the contradiction that will drive the narrative? If none of these is
+traceable in the entry decision, the entry decision is not specific enough.
+Choose a different action.
+
+---
+
+## RUNTIME NOTES
+
+This document is the reference specification. The compressed runtime
+(~800 tokens, PROSE_DNA_RUNTIME.js) is derived from it and updated
+whenever this document advances version. The runtime must be regenerated
+whenever a new rule is added or an existing rule is materially changed.
+
+v2.4 runtime additions required:
+- R18: Add Character Entry Doctrine (compressed — focus on the test,
+  the banned constructions, and the protagonist secondary test)
+
+v2.3 runtime additions (already complete):
+- R1: Emotional Restraint sub-note (compressed)
+- R3: Rhythm-to-tension mapping table (compressed to key values only)
+- R14: Sensory selection psychological targeting (compressed)
+- R16: Scene-Entry Micro-Mystery (full)
+- R17: Revelation Scene Architecture (full)
+
+---
+
+*PROSE_DNA.md | v2.4 | 18 rules | GHOSTLY platform constant*
 *Injection scope: generation_protagonist + anti_ai_detection_secondary ONLY*

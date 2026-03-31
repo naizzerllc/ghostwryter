@@ -13,7 +13,7 @@ Last completed:    S22 ✅ (Medical Fact-Checker module · Clinical Accuracy tab
 Prompts pending:   S23–S28
 MIC version:       2.1
 Schema version:    2.8 (outline format)
-Prose DNA version: v2.3 (17 rules)
+Prose DNA version: v2.4 (18 rules)
 ```
 
 ### Completed files (update as each prompt builds them)
