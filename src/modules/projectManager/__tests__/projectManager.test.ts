@@ -97,8 +97,8 @@ describe("projectManager", () => {
 
   it("createProject generates unique IDs for same name", async () => {
     const p1 = await createProject("Same Name", "psychological_thriller");
-    // Clear index so both can be created independently
-    const p2Id = `same-name-${Date.now().toString(36).slice(-4)}`;
-    expect(p1.id).not.toBe(p2Id);
+    await new Promise((r) => setTimeout(r, 5));
+    const p2 = await createProject("Same Name", "psychological_thriller");
+    expect(p1.id).not.toBe(p2.id);
   });
 });
