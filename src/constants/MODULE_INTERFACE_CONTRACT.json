@@ -209,7 +209,7 @@
     },
 
     "developmental_editor_output": {
-      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance assessment",
+      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance + S24D relationship pivot",
       "fields": {
         "scene_purpose_check": { "type": "object", "required": true },
         "false_progression_check": { "type": "object", "required": true },
@@ -231,7 +231,21 @@
             "RESONANCE_WEAK": "resonance_delivered: false AND act is 2, OR resonance_confidence: LOW — WARNING"
           }
         },
-        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT (CRITICAL) and RESONANCE_WEAK (WARNING) from S24C" },
+        "relationship_pivot_assessment": {
+          "note": "S24D — Active only when chapter_outline_record.relationship_pivot: true. Assesses whether the chapter delivered its designated pivot.",
+          "active": { "type": "boolean", "description": "false when relationship_pivot: false" },
+          "pivot_pair": { "type": "enum | null", "values": ["PAIR_1", "PAIR_2", "PAIR_3", null] },
+          "subtext_traceable": { "type": "boolean", "description": "is the subtext_exchange detectable in the scene dialogue and action?" },
+          "change_permanent": { "type": "boolean", "description": "does the scene contain a moment of irreversible relational shift?" },
+          "pivot_delivered": { "type": "boolean", "description": "both subtext_traceable AND change_permanent" },
+          "pivot_note": { "type": "string", "description": "one sentence on delivery" },
+          "flag": { "type": "enum | null", "values": ["PIVOT_ABSENT", "PIVOT_WEAK", null] },
+          "flag_thresholds": {
+            "PIVOT_ABSENT": "pivot_delivered: false — CRITICAL. Structural hole in relationship architecture.",
+            "PIVOT_WEAK": "subtext_traceable: true but change_permanent: false, or vice versa — WARNING."
+          }
+        },
+        "flags": { "type": "array", "description": "Includes RESONANCE_ABSENT, RESONANCE_WEAK (S24C), PIVOT_ABSENT, PIVOT_WEAK (S24D)" },
         "score": { "type": "number" },
         "veto_scene_purpose": { "type": "boolean" }
       }
