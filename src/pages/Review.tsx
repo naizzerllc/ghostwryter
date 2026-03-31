@@ -4,6 +4,7 @@
  */
 
 import { useState } from "react";
+import { resolveModelString } from "@/api/llmRouter";
 import HumanReview from "@/components/review/HumanReview";
 import type { FlagType } from "@/components/review/HumanReview";
 import ManuscriptHealthDashboard from "@/components/review/ManuscriptHealthDashboard";
