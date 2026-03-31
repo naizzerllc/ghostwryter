@@ -37,9 +37,9 @@ vi.mock("@/modules/livingState/livingState", () => ({
   getLivingState: vi.fn(() => ({ emotional_state_at_chapter_end: "tense" })),
 }));
 
-const mockGetSeriesContext = vi.fn(() => ({ active: false, previous_titles: [] }));
+const mockGetSeriesContext = vi.fn<() => { active: boolean; previous_titles: unknown[] }>(() => ({ active: false, previous_titles: [] }));
 vi.mock("@/modules/seriesMemory/seriesMemory", () => ({
-  getSeriesContext: (...args: unknown[]) => mockGetSeriesContext(...args),
+  getSeriesContext: () => mockGetSeriesContext(),
 }));
 
 vi.mock("./relevanceScorer", () => ({
