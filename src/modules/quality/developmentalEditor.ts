@@ -115,6 +115,29 @@ export interface RelationshipPivotAssessment {
   flag: PivotFlag;
 }
 
+// ── Contradiction Surface Check (S24) ───────────────────────────────────
+
+export type ContradictionFlagType = "CONTRADICTION_ABSENT" | "HISTORICAL_GAP_COLLAPSED" | "NONE";
+
+export interface ContradictionFlag {
+  type: ContradictionFlagType;
+  severity: FlagSeverity | null;
+  revision_instruction: string | null;
+}
+
+export interface ContradictionSurfaceCheck {
+  active: boolean;
+  behavioural_visible: boolean;
+  behavioural_assessment: string;
+  moral_tested: boolean;
+  moral_assessment: string | null;
+  historical_gap_maintained: boolean;
+  historical_assessment: string | null;
+  competence_surfaced_recently: boolean;
+  competence_note: string | null;
+  contradiction_flag: ContradictionFlag;
+}
+
 export interface DevEditorResult {
   chapter_number: number;
   scene_purpose_check: ScenePurposeCheck;
@@ -126,6 +149,7 @@ export interface DevEditorResult {
   opening_check: OpeningCheck;
   emotional_resonance_assessment: EmotionalResonanceAssessment;
   relationship_pivot_assessment: RelationshipPivotAssessment;
+  contradiction_surface_check: ContradictionSurfaceCheck;
   flags: DevEditorFlag[];
   score: number;
   veto_scene_purpose: boolean;
