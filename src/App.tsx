@@ -35,7 +35,7 @@ const App = () => (
             <Route path="/generate" element={<Generate />} />
             <Route path="/review" element={<Review />} />
             <Route path="/archive" element={<ArchivePage />} />
-            <Route path="/editorial" element={<Editorial />} />
+            <Route path="/editorial" element={<EditorialPage />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/dna-intake" element={<DnaIntake />} />
