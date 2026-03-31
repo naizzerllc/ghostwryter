@@ -203,6 +203,7 @@ function buildSystemPrompt(
   consecutiveNeutralCount: number,
   emotionalResonanceTarget?: string | null,
   relationshipPivot?: RelationshipPivotInput,
+  contradictionInput?: ContradictionSurfaceInput,
 ): string {
   const conditionalChecks: string[] = [];
 
