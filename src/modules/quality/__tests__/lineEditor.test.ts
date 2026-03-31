@@ -168,14 +168,13 @@ describe("lineEditor", () => {
   // ── Retry handling ──
 
   it("retries on malformed JSON and succeeds", async () => {
-    const { callWithFallback } = require("@/api/llmRouter");
-    (callWithFallback as any)
-      .mockResolvedValueOnce({ content: "broken" })
-      .mockResolvedValueOnce({ content: JSON.stringify(baseLLMResponse()) });
+    mockCallWithFallback
+      .mockResolvedValueOnce({ content: "broken" } as any)
+      .mockResolvedValueOnce({ content: JSON.stringify(baseLLMResponse()) } as any);
 
     const result = await runLineEditor(baseInput());
     expect(result.score).toBeGreaterThan(0);
-    expect(callWithFallback).toHaveBeenCalledTimes(2);
+    expect(mockCallWithFallback).toHaveBeenCalledTimes(2);
   });
 
   it("throws after all retries exhausted", async () => {
