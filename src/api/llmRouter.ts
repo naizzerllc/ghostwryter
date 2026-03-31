@@ -121,11 +121,30 @@ export function setPlatformConfig(config: typeof platformConfig): void {
 // ---------------------------------------------------------------------------
 
 export function resolveModelString(provider: Provider): string {
+  // 1. Check platform config pinned override (from GitHub project config)
   const pinned = platformConfig.pinned_override?.[provider];
   if (pinned) {
-    console.log(`[LLM Router] Model resolved: ${provider} → ${pinned} [Pinned]`);
+    console.log(`[LLM Router] Model resolved: ${provider} → ${pinned} [Pinned–config]`);
     return pinned;
   }
+
+  // 2. Check Settings panel localStorage overrides (ghostly_model_overrides)
+  if (typeof window !== "undefined") {
+    try {
+      const raw = localStorage.getItem("ghostly_model_overrides");
+      if (raw) {
+        const overrides: Record<string, string> = JSON.parse(raw);
+        const userPin = overrides[provider];
+        if (userPin) {
+          console.log(`[LLM Router] Model resolved: ${provider} → ${userPin} [Pinned–settings]`);
+          return userPin;
+        }
+      }
+    } catch {
+      // Malformed localStorage — ignore silently
+    }
+  }
+
   const alias = PROVIDER_ALIASES[provider];
   return alias;
 }
