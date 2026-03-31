@@ -8,7 +8,8 @@
 
 import { callWithFallback } from "@/api/llmRouter";
 import { classifyRevisionScope, type RevisionScope, type RevisionScopeResult } from "./revisionScopeClassifier";
-import { proposeMemoryUpdate } from "@/modules/memoryCore/memoryCore";
+import { proposeUpdate } from "@/modules/memoryCore/memoryCore";
+import type { TaskType } from "@/api/llmRouter";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
