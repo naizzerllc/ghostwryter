@@ -47,7 +47,7 @@ describe("runReaderSimulation", () => {
   });
 
   it("calls reader_simulation task type (OpenAI routing)", async () => {
-    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
 
     await runReaderSimulation(baseInput());
 
@@ -59,7 +59,7 @@ describe("runReaderSimulation", () => {
   });
 
   it("sends stateless single prompt — no messages array", async () => {
-    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
 
     await runReaderSimulation(baseInput());
 
@@ -69,7 +69,7 @@ describe("runReaderSimulation", () => {
   });
 
   it("injects reader persona in the prompt", async () => {
-    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
 
     await runReaderSimulation(baseInput());
 
@@ -80,7 +80,7 @@ describe("runReaderSimulation", () => {
   });
 
   it("assembles result with correct chapter number and score", async () => {
-    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
 
     const result = await runReaderSimulation(baseInput({ chapterNumber: 7 }));
 
@@ -106,10 +106,10 @@ describe("runReaderSimulation", () => {
   });
 
   it("applies optimism offset to score", async () => {
-    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
     const withOffset = await runReaderSimulation(baseInput({ optimismOffset: 1.0 }));
 
-    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
     const withoutOffset = await runReaderSimulation(baseInput());
 
     expect(withOffset.score).toBeLessThan(withoutOffset.score);
@@ -195,7 +195,7 @@ describe("runReaderSimulation", () => {
   // ── Sympathy Curve ──
 
   it("builds sympathy curve record", async () => {
-    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+    mockedCall.mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
 
     const result = await runReaderSimulation(baseInput({ chapterNumber: 5 }));
     expect(result.sympathy_curve_record.chapter_number).toBe(5);
@@ -223,9 +223,9 @@ describe("runReaderSimulation", () => {
 
   it("retries on parse failure up to MAX_RETRIES", async () => {
     mockedCall
-      .mockResolvedValueOnce({ content: "not json", model_used: "gpt-4o", provider: "openai", tokens_used: 100 })
-      .mockResolvedValueOnce({ content: "still bad", model_used: "gpt-4o", provider: "openai", tokens_used: 100 })
-      .mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+      .mockResolvedValueOnce({ content: "not json", model_used: "gpt-4o", provider: "openai", tokens_used: 100, fallback_used: false })
+      .mockResolvedValueOnce({ content: "still bad", model_used: "gpt-4o", provider: "openai", tokens_used: 100, fallback_used: false })
+      .mockResolvedValueOnce({ content: validLLMResponse(), model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
 
     const result = await runReaderSimulation(baseInput());
     expect(result.chapter_number).toBe(3);
@@ -233,7 +233,7 @@ describe("runReaderSimulation", () => {
   });
 
   it("throws after all retries exhausted", async () => {
-    mockedCall.mockResolvedValue({ content: "bad json", model_used: "gpt-4o", provider: "openai", tokens_used: 100 });
+    mockedCall.mockResolvedValue({ content: "bad json", model_used: "gpt-4o", provider: "openai", tokens_used: 100, fallback_used: false });
 
     await expect(runReaderSimulation(baseInput())).rejects.toThrow("All 3 attempts failed");
   });
@@ -242,7 +242,7 @@ describe("runReaderSimulation", () => {
 
   it("extracts JSON from markdown code blocks", async () => {
     const wrapped = "```json\n" + validLLMResponse() + "\n```";
-    mockedCall.mockResolvedValueOnce({ content: wrapped, model_used: "gpt-4o", provider: "openai", tokens_used: 500 });
+    mockedCall.mockResolvedValueOnce({ content: wrapped, model_used: "gpt-4o", provider: "openai", tokens_used: 500, fallback_used: false });
 
     const result = await runReaderSimulation(baseInput());
     expect(result.chapter_number).toBe(3);
@@ -289,7 +289,7 @@ describe("runSampleReadGate", () => {
   });
 
   it("throws after all retries fail", async () => {
-    mockedCall.mockResolvedValue({ content: "bad", model_used: "gpt-4o", provider: "openai", tokens_used: 100 });
+    mockedCall.mockResolvedValue({ content: "bad", model_used: "gpt-4o", provider: "openai", tokens_used: 100, fallback_used: false });
 
     await expect(runSampleReadGate("content")).rejects.toThrow("All 3 attempts failed");
   });
