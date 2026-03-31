@@ -39,10 +39,13 @@ export const ForbiddenWordsSection = () => {
   return (
     <div className="py-6">
       <SectionHeader title="Forbidden Words — Project Additions" />
-      <p className="text-[10px] font-mono text-muted-foreground mb-4 leading-relaxed">
-        The master forbidden words list is hardcoded and always active. Use this
-        section to add project-specific words for the current book.
-      </p>
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[10px] font-mono text-muted-foreground leading-relaxed">
+          The master forbidden words list is hardcoded and always active. Use this
+          section to add project-specific words for the current book.
+        </p>
+        <ResetButton onReset={handleReset} />
+      </div>
 
       {words.length === 0 ? (
         <p className="text-xs font-mono text-muted-foreground mb-4">
