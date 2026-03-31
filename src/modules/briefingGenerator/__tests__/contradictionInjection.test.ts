@@ -18,9 +18,9 @@ vi.mock("@/modules/dramaticArchitecture/clockRegistry", () => ({
   getActiveClocksForChapter: vi.fn(() => []),
 }));
 
-const mockGetAllCharacters = vi.fn(() => []);
+const mockGetAllCharacters = vi.fn<() => unknown[]>(() => []);
 vi.mock("@/modules/characterDB/characterDB", () => ({
-  getAllCharacters: (...args: unknown[]) => mockGetAllCharacters(...args),
+  getAllCharacters: () => mockGetAllCharacters(),
 }));
 
 vi.mock("@/modules/outline/outlineSystem", () => ({
