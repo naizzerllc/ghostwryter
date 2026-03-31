@@ -192,6 +192,35 @@ If not visible → ARC_DELIVERY_STATED_NOT_SHOWN WARNING
 If not earned → ARC_DELIVERY_UNEARNED CRITICAL`);
   }
 
+  if (emotionalResonanceTarget) {
+    conditionalChecks.push(`
+EMOTIONAL RESONANCE ASSESSMENT:
+The chapter's emotional_resonance_target is: "${emotionalResonanceTarget}"
+Evaluate whether the chapter created the conditions for a reader to experience the
+universal human feeling named in the target. Do not assess whether the character felt
+this. Assess whether a reader carrying this experience in their own life would have
+found a moment of recognition in this chapter.
+
+The Leila Rex register is clinical and dissociative — the narrator does not name her
+emotions. Resonance is achieved through circumstantial precision, not emotional
+declaration. A chapter can achieve HIGH resonance confidence without a single named
+emotion if the specifics of the narrator's situation are rendered with enough accuracy
+that the reader's own emotional memory supplies the feeling.
+
+Ask yourself: Is there a specific moment, image, decision, or detail in this chapter
+that could produce the target feeling in a reader? One is enough for HIGH confidence.
+None means RESONANCE_ABSENT.
+
+Return in your JSON:
+"emotional_resonance_assessment": {
+  "resonance_delivered": boolean,
+  "resonance_confidence": "HIGH"|"MEDIUM"|"LOW",
+  "resonance_note": "one sentence"
+}
+
+Set flags according to act and confidence as specified in the MIC schema.`);
+  }
+
   return `You are a developmental editor for commercial psychological thrillers. Analyze the chapter structurally.
 
 DECLARED SCENE PURPOSE: "${scenePurpose}"
