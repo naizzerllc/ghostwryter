@@ -42,8 +42,7 @@ function baseLLMResponse(overrides: Record<string, unknown> = {}) {
 }
 
 function mockLLMReturn(data: Record<string, unknown>) {
-  const { callWithFallback } = require("@/api/llmRouter");
-  (callWithFallback as any).mockResolvedValue({ content: JSON.stringify(data) });
+  mockCallWithFallback.mockResolvedValue({ content: JSON.stringify(data) } as any);
 }
 
 describe("developmentalEditor", () => {
