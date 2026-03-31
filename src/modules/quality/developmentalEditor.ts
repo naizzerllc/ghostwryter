@@ -315,6 +315,7 @@ export async function runDevelopmentalEditor(
     input.isConsequenceChapter,
     input.consecutiveReactiveCount,
     input.consecutiveNeutralCount,
+    input.emotionalResonanceTarget,
   );
 
   const fullPrompt = `${systemPrompt}\n\n--- CHAPTER CONTENT ---\n\n${input.chapterContent}`;
