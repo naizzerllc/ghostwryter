@@ -1,5 +1,5 @@
 {
-  "version": "2.1",
+  "version": "2.1.1",
   "fields_version": "v1.9",
   "description": "Canonical schema definitions for all inter-module data exchange. No module may exchange data using undocumented schemas.",
 
