@@ -18,6 +18,7 @@ import CharacterDBPage from "./pages/CharacterDB";
 import VoiceCorpus from "./pages/VoiceCorpus";
 import CatalogueRegistryPage from "./pages/CatalogueRegistry";
 import NotFound from "./pages/NotFound";
+import ProjectsPage from "./pages/ProjectsPage";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/generate" element={<Generate />} />
             <Route path="/review" element={<Review />} />
             <Route path="/archive" element={<ArchivePage />} />

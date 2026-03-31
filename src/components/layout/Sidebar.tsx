@@ -13,10 +13,12 @@ import {
   Mic,
   BookOpen,
   List,
+  FolderKanban,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/projects", label: "Projects", icon: FolderKanban },
   { to: "/dna-intake", label: "DNA Intake", icon: Dna },
   { to: "/outline-import", label: "Outline Import", icon: FileInput },
   { to: "/outline", label: "Outline", icon: List },
