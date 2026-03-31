@@ -78,6 +78,12 @@ export const ModelConfigSection = () => {
     localStorage.setItem(LS_KEY, JSON.stringify(next));
   };
 
+  const handleResetAll = () => {
+    setOverrides({});
+    setInputs({});
+    localStorage.removeItem(LS_KEY);
+  };
+
   return (
     <div className="py-6">
       <SectionHeader title="Model Configuration" />
