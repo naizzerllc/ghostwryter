@@ -204,13 +204,23 @@ export async function runChapterPipeline(
   try {
     const forbiddenWordsLog = successResult.forbidden_word_violations.violations.map(v => v.word);
     const calibrationAnchors = loadCalibrationAnchors(projectId, chapterNumber);
+
+    // Wire real outline + living state data into texture pass inputs
+    const outlineRecord = getChapter(chapterNumber);
+    const livingState = getLivingState(projectId);
+
+    const chapterType = outlineRecord?.scene_type ?? "standard";
+    const emotionalArc = outlineRecord?.emotional_resonance_target ?? "escalating";
+    const scenePurpose = outlineRecord?.scene_purpose ?? "unknown";
+    const currentPressureState = livingState.emotional_state_at_chapter_end || "active";
+
     const { revisedText, texturePassRecord } = await runTexturePass({
       chapterText: successResult.content,
       chapterNumber,
-      chapterType: "standard", // TODO: derive from outline
-      emotionalArc: "escalating", // TODO: derive from outline/living state
-      scenePurpose: "generation scene", // scene purpose tracked in outline, not brief
-      currentPressureState: "active", // TODO: derive from living state
+      chapterType,
+      emotionalArc,
+      scenePurpose,
+      currentPressureState,
       forbiddenWordsLog,
       calibrationAnchors,
     });
