@@ -96,6 +96,7 @@ export default function HumanReview({
   onApproved,
   onFlagged,
   onMedicalClaimDecision,
+  onReplaceChapter,
 }: HumanReviewProps) {
   const [editMode, setEditMode] = useState(false);
   const [editedProse, setEditedProse] = useState(prose);
