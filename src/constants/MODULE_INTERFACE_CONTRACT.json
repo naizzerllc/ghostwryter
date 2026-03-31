@@ -62,6 +62,43 @@
       }
     },
 
+    "relationship_architecture": {
+      "type": "object",
+      "note": "S24D — Required at outline level. Three relationship pairs with nine pivot moments. Populated at outline creation before chapter records are finalised. Outline approval gate rejects if absent or incomplete.",
+      "pairs": {
+        "PAIR_1": {
+          "characters": "string",
+          "relationship_type": "TRUST_EROSION_ARC",
+          "act_1_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_2_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_3_pivot": { "$ref": "#/definitions/relationship_pivot_record" }
+        },
+        "PAIR_2": {
+          "characters": "string",
+          "relationship_type": "EMOTIONAL_BALLAST",
+          "act_1_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_2_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_3_pivot": { "$ref": "#/definitions/relationship_pivot_record" }
+        },
+        "PAIR_3": {
+          "characters": "string",
+          "relationship_type": "THEMATIC_WEIGHT",
+          "act_1_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_2_pivot": { "$ref": "#/definitions/relationship_pivot_record" },
+          "act_3_pivot": { "$ref": "#/definitions/relationship_pivot_record" }
+        }
+      },
+      "definitions": {
+        "relationship_pivot_record": {
+          "chapter": "number",
+          "surface_event": "string",
+          "beneath_surface": "string",
+          "subtext_exchange": "string",
+          "what_changes": "string — must describe a permanent, irreversible relational shift"
+        }
+      }
+    },
+
     "character_record": {
       "description": "Character definition with voice DNA and psychological profile",
       "fields": {
