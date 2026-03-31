@@ -156,9 +156,10 @@ const checks: { label: string; category: string; fn: CheckFn }[] = [
     label: "MIC v2.1 loaded",
     category: "MIC",
     fn: () => {
-      const ok = MIC && MIC.version === "2.1" && "schemas" in MIC;
+      const ver = MIC?.version;
+      const ok = MIC && (ver === "2.1" || ver === "2.2") && "schemas" in MIC;
       const schemaCount = Object.keys(MIC?.schemas || {}).length;
-      return { status: ok ? "PASS" : "FAIL", detail: ok ? `v2.1 · ${schemaCount} schemas` : `Version: ${MIC?.version}` };
+      return { status: ok ? "PASS" : "FAIL", detail: ok ? `v${ver} · ${schemaCount} schemas` : `Version: ${ver}` };
     },
   },
 
