@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Lock } from "lucide-react";
 import { SectionHeader } from "../SectionHeader";
+import { ResetButton } from "../ResetButton";
 
 const LS_KEY = "ghostly_style_overrides";
 
