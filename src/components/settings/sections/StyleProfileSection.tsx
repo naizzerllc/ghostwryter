@@ -82,11 +82,14 @@ export const StyleProfileSection = () => {
   return (
     <div className="py-6">
       <SectionHeader title="Style Profile" />
-      <p className="text-[10px] font-mono text-muted-foreground mb-4 leading-relaxed">
-        These are the active Leila Rex brand defaults. brand_lock is true — core
-        register is immovable. Chapter length and quality thresholds are
-        adjustable.
-      </p>
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[10px] font-mono text-muted-foreground leading-relaxed">
+          These are the active Leila Rex brand defaults. brand_lock is true — core
+          register is immovable. Chapter length and quality thresholds are
+          adjustable.
+        </p>
+        <ResetButton onReset={handleReset} />
+      </div>
 
       <div className="flex flex-wrap gap-6 mb-5">
         <LockedField label="POV" value="First Person" />
