@@ -129,6 +129,38 @@ export function validateCharacter(record: Partial<FullCharacterRecord>): Charact
   return errors;
 }
 
+// ── Contradiction Matrix Validation (v2.0) ──────────────────────────────
+
+export function validateContradictionMatrix(record: Partial<FullCharacterRecord>): CharacterValidationError[] {
+  const role = record.role;
+  const matrix = record.contradiction_matrix;
+  const errors: CharacterValidationError[] = [];
+
+  if (role === "protagonist" || role === "antagonist") {
+    if (!matrix?.behavioural?.stated_belief || !matrix?.behavioural?.actual_behaviour) {
+      errors.push({ field: "contradiction_matrix.behavioural", message: `[${role}] stated_belief and actual_behaviour required` });
+    }
+    if (!matrix?.moral?.stated_principle || !matrix?.moral?.collapse_condition) {
+      errors.push({ field: "contradiction_matrix.moral", message: `[${role}] stated_principle and collapse_condition required` });
+    }
+    if (!matrix?.historical?.past_action || !matrix?.historical?.self_narrative) {
+      errors.push({ field: "contradiction_matrix.historical", message: `[${role}] past_action and self_narrative required` });
+    }
+    if (role === "protagonist") {
+      if (!matrix?.historical?.gap) {
+        errors.push({ field: "contradiction_matrix.historical.gap", message: "[protagonist] historical.gap required" });
+      }
+      if (!matrix?.competence?.exceptional_at || !matrix?.competence?.humiliated_by) {
+        errors.push({ field: "contradiction_matrix.competence", message: "[protagonist] exceptional_at and humiliated_by required" });
+      }
+    }
+  }
+
+  // Supporting characters: no hard requirements via validator (warnings only in UI)
+
+  return errors;
+}
+
 // ── CRUD ────────────────────────────────────────────────────────────────
 
 export function addCharacter(record: FullCharacterRecord): { ok: boolean; errors?: CharacterValidationError[] } {
