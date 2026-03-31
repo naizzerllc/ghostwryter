@@ -87,11 +87,14 @@ export const ModelConfigSection = () => {
   return (
     <div className="py-6">
       <SectionHeader title="Model Configuration" />
-      <p className="text-[10px] font-mono text-muted-foreground mb-4 leading-relaxed">
-        Ghostly always uses the latest available model for each provider slot.
-        Pinning a version is only needed for reproducibility testing. When in
-        doubt, leave blank.
-      </p>
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[10px] font-mono text-muted-foreground leading-relaxed">
+          Ghostly always uses the latest available model for each provider slot.
+          Pinning a version is only needed for reproducibility testing. When in
+          doubt, leave blank.
+        </p>
+        <ResetButton onReset={handleResetAll} />
+      </div>
       <div className="space-y-3">
         {PROVIDER_SLOTS.map((slot) => {
           const isPinned = !!overrides[slot.id];
