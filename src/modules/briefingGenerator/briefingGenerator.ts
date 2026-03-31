@@ -329,7 +329,7 @@ export function assembleBrief(chapterNumber: number, projectId: string): Generat
   const tiers: TierBudget[] = [
     { tier: 0, label: "Prose DNA", budget: 800, used: countTokens(tier0Content), content: tier0Content },
     { tier: 1, label: "Style + Clocks + Session", budget: tier1Budget, used: countTokens(tier1Content), content: tier1Content },
-    { tier: 2, label: "Characters + Scene Brief", budget: 2000, used: countTokens(tier2Content), content: tier2Content },
+    { tier: 2, label: "Characters + Scene Brief", budget: 2000, used: countTokens(tier2WithAnnotations), content: tier2WithAnnotations },
     { tier: 3, label: "Continuity Bridge", budget: 1500, used: countTokens(tier3Content), content: tier3Content },
     { tier: 4, label: "Output Headroom", budget: 4500, used: 0, content: "" },
   ];
