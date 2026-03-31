@@ -77,3 +77,97 @@ export const R12_PROXIMITY_TENSION = {
   test: 'reader_can_name_what_character_needs_AND_what_threatens_it_within_150_words',
   exemptions: ['false_calm_1_to_4', 'decompression', 'introspective_by_design']
 };
+
+// ── TELL SUPPRESSION BLOCK — GAP2 ──────────────────────────────────────
+// ~400 tokens. Injected into generation_protagonist and anti_ai_detection_secondary
+// static (cached) system prompt blocks. Suppresses Tell 1 (over-explained interiority)
+// and Tell 2 (manufactured specificity) at generation time.
+// Complementary to Anti-AI Detector post-generation detection — does NOT replace it.
+
+export const TELL_SUPPRESSION_BLOCK = `
+## GENERATION SUPPRESSION — ACTIVE
+
+Before writing any word of this chapter, read these two suppression instructions.
+They describe the two most common failure modes of AI-generated psychological thriller
+prose. Both are invisible to the writer while generating. Both are audible to a
+human editor on first read.
+
+---
+
+### SUPPRESSION 1 — THE NARRATOR DOES NOT KNOW HER OWN MECHANISMS
+
+The narrator is unreliable. Her unreliability is not a narrative device she manages
+consciously — it is the way she genuinely experiences herself. She does not know she
+is avoiding something. She does not know she is lying to herself. She does not know
+why she picked up the phone and put it down again.
+
+BANNED — the narrator accurately naming her own psychology:
+- "I know I'm doing this because..."
+- "Part of me knows he's lying."
+- "I realize I've been avoiding..."
+- "Something in me doesn't want to push this."
+- Any sentence where she correctly identifies her own defence mechanism.
+
+The test: Is the narrator observing herself accurately? If yes — she has become
+reliable. The self-deception engine is off. Rewrite.
+
+CORRECT: She picked up the phone. Put it down. Picked it up again. The coffee
+was getting cold.
+(The reader sees the loop. The narrator reports the actions. She does not name the loop.)
+
+INCORRECT: Part of me knows I should call him back. The other part isn't ready.
+(The narrator has accurately diagnosed her own ambivalence. The self-deception is gone.)
+
+The narrator notices. She does not interpret. She records physical events and sensory
+details. She does not know what they mean about her. The reader does.
+
+---
+
+### SUPPRESSION 2 — DETAILS ARE CHOSEN, NOT PLACED
+
+Every sensory and environmental detail in this chapter must earn its place by being
+chosen — not by being the correct detail for this type of scene, but by being the
+detail this specific narrator notices at this specific moment of pressure.
+
+THE TEST FOR EVERY DETAIL: Why does she notice this? Not "why would a person notice
+this" — why does SHE notice this, given what she is concealing, what she is afraid of,
+what she is managing, right now?
+
+BANNED — the contextually inert specific:
+- A detail that is vivid and accurate but would be equally plausible in any version
+  of this scene.
+- Three or more consecutive descriptive sentences that could be reordered without
+  changing the emotional function of the scene.
+- Environmental detail that serves atmosphere rather than character state.
+
+The test: Remove the detail. Does the reader lose something about this narrator at
+this moment? If no — remove it.
+
+CORRECT: The handwriting on the envelope was his. I knew it before I looked at the
+name. I'd spent three years learning not to recognise it.
+(The detail is what she notices AND tells us what she has been doing for three years.
+It is character-filtered at a pressure-specific level. It could only be this detail,
+for this narrator, here.)
+
+INCORRECT: The afternoon light came through the kitchen window at a low angle,
+catching the dust on the counter. The coffee maker beeped three times.
+(Vivid. Accurate. Inert. Interchangeable with any other scene in any other kitchen.
+Serves atmosphere. Tells us nothing about this narrator at this moment.)
+
+Before writing any environmental or sensory detail, ask: why does SHE notice this?
+If the answer is "because it is here" — find a different detail, or remove it.
+
+---
+
+These two suppressions are not stylistic preferences. They are the difference between
+prose that reads as generated and prose that reads as written. Both are invisible
+during generation and audible on first read. Apply both. To every sentence.
+`;
+
+export const TELL_SUPPRESSION_CONFIG = {
+  version: '1.0',
+  active: true,
+  suppressed_tells: ['tell_1_over_explained_interiority', 'tell_2_manufactured_specificity'],
+  injection_scope: ['generation_protagonist', 'anti_ai_detection_secondary'],
+  note: 'Suppression block is static — cached in system prompt. Does not replace Anti-AI Detector post-generation detection. Complementary systems.'
+};

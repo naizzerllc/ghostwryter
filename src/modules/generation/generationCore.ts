@@ -16,6 +16,7 @@ import { getAllCharacters } from "@/modules/characterDB/characterDB";
 import { getChapter, getAllChapters } from "@/modules/outline/outlineSystem";
 import { githubStorage } from "@/storage/githubStorage";
 import STYLE_PROFILES from "@/constants/STYLE_PROFILES.json";
+import { TELL_SUPPRESSION_BLOCK, TELL_SUPPRESSION_CONFIG } from "@/constants/PROSE_DNA_RUNTIME";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
