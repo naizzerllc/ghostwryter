@@ -195,6 +195,91 @@ describe("chapterPipeline", () => {
         }),
       );
     });
+
+    it("succeeds when texture pass throws (non-blocking)", async () => {
+      const { generateChapter } = await import("../generationCore");
+      (generateChapter as any).mockResolvedValue(makeSuccessResult());
+
+      const { runTexturePass } = await import("@/modules/texturePass/texturePass");
+      (runTexturePass as any).mockRejectedValueOnce(new Error("texture LLM timeout"));
+
+      const { success, state } = await runChapterPipeline(1, "proj");
+
+      expect(success).toBe(true);
+      expect(state.stage).toBe("APPROVED");
+      expect(state.texture_pass_record).toBeNull();
+    });
+
+    it("proceeds with raw text when texture pass status is FAILED", async () => {
+      const { generateChapter } = await import("../generationCore");
+      const genResult = makeSuccessResult();
+      genResult.content = "Original prose.";
+      (generateChapter as any).mockResolvedValue(genResult);
+
+      const { runTexturePass } = await import("@/modules/texturePass/texturePass");
+      (runTexturePass as any).mockResolvedValueOnce({
+        revisedText: "Should not be used.",
+        texturePassRecord: { pass_status: "FAILED", token_cost: 0 },
+      });
+
+      const { success, state } = await runChapterPipeline(1, "proj");
+
+      expect(success).toBe(true);
+      expect(state.texture_pass_record!.pass_status).toBe("FAILED");
+      // Content should remain original since pass_status !== COMPLETED
+      expect(state.approved_record!.approved_draft).toBe("Original prose.");
+    });
+
+    it("succeeds when medical fact check throws (non-blocking)", async () => {
+      const { generateChapter } = await import("../generationCore");
+      (generateChapter as any).mockResolvedValue(makeSuccessResult());
+
+      const { runMedicalFactCheck } = await import("@/modules/quality/medicalFactChecker");
+      (runMedicalFactCheck as any).mockRejectedValueOnce(new Error("medical API down"));
+
+      const { success, state } = await runChapterPipeline(1, "proj");
+
+      expect(success).toBe(true);
+      expect(state.stage).toBe("APPROVED");
+      expect(state.medical_fact_check_result).toBeNull();
+      expect(state.medical_advisory_required).toBe(false);
+    });
+
+    it("sets advisory_required when medical check flags it", async () => {
+      const { generateChapter } = await import("../generationCore");
+      (generateChapter as any).mockResolvedValue(makeSuccessResult());
+
+      const { runMedicalFactCheck } = await import("@/modules/quality/medicalFactChecker");
+      (runMedicalFactCheck as any).mockResolvedValueOnce({
+        pass: false,
+        advisory_required: true,
+        claims: [{ claim: "incorrect dosage", severity: "HIGH" }],
+      });
+
+      const { success, state } = await runChapterPipeline(1, "proj");
+
+      expect(success).toBe(true);
+      expect(state.medical_advisory_required).toBe(true);
+      expect(state.medical_fact_check_result!.pass).toBe(false);
+    });
+
+    it("succeeds when both texture pass and medical check fail simultaneously", async () => {
+      const { generateChapter } = await import("../generationCore");
+      (generateChapter as any).mockResolvedValue(makeSuccessResult());
+
+      const { runTexturePass } = await import("@/modules/texturePass/texturePass");
+      (runTexturePass as any).mockRejectedValueOnce(new Error("texture fail"));
+
+      const { runMedicalFactCheck } = await import("@/modules/quality/medicalFactChecker");
+      (runMedicalFactCheck as any).mockRejectedValueOnce(new Error("medical fail"));
+
+      const { success, state } = await runChapterPipeline(1, "proj");
+
+      expect(success).toBe(true);
+      expect(state.stage).toBe("APPROVED");
+      expect(state.texture_pass_record).toBeNull();
+      expect(state.medical_fact_check_result).toBeNull();
+    });
   });
 
   // ── applyHumanOverride ──────────────────────────────────────────────
