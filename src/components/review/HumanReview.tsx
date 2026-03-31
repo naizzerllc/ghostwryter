@@ -24,6 +24,7 @@ import type { GenerationSuccess } from "@/modules/generation/generationCore";
 import type { ForbiddenWordsResult } from "@/utils/forbiddenWordsChecker";
 import type { BoundaryViolation } from "@/modules/knowledgeBoundary/knowledgeBoundaryMap";
 import type { MedicalFactCheckResult, WriterDecision } from "@/modules/quality/medicalFactChecker";
+import type { TexturePassRecord } from "@/modules/texturePass/texturePass";
 import ClinicalAccuracyTab from "./ClinicalAccuracyTab";
 
 // ── Types ───────────────────────────────────────────────────────────────
