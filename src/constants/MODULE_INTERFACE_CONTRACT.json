@@ -245,7 +245,7 @@
     },
 
     "developmental_editor_output": {
-      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance + S24D relationship pivot",
+      "description": "Developmental Editor structured output — S19 base + S24C emotional resonance + S24D relationship pivot + S24 contradiction surface check",
       "fields": {
         "scene_purpose_check": { "type": "object", "required": true },
         "false_progression_check": { "type": "object", "required": true },
