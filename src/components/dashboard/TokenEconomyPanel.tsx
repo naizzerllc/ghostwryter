@@ -1,5 +1,6 @@
 import { useSyncExternalStore, useMemo } from "react";
 import { getSessionSummary, subscribe } from "@/api/sessionCostTracker";
+import { getAllChapters } from "@/modules/outline/outlineSystem";
 
 const useSessionCost = () =>
   useSyncExternalStore(subscribe, getSessionSummary, getSessionSummary);
@@ -83,6 +84,59 @@ const TokenEconomyPanel = () => {
           })}
         </div>
       )}
+
+      {/* Manuscript cost projection */}
+      {(() => {
+        const chapters = getAllChapters();
+        const totalChapters = chapters.length;
+        const genEntries = summary.entries.filter((e) =>
+          e.call_type.startsWith("generation_") ||
+          e.call_type === "quality_analysis" ||
+          e.call_type === "anti_ai_detection" ||
+          e.call_type === "anti_ai_detection_secondary" ||
+          e.call_type === "reader_simulation" ||
+          e.call_type === "continuity_check"
+        );
+        // Count unique chapters generated (approximate: group by rough time windows)
+        const chaptersGenerated = summary.call_count > 0
+          ? Math.max(1, Math.round(genEntries.length / Math.max(summary.call_count, 1) * summary.call_count / 6))
+          : 0;
+        const avgCostPerChapter = chaptersGenerated > 0
+          ? summary.estimated_cost_usd / chaptersGenerated
+          : null;
+
+        return (
+          <div className="pt-2 border-t border-border space-y-1">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Manuscript Projection</p>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Outline Chapters</p>
+                <p className="text-sm font-mono">{totalChapters || "—"}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Avg / Chapter</p>
+                <p className="text-sm font-mono">
+                  {avgCostPerChapter !== null ? `$${avgCostPerChapter.toFixed(4)}` : "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Projected Total</p>
+                <p className="text-sm font-mono text-warning">
+                  {avgCostPerChapter !== null && totalChapters > 0
+                    ? `$${(avgCostPerChapter * totalChapters).toFixed(2)}`
+                    : "—"}
+                </p>
+              </div>
+            </div>
+            {totalChapters === 0 && (
+              <p className="text-[10px] text-muted-foreground">Import an outline to enable projection</p>
+            )}
+            {totalChapters > 0 && avgCostPerChapter === null && (
+              <p className="text-[10px] text-muted-foreground">Generate a chapter to calculate projection</p>
+            )}
+          </div>
+        );
+      })()}
 
       {summary.call_count === 0 && (
         <p className="text-xs text-muted-foreground">No API calls this session</p>
