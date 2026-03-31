@@ -416,6 +416,19 @@ const CharacterDBPage = () => {
 
 // ── Sub-components ──────────────────────────────────────────────────────
 
+function CollapsibleSection({ title, defaultOpen = false, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border border-border">
+      <button onClick={() => setOpen(!open)} className="w-full text-left px-3 py-2 flex items-center justify-between hover:bg-muted/30 transition-colors">
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">{title}</span>
+        <span className="text-[10px] font-mono text-muted-foreground">{open ? "▾" : "▸"}</span>
+      </button>
+      {open && <div className="px-3 pb-3 space-y-2">{children}</div>}
+    </div>
+  );
+}
+
 function SectionHeader({ title }: { title: string }) {
   return (
     <div className="border-b border-border pb-1 pt-2">
