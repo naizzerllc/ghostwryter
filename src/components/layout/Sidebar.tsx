@@ -13,6 +13,7 @@ import {
   Mic,
   BookOpen,
   List,
+  FolderKanban,
 } from "lucide-react";
 
 const NAV_ITEMS = [
