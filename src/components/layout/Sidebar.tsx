@@ -14,6 +14,7 @@ import {
   BookOpen,
   List,
   FolderKanban,
+  Activity,
 } from "lucide-react";
 
 const NAV_ITEMS = [
