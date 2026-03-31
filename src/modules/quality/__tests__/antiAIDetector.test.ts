@@ -13,10 +13,7 @@ vi.mock("@/api/llmRouter", () => ({
 }));
 
 import { callWithFallback } from "@/api/llmRouter";
-import {
-  runAntiAIDetector,
-  type AntiAIDetectorInput,
-} from "../antiAIDetector";
+import { runAntiAIDetector, type AntiAIDetectorInput } from "../antiAIDetector";
 
 const mockedCall = vi.mocked(callWithFallback);
 
@@ -60,32 +57,23 @@ function baseInput(overrides: Partial<AntiAIDetectorInput> = {}): AntiAIDetector
 }
 
 describe("runAntiAIDetector", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  beforeEach(() => { vi.clearAllMocks(); });
 
   it("runs primary and secondary passes in parallel", async () => {
     mockedCall
-      .mockResolvedValueOnce({ content: primaryResponse(), model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600, fallback_used: false })
-      .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
+      .mockResolvedValueOnce(flash(primaryResponse()))
+      .mockResolvedValueOnce(claude(secondaryResponse()));
     const result = await runAntiAIDetector(baseInput());
-
     expect(mockedCall).toHaveBeenCalledTimes(2);
-    // First call = primary (anti_ai_detection)
     expect(mockedCall.mock.calls[0][0]).toBe("anti_ai_detection");
-    // Second call = secondary (anti_ai_detection_secondary)
     expect(mockedCall.mock.calls[1][0]).toBe("anti_ai_detection_secondary");
   });
 
   it("calculates combined score with correct weighting (0.667/0.333)", async () => {
     mockedCall
-      .mockResolvedValueOnce({ content: primaryResponse({ primary_score: 9.0 }), model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600, fallback_used: false })
-      .mockResolvedValueOnce({ content: secondaryResponse({ secondary_score: 6.0 }), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
+      .mockResolvedValueOnce(flash(primaryResponse({ primary_score: 9.0 })))
+      .mockResolvedValueOnce(claude(secondaryResponse({ secondary_score: 6.0 })));
     const result = await runAntiAIDetector(baseInput());
-
-    // 9.0 * 0.667 + 6.0 * 0.333 = 6.003 + 1.998 = 8.001
     expect(result.combined_score).toBeCloseTo(8.0, 0);
     expect(result.primary_score).toBe(9.0);
     expect(result.secondary_score).toBe(6.0);
@@ -93,9 +81,8 @@ describe("runAntiAIDetector", () => {
 
   it("clamps combined score to 0-10", async () => {
     mockedCall
-      .mockResolvedValueOnce({ content: primaryResponse({ primary_score: 10 }), model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600, fallback_used: false })
-      .mockResolvedValueOnce({ content: secondaryResponse({ secondary_score: 10 }), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
+      .mockResolvedValueOnce(flash(primaryResponse({ primary_score: 10 })))
+      .mockResolvedValueOnce(claude(secondaryResponse({ secondary_score: 10 })));
     const result = await runAntiAIDetector(baseInput());
     expect(result.combined_score).toBeLessThanOrEqual(10);
     expect(result.combined_score).toBeGreaterThanOrEqual(0);
@@ -103,149 +90,89 @@ describe("runAntiAIDetector", () => {
 
   it("merges tells from both passes", async () => {
     mockedCall
-      .mockResolvedValueOnce({
-        content: primaryResponse({
-          tells: [{ tell_id: "hedging_1", category: "hedging", description: "Excessive hedging", severity: "WARNING" }],
-        }),
-        model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600,
-      fallback_used: false,
-      })
-      .mockResolvedValueOnce({
-        content: secondaryResponse({
-          tells: [{ tell_id: "manufactured_1", category: "register", description: "Manufactured voice", severity: "NOTE" }],
-        }),
-        model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500,
-      fallback_used: false,
-      });
-
+      .mockResolvedValueOnce(flash(primaryResponse({
+        tells: [{ tell_id: "hedging_1", category: "hedging", description: "Excessive hedging", severity: "WARNING" }],
+      })))
+      .mockResolvedValueOnce(claude(secondaryResponse({
+        tells: [{ tell_id: "manufactured_1", category: "register", description: "Manufactured voice", severity: "NOTE" }],
+      })));
     const result = await runAntiAIDetector(baseInput());
     expect(result.tells_detected).toHaveLength(2);
   });
 
-  // ── Flags ──
-
   it("flags AI_DETECTION_HIGH when combined score < 5", async () => {
     mockedCall
-      .mockResolvedValueOnce({ content: primaryResponse({ primary_score: 3 }), model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600, fallback_used: false })
-      .mockResolvedValueOnce({ content: secondaryResponse({ secondary_score: 2 }), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
+      .mockResolvedValueOnce(flash(primaryResponse({ primary_score: 3 })))
+      .mockResolvedValueOnce(claude(secondaryResponse({ secondary_score: 2 })));
     const result = await runAntiAIDetector(baseInput());
     expect(result.flags.some(f => f.code === "AI_DETECTION_HIGH")).toBe(true);
   });
 
   it("flags REGISTER_MANUFACTURED when secondary detects it", async () => {
     mockedCall
-      .mockResolvedValueOnce({ content: primaryResponse(), model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600, fallback_used: false })
-      .mockResolvedValueOnce({
-        content: secondaryResponse({ register_manufactured: true }),
-        model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500,
-      fallback_used: false,
-      });
-
+      .mockResolvedValueOnce(flash(primaryResponse()))
+      .mockResolvedValueOnce(claude(secondaryResponse({ register_manufactured: true })));
     const result = await runAntiAIDetector(baseInput());
     expect(result.flags.some(f => f.code === "REGISTER_MANUFACTURED")).toBe(true);
   });
 
-  // ── Systematic Tell Detection ──
-
   it("detects systematic tell across 3 consecutive chapters", async () => {
     mockedCall
-      .mockResolvedValueOnce({
-        content: primaryResponse({
-          tells: [{ tell_id: "hedging_pattern", category: "hedging", description: "Hedging", severity: "WARNING" }],
-        }),
-        model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600,
-      fallback_used: false,
-      })
-      .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
+      .mockResolvedValueOnce(flash(primaryResponse({
+        tells: [{ tell_id: "hedging_pattern", category: "hedging", description: "Hedging", severity: "WARNING" }],
+      })))
+      .mockResolvedValueOnce(claude(secondaryResponse()));
     const result = await runAntiAIDetector(baseInput({
-      previousChapterTells: [
-        ["hedging_pattern", "other_tell"],
-        ["hedging_pattern"],
-      ],
+      previousChapterTells: [["hedging_pattern", "other_tell"], ["hedging_pattern"]],
     }));
-
     expect(result.systematic_tell_flag).toBe(true);
     expect(result.flags.some(f => f.code === "SYSTEMATIC_TELL_PATTERN")).toBe(true);
   });
 
   it("no systematic flag with only 1 previous chapter", async () => {
     mockedCall
-      .mockResolvedValueOnce({
-        content: primaryResponse({
-          tells: [{ tell_id: "hedging_pattern", category: "hedging", description: "Hedging", severity: "WARNING" }],
-        }),
-        model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600,
-      fallback_used: false,
-      })
-      .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
-    const result = await runAntiAIDetector(baseInput({
-      previousChapterTells: [["hedging_pattern"]],
-    }));
-
+      .mockResolvedValueOnce(flash(primaryResponse({
+        tells: [{ tell_id: "hedging_pattern", category: "hedging", description: "Hedging", severity: "WARNING" }],
+      })))
+      .mockResolvedValueOnce(claude(secondaryResponse()));
+    const result = await runAntiAIDetector(baseInput({ previousChapterTells: [["hedging_pattern"]] }));
     expect(result.systematic_tell_flag).toBe(false);
   });
 
   it("no systematic flag when tells differ across chapters", async () => {
     mockedCall
-      .mockResolvedValueOnce({
-        content: primaryResponse({
-          tells: [{ tell_id: "new_tell", category: "rhythm", description: "Rhythm", severity: "NOTE" }],
-        }),
-        model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600,
-      fallback_used: false,
-      })
-      .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
+      .mockResolvedValueOnce(flash(primaryResponse({
+        tells: [{ tell_id: "new_tell", category: "rhythm", description: "Rhythm", severity: "NOTE" }],
+      })))
+      .mockResolvedValueOnce(claude(secondaryResponse()));
     const result = await runAntiAIDetector(baseInput({
-      previousChapterTells: [
-        ["hedging_pattern"],
-        ["other_pattern"],
-      ],
+      previousChapterTells: [["hedging_pattern"], ["other_pattern"]],
     }));
-
     expect(result.systematic_tell_flag).toBe(false);
   });
 
-  // ── Rhythm uniform cross-reference ──
-
   it("passes rhythmUniformFlagged to primary prompt", async () => {
     mockedCall
-      .mockResolvedValueOnce({ content: primaryResponse(), model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600, fallback_used: false })
-      .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
+      .mockResolvedValueOnce(flash(primaryResponse()))
+      .mockResolvedValueOnce(claude(secondaryResponse()));
     await runAntiAIDetector(baseInput({ rhythmUniformFlagged: true }));
-
     const primaryPrompt = mockedCall.mock.calls[0][1] as string;
     expect(primaryPrompt).toContain("RHYTHM_UNIFORM");
   });
 
-  // ── Retries ──
-
   it("retries primary pass on parse failure", async () => {
     mockedCall
-      // Primary: fail then succeed
-      .mockResolvedValueOnce({ content: "bad json", model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 100, fallback_used: false })
-      // Secondary: succeed immediately
-      .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false })
-      // Primary retry
-      .mockResolvedValueOnce({ content: primaryResponse(), model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600, fallback_used: false });
-
-    // Promise.all runs both, but the primary will retry internally
-    // This may call in different order due to parallel execution
+      .mockResolvedValueOnce(flash("bad json"))
+      .mockResolvedValueOnce(claude(secondaryResponse()))
+      .mockResolvedValueOnce(flash(primaryResponse()));
     const result = await runAntiAIDetector(baseInput());
     expect(result.chapter_number).toBe(5);
   });
 
-  // ── Chapter number ──
-
   it("returns correct chapter number", async () => {
     mockedCall
-      .mockResolvedValueOnce({ content: primaryResponse(), model_used: "gemini-2.0-flash", provider: "gemini_flash", tokens_used: 600, fallback_used: false })
-      .mockResolvedValueOnce({ content: secondaryResponse(), model_used: "claude-sonnet", provider: "anthropic", tokens_used: 500, fallback_used: false });
-
+      .mockResolvedValueOnce(flash(primaryResponse()))
+      .mockResolvedValueOnce(claude(secondaryResponse()));
     const result = await runAntiAIDetector(baseInput({ chapterNumber: 12 }));
     expect(result.chapter_number).toBe(12);
   });
