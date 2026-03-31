@@ -9,7 +9,8 @@
  */
 
 import { generateChapter, type GenerationResult, type GenerationSuccess } from "./generationCore";
-import { updateLivingState } from "@/modules/livingState/livingState";
+import { updateLivingState, getLivingState } from "@/modules/livingState/livingState";
+import { getChapter } from "@/modules/outline/outlineSystem";
 import { proposeUpdate } from "@/modules/memoryCore/memoryCore";
 import { githubStorage } from "@/storage/githubStorage";
 import { runMedicalFactCheck, type MedicalFactCheckResult } from "@/modules/quality/medicalFactChecker";
