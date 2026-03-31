@@ -8,9 +8,9 @@
 
 ```
 Platform:          Ghostly v2.2
-Active prompt:     S23 (pending)
-Last completed:    S22 ✅ (Medical Fact-Checker module · Clinical Accuracy tab · pipeline wiring complete)
-Prompts pending:   S23–S28
+Active prompt:     S25 (pending)
+Last completed:    S24D ✅ (Relationship Architecture · approval gate · pivot assessment)
+Prompts pending:   S25–S28
 MIC version:       2.1.3
 Schema version:    2.10 (outline format)
 Prose DNA version: v2.4 (18 rules)
