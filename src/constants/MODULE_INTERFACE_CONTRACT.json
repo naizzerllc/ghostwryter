@@ -23,7 +23,7 @@
     },
 
     "chapter_outline_record": {
-      "description": "Per-chapter outline specification — schema v2.8",
+      "description": "Per-chapter outline specification — schema v2.9",
       "fields": {
         "chapter_number": { "type": "number", "required": true },
         "timeline_id": { "type": "string", "required": true, "description": "Timeline strand identifier" },
@@ -38,7 +38,14 @@
         "collision_specification": { "type": "string", "required": true, "description": "What forces collide in this chapter" },
         "permanent_change": { "type": "string", "required": true, "description": "What irreversibly changes by chapter end" },
         "protagonist_decision_type": { "type": "enum", "values": ["active", "passive_justified", "forced"], "required": true },
-        "reader_information_mode": { "type": "enum", "values": ["dramatic_irony", "shared_discovery", "delayed_reveal"], "required": true }
+        "reader_information_mode": { "type": "enum", "values": ["dramatic_irony", "shared_discovery", "delayed_reveal"], "required": true },
+        "emotional_resonance_target": {
+          "type": "string | null",
+          "note": "S24C — The universal human experience this chapter is designed to activate in the reader. One sentence. Required for Act 1 + Act 3 chapters. Recommended for Act 2. NOT the character's emotion — the underlying feeling any reader could recognise from their own life. Populated at outline time by writer or outline LLM. Read by Developmental Editor for resonance delivery assessment.",
+          "required_for_acts": ["1", "3"],
+          "recommended_for_acts": ["2"],
+          "format": "one sentence describing the texture of the universal experience, not a category emotion word"
+        }
       }
     },
 
