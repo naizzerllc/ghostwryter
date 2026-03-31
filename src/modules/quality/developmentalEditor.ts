@@ -163,6 +163,7 @@ function buildSystemPrompt(
   isConsequenceChapter: boolean,
   consecutiveReactiveCount: number,
   consecutiveNeutralCount: number,
+  emotionalResonanceTarget?: string | null,
 ): string {
   const conditionalChecks: string[] = [];
 
