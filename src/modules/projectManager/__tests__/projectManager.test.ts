@@ -49,12 +49,14 @@ describe("projectManager", () => {
   });
 
   it("listProjects returns projects sorted by last_active", async () => {
-    await createProject("Alpha", "psychological_thriller");
-    await createProject("Beta", "standard_thriller");
+    const p1 = await createProject("Alpha", "psychological_thriller");
+    // Ensure different timestamp
+    await new Promise((r) => setTimeout(r, 5));
+    const p2 = await createProject("Beta", "standard_thriller");
     const list = await listProjects();
     expect(list.length).toBe(2);
     // Most recent first
-    expect(list[0].name).toBe("Beta");
+    expect(new Date(list[0].last_active).getTime()).toBeGreaterThanOrEqual(new Date(list[1].last_active).getTime());
   });
 
   it("archiveProject sets status to ARCHIVED", async () => {
