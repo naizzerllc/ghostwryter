@@ -20,6 +20,11 @@ export const ForbiddenWordsSection = () => {
     localStorage.setItem(LS_KEY, JSON.stringify(next));
   };
 
+  const handleReset = () => {
+    setWords([]);
+    localStorage.removeItem(LS_KEY);
+  };
+
   const handleAdd = () => {
     const word = input.trim().toLowerCase();
     if (!word || words.includes(word)) return;

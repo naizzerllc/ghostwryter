@@ -88,7 +88,10 @@ export const QualityGateSection = () => {
 
   return (
     <div className="py-6">
-      <SectionHeader title="Quality Gate" />
+      <div className="flex items-center justify-between mb-4">
+        <SectionHeader title="Quality Gate" />
+        <ResetButton onReset={handleReset} />
+      </div>
       <div className="space-y-4">
         <SliderField
           label="Approval Threshold"
