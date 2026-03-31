@@ -1,6 +1,9 @@
-// GHOSTLY PROSE DNA v2.3 — 17 Universal Laws — injected only for generation_protagonist and anti_ai_detection_secondary
+// PROSE DNA RUNTIME — Ghostly v2.2
+// Version: 2.4 (18 rules)
+// Last updated: S24A
+// Reference: PROSE_DNA_v2_4.md
 
-export const PROSE_DNA_RUNTIME = `PROSE DNA v2.3 — 17 UNIVERSAL LAWS
+export const PROSE_DNA_RUNTIME = `PROSE DNA v2.4 — 18 UNIVERSAL LAWS
 
 R1 SHOW DON'T TELL: Never name emotions. Use physical sensation, observed detail, action under pressure, dialogue subtext. Cut everything after the emotional peak of any scene.
 
@@ -34,4 +37,34 @@ R15 SIGNIFICANT OMISSION: What the narrator does not describe is load-bearing. S
 
 R16 SCENE-ENTRY MICRO-MYSTERY: Open a narrative loop in the first 500 words. This loop must close before the chapter hook fires.
 
-R17 REVELATION ARCHITECTURE: Three mandatory components: (1) one clean truth sentence, (2) minimum two backward flashes with specific chapter references, (3) immediate emotional cost expressed through physical sensation — never named emotion.`;
+R17 REVELATION ARCHITECTURE: Three mandatory components: (1) one clean truth sentence, (2) minimum two backward flashes with specific chapter references, (3) immediate emotional cost expressed through physical sensation — never named emotion.
+
+R18 CHARACTER ENTRY DOCTRINE: First appearance of any named character = decision/action BEFORE description or interiority. Decision must carry inferential weight — reader draws conclusions without explanation. BANNED: appearance-first, atmosphere-first, interiority-first (unless withheld decision), generic action (no inferential value). PROTAGONIST: entry decision must hint at wound, mistaken belief, or contradiction. SECONDARY CHARACTERS: first dialogue line carries same inferential weight as action entry. TEST: First action alone → can reader infer who this person is? No = rewrite. PROTAGONIST TEST: Is wound/belief/contradiction traceable? R12 BRIDGE: Character entry at chapter opening → R12 + R18 fire simultaneously; mid-action physical detail (R12 Type 1) satisfies both.`;
+
+// RULE 18 — CHARACTER ENTRY DOCTRINE (v2.4)
+// First appearance = decision/action before any description or interiority.
+// Decision must carry inferential weight — reader draws conclusions without explanation.
+// PROTAGONIST: entry decision must hint at wound, mistaken belief, or contradiction.
+// SECONDARY: first dialogue line carries same weight as action entry.
+// BANNED: appearance-first, atmosphere-first, generic action (no inferential value).
+// TEST: First action alone → can reader infer who this person is? No = rewrite.
+// PROTAGONIST TEST: Is wound/belief/contradiction traceable in the entry decision?
+// R12 BRIDGE: Character entry at chapter opening → R12 + R18 fire simultaneously.
+//   Mid-action physical detail (R12 Type 1) is highest-leverage entry — satisfies both.
+export const R18_CHARACTER_ENTRY = {
+  rule: 18,
+  name: 'CHARACTER_ENTRY_DOCTRINE',
+  version: '2.4',
+  applies_to: 'all_named_characters_first_appearance',
+  exemptions: ['unnamed_background_figures', 'dialogue_only_characters_first_line_governs'],
+  entry_order: ['DECISION_OR_ACTION', 'INTERIORITY_IF_WITHHELD_DECISION', 'DESCRIPTION_IF_IT_SHARPENS'],
+  banned: [
+    'APPEARANCE_FIRST',
+    'ATMOSPHERE_FIRST',
+    'INTERIORITY_FIRST_WITHOUT_WITHHELD_DECISION',
+    'GENERIC_ACTION_NO_INFERENTIAL_VALUE'
+  ],
+  protagonist_secondary_test: 'entry_decision_hints_at_wound_OR_mistaken_belief_OR_contradiction',
+  test: 'first_action_alone → reader_draws_specific_inference → yes=pass no=rewrite',
+  r12_bridge: 'R12_TYPE_1_MID_ACTION_SATISFIES_BOTH_RULES_SIMULTANEOUSLY'
+};
