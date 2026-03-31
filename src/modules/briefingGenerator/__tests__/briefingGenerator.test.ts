@@ -65,11 +65,13 @@ vi.mock("@/modules/livingState/livingState", () => ({
   }),
 }));
 
+const mockGetSeriesContext = vi.fn().mockReturnValue({
+  active: false,
+  previous_titles: [],
+});
+
 vi.mock("@/modules/seriesMemory/seriesMemory", () => ({
-  getSeriesContext: () => ({
-    active: false,
-    previous_titles: [],
-  }),
+  getSeriesContext: (...args: unknown[]) => mockGetSeriesContext(...args),
 }));
 
 vi.mock("./relevanceScorer", () => ({
