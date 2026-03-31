@@ -628,6 +628,59 @@ function assembleResult(
     };
   }
 
+  // ── Relationship Pivot Assessment (S24D) ──
+  let relationshipPivotAssessment: RelationshipPivotAssessment;
+  const pivotInput = input.relationshipPivot;
+
+  if (pivotInput?.isPivot && data.relationship_pivot_assessment) {
+    const rpa = data.relationship_pivot_assessment as Record<string, unknown>;
+    const subtextTraceable = (rpa.subtext_traceable as boolean) ?? false;
+    const changePermanent = (rpa.change_permanent as boolean) ?? false;
+    const pivotDelivered = subtextTraceable && changePermanent;
+
+    let pivotFlag: PivotFlag = null;
+    if (!pivotDelivered) {
+      if (!subtextTraceable && !changePermanent) {
+        pivotFlag = "PIVOT_ABSENT";
+        flags.push({
+          code: "PIVOT_ABSENT",
+          severity: "CRITICAL",
+          message: `Relationship pivot not delivered for ${pivotInput.pivotPair ?? 'unknown pair'}. Neither subtext nor permanent change detected. Structural hole in relationship architecture.`,
+          instruction: "This chapter was designated as a relationship pivot. Revise to include traceable subtext exchange and an irreversible relational shift.",
+        });
+        score -= 2;
+      } else {
+        pivotFlag = "PIVOT_WEAK";
+        flags.push({
+          code: "PIVOT_WEAK",
+          severity: "WARNING",
+          message: `Relationship pivot partially delivered for ${pivotInput.pivotPair ?? 'unknown pair'}. Subtext: ${subtextTraceable}, Permanent change: ${changePermanent}.`,
+        });
+        score -= 1;
+      }
+    }
+
+    relationshipPivotAssessment = {
+      active: true,
+      pivot_pair: pivotInput.pivotPair ?? null,
+      subtext_traceable: subtextTraceable,
+      change_permanent: changePermanent,
+      pivot_delivered: pivotDelivered,
+      pivot_note: (rpa.pivot_note as string) ?? "",
+      flag: pivotFlag,
+    };
+  } else {
+    relationshipPivotAssessment = {
+      active: false,
+      pivot_pair: null,
+      subtext_traceable: false,
+      change_permanent: false,
+      pivot_delivered: false,
+      pivot_note: "",
+      flag: null,
+    };
+  }
+
   // Clamp score
   score = Math.max(0, Math.min(10, Math.round(score * 10) / 10));
 
@@ -641,6 +694,7 @@ function assembleResult(
     arc_delivery_check: arcDeliveryCheck,
     opening_check: openingCheck,
     emotional_resonance_assessment: emotionalResonanceAssessment,
+    relationship_pivot_assessment: relationshipPivotAssessment,
     flags,
     score,
     veto_scene_purpose: !scenePurposeCheck.scene_purpose_delivered,
