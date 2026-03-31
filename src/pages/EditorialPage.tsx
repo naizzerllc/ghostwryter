@@ -121,7 +121,7 @@ export default function EditorialPage() {
       {/* ── MANUSCRIPT STATUS ────────────────────────────────────── */}
       <section className="border border-border bg-card p-4">
         <h2 className="text-sm font-semibold tracking-wide text-foreground mb-3">MANUSCRIPT STATUS</h2>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatusCard label="Approved" value={approvedCount} />
           <StatusCard label="Signed Off" value={signedOffCount} />
           <StatusCard label="Flagged" value={flaggedCount} variant="warning" />
