@@ -49,7 +49,7 @@ describe("sceneRevisionTool", () => {
 
     it("handles added lines at the end", () => {
       const diff = generateDiff("line one", "line one\nline two");
-      expect(diff).toHaveLength(3); // unchanged + added
+      expect(diff).toHaveLength(2); // unchanged + added
       expect(diff.filter((d) => d.type === "added")).toHaveLength(1);
     });
 
