@@ -178,8 +178,7 @@ describe("lineEditor", () => {
   });
 
   it("throws after all retries exhausted", async () => {
-    const { callWithFallback } = require("@/api/llmRouter");
-    (callWithFallback as any).mockResolvedValue({ content: "{}" });
+    mockCallWithFallback.mockResolvedValue({ content: "{}" } as any);
 
     await expect(runLineEditor(baseInput())).rejects.toThrow(/All 3 attempts failed/);
   });
