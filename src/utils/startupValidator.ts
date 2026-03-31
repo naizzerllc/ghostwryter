@@ -11,7 +11,7 @@ import FORBIDDEN_WORDS from "@/constants/FORBIDDEN_WORDS.json";
 import MIC from "@/constants/MODULE_INTERFACE_CONTRACT.json";
 import { MEMORY_CORE_CONFIG } from "@/constants/MEMORY_CORE_CONFIG";
 import { PROSE_DNA_RUNTIME } from "@/constants/PROSE_DNA_RUNTIME";
-import { TASK_ROUTING, TASK_FALLBACK_OVERRIDES } from "@/api/llmRouter";
+import { TASK_ROUTING } from "@/api/llmRouter";
 
 // ---------------------------------------------------------------------------
 // Types
