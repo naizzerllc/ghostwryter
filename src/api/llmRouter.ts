@@ -372,6 +372,11 @@ export async function callAnthropic(
       console.warn(`[LLM Router] TRUNCATION_SUSPECTED for ${taskType} — output tokens: ${outputTokens}`);
     }
 
+    // Record successful model for drift detection baseline
+    if (!refusal_detected) {
+      recordAnthropicModel();
+    }
+
     return {
       content,
       model_used: model,
