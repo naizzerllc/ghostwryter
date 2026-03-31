@@ -236,6 +236,35 @@ Return in your JSON:
 Set flags according to act and confidence as specified in the MIC schema.`);
   }
 
+  if (relationshipPivot?.isPivot && relationshipPivot.subtextExchange) {
+    conditionalChecks.push(`
+RELATIONSHIP PIVOT ASSESSMENT:
+This chapter is a designated relationship pivot for ${relationshipPivot.pivotPair ?? 'unknown pair'}.
+Expected subtext exchange: "${relationshipPivot.subtextExchange}"
+Expected permanent change: "${relationshipPivot.whatChanges ?? 'unspecified'}"
+
+Assess two things independently:
+
+1. SUBTEXT TRACEABILITY: Read this chapter's dialogue knowing the subtext_exchange.
+   Can you point to specific lines where each character is pursuing their unstated
+   want? Yes = subtext_traceable: true. If the dialogue is competent but generic —
+   if it could belong to a scene with no specific subtext — set subtext_traceable: false.
+
+2. PERMANENT CHANGE: Find the specific moment after which this relationship cannot
+   return to what it was before. Name it in your pivot_note. If no such moment
+   exists — only a general impression that something shifted — set change_permanent: false.
+
+Return in your JSON:
+"relationship_pivot_assessment": {
+  "subtext_traceable": boolean,
+  "change_permanent": boolean,
+  "pivot_note": "one sentence naming the specific pivot moment or explaining its absence"
+}
+
+pivot_delivered requires both subtext_traceable: true AND change_permanent: true.
+Set flags: PIVOT_ABSENT if pivot_delivered false, PIVOT_WEAK if only one of the two is true.`);
+  }
+
   return `You are a developmental editor for commercial psychological thrillers. Analyze the chapter structurally.
 
 DECLARED SCENE PURPOSE: "${scenePurpose}"
