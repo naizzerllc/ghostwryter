@@ -11,7 +11,7 @@ const mockGetChapter = vi.fn(() => null);
 vi.mock("@/modules/outline/outlineSystem", () => ({
   getRevelationChapter: () => mockGetRevelationChapter(),
   getGenreMode: () => mockGetGenreMode(),
-  getChapter: (n: number) => mockGetChapter(n),
+  getChapter: (_n: number) => mockGetChapter(),
 }));
 
 vi.mock("@/modules/livingState/livingState", () => ({
