@@ -47,6 +47,11 @@ export interface GenerationSuccess {
   boundary_violations: BoundaryViolation[];
   brief: GenerationBrief;
   validation: BriefValidationResult;
+  generation_config: {
+    prose_dna_version: string;
+    tell_suppression_active: boolean;
+    tell_suppression_version: string;
+  };
 }
 
 export type GenerationResult = GenerationBlock | GenerationSuccess;
