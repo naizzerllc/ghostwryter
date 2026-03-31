@@ -89,6 +89,7 @@ export default function HumanReview({
   qualityGateRejected,
   medicalFactCheckResult,
   medicalAdvisoryRequired,
+  texturePassRecord,
   onApproved,
   onFlagged,
   onMedicalClaimDecision,
