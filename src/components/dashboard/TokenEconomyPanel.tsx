@@ -1,5 +1,6 @@
 import { useSyncExternalStore, useMemo } from "react";
 import { getSessionSummary, subscribe } from "@/api/sessionCostTracker";
+import { getAllChapters } from "@/modules/outline/outlineSystem";
 
 const useSessionCost = () =>
   useSyncExternalStore(subscribe, getSessionSummary, getSessionSummary);
