@@ -31,7 +31,33 @@ export interface ChapterOutlineRecord {
   act: 1 | 2 | 3;
   scene_type?: string;
   approved?: boolean;
+  emotional_resonance_target?: string | null;
+  relationship_pivot?: boolean;
+  pivot_pair?: "PAIR_1" | "PAIR_2" | "PAIR_3" | null;
+  pivot_act?: 1 | 2 | 3 | null;
   [key: string]: unknown;
+}
+
+export interface RelationshipPivotRecord {
+  chapter: number;
+  surface_event: string;
+  beneath_surface: string;
+  subtext_exchange: string;
+  what_changes: string;
+}
+
+export interface RelationshipPairRecord {
+  characters: string;
+  relationship_type: "TRUST_EROSION_ARC" | "EMOTIONAL_BALLAST" | "THEMATIC_WEIGHT";
+  act_1_pivot: RelationshipPivotRecord;
+  act_2_pivot: RelationshipPivotRecord;
+  act_3_pivot: RelationshipPivotRecord;
+}
+
+export interface RelationshipArchitecture {
+  PAIR_1: RelationshipPairRecord;
+  PAIR_2: RelationshipPairRecord;
+  PAIR_3: RelationshipPairRecord;
 }
 
 interface OutlineData {
