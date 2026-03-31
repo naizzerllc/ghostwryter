@@ -62,6 +62,7 @@ export interface RelationshipArchitecture {
 
 interface OutlineData {
   schema_version?: string;
+  relationship_architecture?: RelationshipArchitecture;
   project_config?: {
     genre_mode?: string;
     revelation_chapter?: number;
