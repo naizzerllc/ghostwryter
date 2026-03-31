@@ -143,6 +143,67 @@ const TokenEconomyPanel = () => {
         <p className="text-xs text-muted-foreground">No API calls this session</p>
       )}
 
+      {/* Cost burn-down chart */}
+      {summary.entries.length >= 2 && (() => {
+        const chartData = summary.entries.reduce<{ label: string; cost: number }[]>((acc, e, i) => {
+          const rates = COST_PER_1M[e.provider] ?? COST_PER_1M.openai;
+          const entryCost =
+            (e.tokens_used * 0.6 / 1_000_000) * rates.input +
+            (e.tokens_used * 0.4 / 1_000_000) * rates.output;
+          const prev = acc.length > 0 ? acc[acc.length - 1].cost : 0;
+          acc.push({ label: `#${i + 1}`, cost: +(prev + entryCost).toFixed(6) });
+          return acc;
+        }, []);
+
+        return (
+          <div className="pt-2 border-t border-border space-y-1">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Cumulative Cost</p>
+            <div className="h-32 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
+                  <defs>
+                    <linearGradient id="costGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }}
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={(v: number) => `$${v.toFixed(3)}`}
+                    width={48}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--background))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: 0,
+                      fontSize: 10,
+                      fontFamily: "monospace",
+                    }}
+                    formatter={(value: number) => [`$${value.toFixed(5)}`, "Cost"]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="cost"
+                    stroke="hsl(var(--primary))"
+                    fill="url(#costGrad)"
+                    strokeWidth={1.5}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Recent calls */}
       {summary.entries.length > 0 && (
         <div className="space-y-1 pt-2 border-t border-border">
