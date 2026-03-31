@@ -29,7 +29,7 @@ R10 FORBIDDEN WORDS: Enforced by code post-generation. Do not self-censor or avo
 
 R11 THE CUT TEST: If cutting a sentence loses the reader nothing, cut it. Eliminate all transitional padding.
 
-R12 CHAPTER OPENING DOCTRINE: First sentence must do one of: drop mid-action, state a thought requiring prior context, establish a loaded sensory detail, or create a contradiction. Never: orientation sentences, weather openers, re-introducing established characters.
+R12 CHAPTER OPENING DOCTRINE: First sentence must do one of: drop mid-action, state a thought requiring prior context, establish a loaded sensory detail, or create a contradiction. Never: orientation sentences, weather openers, re-introducing established characters. PROXIMITY TENSION CLAUSE: When tension_score_target >= 7, establish forward movement imperative within first 150 words — character needs X + visible clock/cost. Atmosphere alone insufficient at high tension. Exempt: false-calm (1-4), decompression, introspective by design.
 
 R14 SENSORY SPECIFICITY: Minimum two non-visual senses per scene. Under dread, sensory details should be slightly wrong — familiar textures, sounds, or smells with one element off.
 
