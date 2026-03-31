@@ -10,9 +10,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { runDevelopmentalEditor, type DevEditorInput } from "../developmentalEditor";
 
+import { callWithFallback } from "@/api/llmRouter";
+
 vi.mock("@/api/llmRouter", () => ({
   callWithFallback: vi.fn(),
 }));
+
+const mockCallWithFallback = vi.mocked(callWithFallback);
 
 function baseInput(overrides: Partial<DevEditorInput> = {}): DevEditorInput {
   return {

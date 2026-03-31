@@ -10,9 +10,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { runLineEditor, type LineEditorInput } from "../lineEditor";
 import type { ForbiddenWordsResult } from "@/utils/forbiddenWordsChecker";
 
+import { callWithFallback } from "@/api/llmRouter";
+
 vi.mock("@/api/llmRouter", () => ({
   callWithFallback: vi.fn(),
 }));
+
+const mockCallWithFallback = vi.mocked(callWithFallback);
 
 function cleanFWResult(): ForbiddenWordsResult {
   return { violations: [], hardBanCount: 0, softBanCount: 0, dialogueExemptCleared: 0, contextFlagCount: 0 };
