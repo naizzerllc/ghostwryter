@@ -139,7 +139,7 @@ describe("lineEditor", () => {
   it("applies forbidden words score impact for hard bans", async () => {
     mockLLMReturn(baseLLMResponse());
     const fwResult: ForbiddenWordsResult = {
-      violations: [{ word: "suddenly", tier: "hard_ban", context: "narration", location: "p1" }],
+      violations: [{ word: "suddenly", tier: "hard_ban", context: "narration", position: 0 }],
       hardBanCount: 1,
       softBanCount: 0,
       dialogueExemptCleared: 0,
