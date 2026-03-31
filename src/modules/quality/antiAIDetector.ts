@@ -10,6 +10,7 @@
  */
 
 import { callWithFallback } from "@/api/llmRouter";
+import { TELL_SUPPRESSION_BLOCK } from "@/constants/PROSE_DNA_RUNTIME";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
