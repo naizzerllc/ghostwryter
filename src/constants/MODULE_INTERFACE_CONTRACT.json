@@ -119,6 +119,29 @@
         "external_goal": { "type": "string", "required": true, "description": "v1.9 addition — visible objective" },
         "internal_desire": { "type": "string", "required": true, "description": "v1.9 addition — hidden emotional need" },
         "goal_desire_gap": { "type": "string", "required": true, "description": "v1.9 addition — tension between external_goal and internal_desire" },
+        "contradiction_matrix": {
+          "_note": "v2.0 addition. Four contradiction types encode the specific internal incoherence that makes a character feel real. Required for protagonist and antagonist. Minimum two types for major supporting. Minimum historical.past_action for minor supporting with 3+ scenes.",
+          "behavioural": {
+            "stated_belief": { "type": "string", "description": "What this character genuinely believes about how they behave. One sentence." },
+            "actual_behaviour": { "type": "string", "description": "The specific recurring behaviour that contradicts stated_belief. Observable in prose." },
+            "blind_spot": { "type": "boolean", "description": "true for protagonist (she cannot see the contradiction; the reader can)." }
+          },
+          "moral": {
+            "stated_principle": { "type": "string", "description": "The principle this character holds. Specific, not generic." },
+            "collapse_condition": { "type": "string", "description": "The specific circumstance under which the stated_principle fails." },
+            "guilt_residue": { "type": "string | null", "description": "What this character carries from a previous collapse. null if first test." }
+          },
+          "historical": {
+            "past_action": { "type": "string", "description": "What they did. One sentence. Specific." },
+            "self_narrative": { "type": "string", "description": "What they tell themselves about the past_action. The rationalisation." },
+            "gap": { "type": "string | null", "description": "The part of the truth the self_narrative cannot accommodate. Required for protagonist." }
+          },
+          "competence": {
+            "exceptional_at": { "type": "string", "description": "What this character is extraordinary at. Story-adjacent." },
+            "humiliated_by": { "type": "string", "description": "The specific thing they cannot do." },
+            "origin": { "type": "string | null", "description": "Why. null if unknown to character." }
+          }
+        },
         "psychological_sliders": { "type": "object", "fields": { "openness": "number", "conscientiousness": "number", "extraversion": "number", "agreeableness": "number", "neuroticism": "number" } },
         "voice_corpus_status": { "type": "enum", "values": ["PENDING", "APPROVED", "REJECTED"], "default": "PENDING" },
         "voice_reliability": { "type": "enum", "values": ["HIGH", "MISSING"], "default": "MISSING" },
