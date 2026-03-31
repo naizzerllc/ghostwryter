@@ -31,6 +31,7 @@ const App = () => (
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/generate" element={<Generate />} />
             <Route path="/review" element={<Review />} />
             <Route path="/archive" element={<ArchivePage />} />
