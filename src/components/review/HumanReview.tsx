@@ -51,6 +51,7 @@ interface HumanReviewProps {
   qualityGateRejected: boolean;
   medicalFactCheckResult: MedicalFactCheckResult | null;
   medicalAdvisoryRequired: boolean;
+  texturePassRecord: TexturePassRecord | null;
   onApproved: (record: ApprovedChapterRecord) => void;
   onFlagged: (flagType: FlagType, notes: string) => void;
   onMedicalClaimDecision: (claimId: string, decision: WriterDecision, reasoning?: string) => void;
