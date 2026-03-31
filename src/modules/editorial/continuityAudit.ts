@@ -109,9 +109,9 @@ export async function runContinuityAudit(projectId: string): Promise<ContinuityA
   }));
 
   const factsContext = canonicalFacts.slice(0, 50).map((f) => ({
-    id: f.id,
+    id: f.fact_id,
     category: f.category,
-    content: f.content,
+    content: f.statement,
   }));
 
   const prompt = `You are a continuity editor for a psychological thriller novel.

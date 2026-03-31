@@ -205,7 +205,7 @@ export function acceptRevision(
 
   // Trigger memory update if required
   if (result.scope.memory_update_required) {
-    proposeMemoryUpdate(projectId, {
+    proposeUpdate(projectId, {
       type: "scene_revision",
       chapter_number: result.chapter_number,
       scope: result.scope.scope,
