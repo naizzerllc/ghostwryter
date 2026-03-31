@@ -46,6 +46,12 @@ export const QualityGateSection = () => {
     setTimeout(() => setSaved(false), 2000);
   };
 
+  const handleReset = () => {
+    setValues(DEFAULTS);
+    setError("");
+    localStorage.removeItem(LS_KEY);
+  };
+
   const SliderField = ({
     label,
     field,
