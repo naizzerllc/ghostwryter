@@ -208,6 +208,7 @@ export async function generateChapter(
 
   // ── Step 5: Build two-block system prompt ─────────────────────────
   // Static block: Prose DNA runtime (Tier 0) + Style Layer + Forbidden Words header
+  // + Tell Suppression Block (GAP2 — cached, ~400T, invariant across chapters)
   const proseDnaTier = brief.tiers.find(t => t.tier === 0);
   const styleLayer = getStyleLayerContent();
   const forbiddenWordsHeader = "FORBIDDEN WORDS: Code-enforced post-generation. Do not self-censor — write naturally.";
@@ -216,6 +217,7 @@ export async function generateChapter(
     proseDnaTier?.content ?? "",
     styleLayer,
     forbiddenWordsHeader,
+    TELL_SUPPRESSION_BLOCK,
   ].filter(Boolean).join("\n\n---\n\n");
 
   // Dynamic block: Assembled brief (Tiers 1–3)
