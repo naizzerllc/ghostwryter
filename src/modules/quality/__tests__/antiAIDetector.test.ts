@@ -160,6 +160,16 @@ describe("runAntiAIDetector", () => {
     expect(primaryPrompt).toContain("RHYTHM_UNIFORM");
   });
 
+  it("injects TELL_SUPPRESSION_BLOCK into secondary prompt", async () => {
+    mockedCall
+      .mockResolvedValueOnce(flash(primaryResponse()))
+      .mockResolvedValueOnce(claude(secondaryResponse()));
+    await runAntiAIDetector(baseInput());
+    const secondaryPrompt = mockedCall.mock.calls[1][1] as string;
+    expect(secondaryPrompt).toContain("SUPPRESSION 1");
+    expect(secondaryPrompt).toContain("SUPPRESSION 2");
+  });
+
   it("retries primary pass on parse failure", async () => {
     mockedCall
       .mockResolvedValueOnce(flash("bad json"))

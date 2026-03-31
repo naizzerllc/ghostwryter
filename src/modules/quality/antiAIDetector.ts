@@ -10,6 +10,7 @@
  */
 
 import { callWithFallback } from "@/api/llmRouter";
+import { TELL_SUPPRESSION_BLOCK } from "@/constants/PROSE_DNA_RUNTIME";
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -109,7 +110,11 @@ function buildSecondaryPrompt(
   chapterContent: string,
   chapterNumber: number,
 ): string {
-  return `You are performing AI self-detection on this chapter. You are Claude — evaluate whether this prose feels generated-to-spec rather than inhabited by a human voice.
+  return `${TELL_SUPPRESSION_BLOCK}
+
+---
+
+You are performing AI self-detection on this chapter. You are Claude — evaluate whether this prose feels generated-to-spec rather than inhabited by a human voice.
 
 Check for:
 
