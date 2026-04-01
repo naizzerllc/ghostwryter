@@ -84,6 +84,9 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
         commitLog.outlineSaved = true;
       }
 
+      // 1b. Populate outline system (localStorage runtime)
+      commitLog.outlineSystemPopulated = populateFromImport(rawJson);
+
       // 2. Auto-populate CharacterDB
       const chars = result.characters_extracted ?? [];
       for (const c of chars) {
