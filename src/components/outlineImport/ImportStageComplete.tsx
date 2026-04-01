@@ -48,6 +48,7 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
   const [status, setStatus] = useState<CommitStatus>("idle");
   const [log, setLog] = useState<CommitLog>({
     outlineSaved: false,
+    outlineSystemPopulated: 0,
     charactersAdded: [],
     charactersSkipped: [],
     corpusStubsCreated: [],
