@@ -198,6 +198,36 @@ export function addCharacter(record: FullCharacterRecord): { ok: boolean; errors
   return { ok: true };
 }
 
+/**
+ * Import-safe add — skips contradiction matrix validation so outline imports
+ * can create protagonist/antagonist stubs that display "CM incomplete" badges.
+ */
+export function addCharacterFromImport(record: FullCharacterRecord): { ok: boolean; errors?: CharacterValidationError[] } {
+  // Only validate basic required fields, not CM
+  const errors: CharacterValidationError[] = [];
+  for (const field of ["id", "name", "role"] as (keyof FullCharacterRecord)[]) {
+    const value = record[field];
+    if (value === undefined || value === null || (typeof value === "string" && value.trim() === "")) {
+      errors.push({ field, message: `${field} is required` });
+    }
+  }
+  if (errors.length > 0) return { ok: false, errors };
+  if (characters.has(record.id)) {
+    return { ok: false, errors: [{ field: "id", message: `Character "${record.id}" already exists` }] };
+  }
+  const now = new Date().toISOString();
+  characters.set(record.id, {
+    ...record,
+    voice_corpus_status: record.voice_corpus_status ?? "MISSING" as VoiceCorpusStatus,
+    voice_reliability: record.voice_reliability ?? "MISSING",
+    corpus_approved: record.corpus_approved ?? false,
+    created_at: record.created_at ?? now,
+    last_updated: record.last_updated ?? now,
+  });
+  notify();
+  return { ok: true };
+}
+
 export function updateCharacter(id: string, updates: Partial<FullCharacterRecord>): { ok: boolean; errors?: CharacterValidationError[] } {
   const existing = characters.get(id);
   if (!existing) return { ok: false, errors: [{ field: "id", message: `Character "${id}" not found` }] };
