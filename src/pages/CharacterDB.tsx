@@ -1,6 +1,6 @@
 /**
  * Character Database Page — list + editable detail view + clinical profile tab.
- * GHOSTLY v2.2 · S08 + S23
+ * GHOSTLY v2.2 · S08 + S23 · 02C-aligned schema
  */
 
 import { useState, useSyncExternalStore, useCallback } from "react";
@@ -12,11 +12,19 @@ import {
   removeCharacter,
   type FullCharacterRecord,
   type CharacterRole,
-  type PsychologicalSliders,
 } from "@/lib/characterDatabase";
 import { Plus, Save, Trash2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ClinicalProfileTab from "@/components/character/ClinicalProfileTab";
+import {
+  Field,
+  SectionHeader,
+  CollapsibleSection,
+  CorpusStatusBadges,
+  MetadataRow,
+  AntagonistFieldsSection,
+  PsychologicalSlidersSection,
+} from "@/components/character/CharacterDetailFields";
 
 const ROLE_COLORS: Record<CharacterRole, string> = {
   protagonist: "bg-primary text-primary-foreground",
@@ -26,14 +34,18 @@ const ROLE_COLORS: Record<CharacterRole, string> = {
   supporting: "bg-secondary text-secondary-foreground",
 };
 
-const SLIDER_KEYS: (keyof PsychologicalSliders)[] = [
-  "openness", "conscientiousness", "extraversion", "agreeableness",
-  "neuroticism", "machiavellianism", "empathy",
+const ROLE_OPTIONS: { value: CharacterRole; label: string }[] = [
+  { value: "protagonist", label: "Protagonist" },
+  { value: "antagonist", label: "Antagonist" },
+  { value: "major_supporting", label: "Major Supporting" },
+  { value: "minor_supporting", label: "Minor Supporting" },
+  { value: "supporting", label: "Supporting" },
 ];
 
 const EMPTY_RECORD: Omit<FullCharacterRecord, "id"> = {
   name: "", role: "supporting", wound: "", flaw: "", want: "", need: "",
   self_deception: "", fear: "", arc_start: "", arc_end: "", arc_lesson: "",
+  arc_entry_state: "", arc_exit_state: "", karma_arc: "",
   compressed_voice_dna: "", external_goal: "", internal_desire: "",
   goal_desire_gap: "", voice_corpus_status: "MISSING",
   voice_reliability: "MISSING", corpus_approved: false,
@@ -118,8 +130,8 @@ const CharacterDBPage = () => {
       });
     } else if (field.startsWith("contradiction_matrix.")) {
       const parts = field.split(".");
-      const category = parts[1]; // behavioural, moral, historical, competence
-      const subField = parts[2]; // stated_belief, etc.
+      const category = parts[1];
+      const subField = parts[2];
       const cm = editing.contradiction_matrix ?? {};
       const existing = (cm as Record<string, Record<string, unknown>>)[category] ?? {};
       setEditing({
@@ -172,7 +184,7 @@ const CharacterDBPage = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-foreground font-medium">{c.name || "Unnamed"}</span>
                 <span className={`text-[9px] font-mono uppercase px-1.5 py-0.5 ${ROLE_COLORS[c.role]}`}>
-                  {c.role.slice(0, 4)}
+                  {c.role.replace("_", " ")}
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
@@ -244,22 +256,10 @@ const CharacterDBPage = () => {
             </TabsList>
 
             <TabsContent value="details" className="space-y-4">
-              {/* Corpus status badge */}
-              <div className="flex items-center gap-3">
-                <span className={`px-2 py-1 text-[10px] font-mono font-semibold ${
-                  activeRecord.corpus_approved ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
-                }`}>
-                  corpus_approved: {activeRecord.corpus_approved ? "TRUE" : "FALSE — BLOCKED"}
-                </span>
-                <span className="px-2 py-1 text-[10px] font-mono bg-muted text-muted-foreground">
-                  voice: {activeRecord.voice_corpus_status}
-                </span>
-                <span className="px-2 py-1 text-[10px] font-mono bg-muted text-muted-foreground">
-                  reliability: {activeRecord.voice_reliability}
-                </span>
-              </div>
+              {/* Corpus status badges */}
+              <CorpusStatusBadges record={activeRecord} />
 
-              {/* Fields */}
+              {/* Core fields */}
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Name" field="name" value={activeRecord.name} editing={!!editing} onChange={updateField} />
                 <div>
@@ -270,9 +270,9 @@ const CharacterDBPage = () => {
                       onChange={e => updateField("role", e.target.value)}
                       className="w-full bg-background border border-border px-2 py-1.5 text-sm font-mono text-foreground"
                     >
-                      <option value="protagonist">Protagonist</option>
-                      <option value="antagonist">Antagonist</option>
-                      <option value="supporting">Supporting</option>
+                      {ROLE_OPTIONS.map(r => (
+                        <option key={r.value} value={r.value}>{r.label}</option>
+                      ))}
                     </select>
                   ) : (
                     <p className="text-sm text-foreground">{activeRecord.role}</p>
@@ -290,11 +290,14 @@ const CharacterDBPage = () => {
                 <Field label="Fear" field="fear" value={activeRecord.fear} editing={!!editing} onChange={updateField} multiline />
               </div>
 
-              <SectionHeader title="Arc" />
+              {/* Antagonist-specific fields — conditional on role */}
+              <AntagonistFieldsSection record={activeRecord} editing={!!editing} onChange={updateField} />
+
+              <SectionHeader title="Arc (02C)" />
               <div className="grid grid-cols-3 gap-4">
-                <Field label="Arc Start" field="arc_start" value={activeRecord.arc_start} editing={!!editing} onChange={updateField} multiline />
-                <Field label="Arc End" field="arc_end" value={activeRecord.arc_end} editing={!!editing} onChange={updateField} multiline />
-                <Field label="Arc Lesson" field="arc_lesson" value={activeRecord.arc_lesson} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Arc Entry State" field="arc_entry_state" value={activeRecord.arc_entry_state} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Arc Exit State" field="arc_exit_state" value={activeRecord.arc_exit_state} editing={!!editing} onChange={updateField} multiline />
+                <Field label="Karma Arc" field="karma_arc" value={activeRecord.karma_arc} editing={!!editing} onChange={updateField} multiline />
               </div>
 
               <SectionHeader title="Goals (v1.9)" />
@@ -363,47 +366,10 @@ const CharacterDBPage = () => {
                 fullWidth
               />
 
-              <SectionHeader title="Psychological Sliders (7 dimensions)" />
-              <div className="grid grid-cols-4 gap-3">
-                {SLIDER_KEYS.map(key => (
-                  <div key={key}>
-                    <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono block mb-1">
-                      {key}
-                    </label>
-                    {editing ? (
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="range"
-                          min={-10}
-                          max={10}
-                          value={activeRecord.psychological_sliders?.[key] ?? 0}
-                          onChange={e => updateField(`psychological_sliders.${key}`, Number(e.target.value))}
-                          className="flex-1"
-                        />
-                        <span className="text-[10px] font-mono text-foreground w-6 text-right">
-                          {activeRecord.psychological_sliders?.[key] ?? 0}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-1.5 bg-muted relative">
-                          <div
-                            className="absolute top-0 h-full bg-primary"
-                            style={{
-                              left: "50%",
-                              width: `${Math.abs(activeRecord.psychological_sliders?.[key] ?? 0) * 5}%`,
-                              transform: (activeRecord.psychological_sliders?.[key] ?? 0) < 0 ? "translateX(-100%)" : "none",
-                            }}
-                          />
-                        </div>
-                        <span className="text-[10px] font-mono text-muted-foreground w-6 text-right">
-                          {activeRecord.psychological_sliders?.[key] ?? 0}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <PsychologicalSlidersSection record={activeRecord} editing={!!editing} onChange={updateField} />
+
+              {/* Metadata footer */}
+              <MetadataRow record={activeRecord} />
             </TabsContent>
 
             <TabsContent value="clinical">
@@ -415,62 +381,5 @@ const CharacterDBPage = () => {
     </div>
   );
 };
-
-// ── Sub-components ──────────────────────────────────────────────────────
-
-function CollapsibleSection({ title, defaultOpen = false, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="border border-border">
-      <button onClick={() => setOpen(!open)} className="w-full text-left px-3 py-2 flex items-center justify-between hover:bg-muted/30 transition-colors">
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">{title}</span>
-        <span className="text-[10px] font-mono text-muted-foreground">{open ? "▾" : "▸"}</span>
-      </button>
-      {open && <div className="px-3 pb-3 space-y-2">{children}</div>}
-    </div>
-  );
-}
-
-function SectionHeader({ title }: { title: string }) {
-  return (
-    <div className="border-b border-border pb-1 pt-2">
-      <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">{title}</p>
-    </div>
-  );
-}
-
-function Field({
-  label, field, value, editing, onChange, multiline, fullWidth,
-}: {
-  label: string; field: string; value?: string; editing: boolean;
-  onChange: (field: string, value: string) => void;
-  multiline?: boolean; fullWidth?: boolean;
-}) {
-  const cls = fullWidth ? "col-span-full" : "";
-  return (
-    <div className={cls}>
-      <label className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono block mb-1">
-        {label}
-      </label>
-      {editing ? (
-        multiline ? (
-          <textarea
-            value={value ?? ""}
-            onChange={e => onChange(field, e.target.value)}
-            className="w-full bg-background border border-border px-2 py-1.5 text-sm font-mono text-foreground resize-none h-20"
-          />
-        ) : (
-          <input
-            value={value ?? ""}
-            onChange={e => onChange(field, e.target.value)}
-            className="w-full bg-background border border-border px-2 py-1.5 text-sm font-mono text-foreground"
-          />
-        )
-      ) : (
-        <p className="text-sm text-foreground whitespace-pre-wrap">{value || "—"}</p>
-      )}
-    </div>
-  );
-}
 
 export default CharacterDBPage;
