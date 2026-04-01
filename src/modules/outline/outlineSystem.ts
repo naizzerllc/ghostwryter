@@ -103,6 +103,43 @@ function saveOutlineData(data: OutlineData): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+/**
+ * Populate the outline system from imported raw JSON.
+ * Parses chapters, project_config, subplot_registry, and relationship_architecture.
+ * Returns the number of chapters stored.
+ */
+export function populateFromImport(rawJson: string): number {
+  try {
+    const parsed = JSON.parse(rawJson);
+    const data: OutlineData = {};
+
+    if (parsed.project_config && typeof parsed.project_config === "object") {
+      data.project_config = parsed.project_config;
+    }
+
+    if (Array.isArray(parsed.chapters)) {
+      data.chapters = parsed.chapters;
+    }
+
+    if (Array.isArray(parsed.subplot_registry)) {
+      data.subplot_registry = parsed.subplot_registry;
+    }
+
+    if (parsed.relationship_architecture && typeof parsed.relationship_architecture === "object") {
+      data.relationship_architecture = parsed.relationship_architecture;
+    }
+
+    if (parsed.schema_version) {
+      data.schema_version = parsed.schema_version;
+    }
+
+    saveOutlineData(data);
+    return data.chapters?.length ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
 // ── Public API ──────────────────────────────────────────────────────────
 
 export function getChapter(chapterNumber: number): ChapterOutlineRecord | undefined {

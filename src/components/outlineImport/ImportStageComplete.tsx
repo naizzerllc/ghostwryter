@@ -13,6 +13,7 @@ type CommitStatus = "idle" | "saving" | "done" | "error";
 
 interface CommitLog {
   outlineSaved: boolean;
+  outlineSystemPopulated: number;
   charactersAdded: string[];
   charactersSkipped: string[];
   corpusStubsCreated: string[];
