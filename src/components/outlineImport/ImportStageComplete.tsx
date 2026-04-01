@@ -184,6 +184,15 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
         </span>
       </div>
 
+      {/* Outline system populated */}
+      <div className="px-4 py-3 border-b border-border flex items-center gap-3">
+        <BookOpen className="w-4 h-4 text-muted-foreground" />
+        <span className="text-xs font-mono text-foreground">Outline system populated</span>
+        <span className={`ml-auto text-[10px] font-mono ${log.outlineSystemPopulated > 0 ? "text-success" : "text-destructive"}`}>
+          {log.outlineSystemPopulated > 0 ? `${log.outlineSystemPopulated} chapters` : "EMPTY"}
+        </span>
+      </div>
+
       {/* Characters */}
       <div className="px-4 py-3 border-b border-border">
         <div className="flex items-center gap-3 mb-2">
