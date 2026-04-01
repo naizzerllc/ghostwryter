@@ -327,19 +327,49 @@ function validateBreadcrumbs(
 
 function extractCharacters(data: Record<string, unknown>): ExtractedCharacter[] {
   const chars: ExtractedCharacter[] = [];
-  const characters = data.characters as Record<string, unknown>[] | undefined;
-  if (!characters || !Array.isArray(characters)) return chars;
+  const seen = new Set<string>();
 
-  for (const c of characters) {
-    if (typeof c.name === "string" && typeof c.role === "string") {
-      chars.push({
-        id: (c.id as string) ?? c.name.toLowerCase().replace(/\s+/g, "_"),
-        name: c.name,
-        role: c.role as "protagonist" | "antagonist" | "supporting",
-        source_chapter: (c.introduced_chapter as number) ?? 1,
-      });
+  // Source 1: top-level characters array (structured objects)
+  const characters = data.characters as Record<string, unknown>[] | undefined;
+  if (characters && Array.isArray(characters)) {
+    for (const c of characters) {
+      if (typeof c.name === "string" && typeof c.role === "string") {
+        const id = (c.id as string) ?? c.name.toLowerCase().replace(/\s+/g, "_");
+        if (!seen.has(id)) {
+          seen.add(id);
+          chars.push({
+            id,
+            name: c.name,
+            role: c.role as "protagonist" | "antagonist" | "supporting",
+            source_chapter: (c.introduced_chapter as number) ?? 1,
+          });
+        }
+      }
     }
   }
+
+  // Source 2: character name strings inside chapters[].characters
+  const chapters = data.chapters as Record<string, unknown>[] | undefined;
+  if (chapters && Array.isArray(chapters)) {
+    for (const ch of chapters) {
+      const chapterChars = ch.characters as unknown[] | undefined;
+      const chapterNum = (ch.chapter_number as number) ?? 1;
+      if (!chapterChars || !Array.isArray(chapterChars)) continue;
+      for (const entry of chapterChars) {
+        if (typeof entry === "string") {
+          const id = entry.toLowerCase().replace(/\s+/g, "_");
+          if (!seen.has(id)) {
+            seen.add(id);
+            // First character listed in chapter 1 is likely protagonist
+            const role: "protagonist" | "antagonist" | "supporting" =
+              chars.length === 0 && chapterNum === 1 ? "protagonist" : "supporting";
+            chars.push({ id, name: entry, role, source_chapter: chapterNum });
+          }
+        }
+      }
+    }
+  }
+
   return chars;
 }
 
