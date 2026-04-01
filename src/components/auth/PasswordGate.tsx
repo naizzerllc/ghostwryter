@@ -1,6 +1,6 @@
 import { useState, useCallback, FormEvent } from "react";
 
-const PASS_HASH = "ghostly2025";
+const PASS_HASH = "Andreas";
 const SESSION_KEY = "ghostly_auth";
 
 const PasswordGate = ({ children }: { children: React.ReactNode }) => {
