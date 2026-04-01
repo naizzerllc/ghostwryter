@@ -167,7 +167,7 @@ function buildTier1(chapterNumber: number, projectId: string, seriesBudget: numb
   // Antagonist Architecture (02C) — mirror_relationship + threat_arc injected at Tier 1
   if (antagonist) {
     const antArch: string[] = [];
-    const a = antagonist as Record<string, unknown>;
+    const a = antagonist as unknown as Record<string, unknown>;
     if (a.mirror_relationship) antArch.push(`MIRROR: ${a.mirror_relationship}`);
     if (a.threat_arc) antArch.push(`THREAT ARC: ${a.threat_arc}`);
     if (a.antagonist_self_deception) antArch.push(`ANTAGONIST SELF-DECEPTION: ${a.antagonist_self_deception}`);
