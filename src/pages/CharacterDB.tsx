@@ -187,13 +187,20 @@ const CharacterDBPage = () => {
                   {c.role.replace("_", " ")}
                 </span>
               </div>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <span className={`text-[10px] font-mono ${c.corpus_approved ? "text-success" : "text-destructive"}`}>
                   {c.corpus_approved ? "APPROVED" : "BLOCKED"}
                 </span>
                 <span className="text-[10px] font-mono text-muted-foreground">
                   {c.voice_corpus_status}
                 </span>
+                {(c.role === "protagonist" || c.role === "antagonist") &&
+                  (!c.contradiction_matrix?.behavioural || !c.contradiction_matrix?.moral ||
+                   !c.contradiction_matrix?.historical || !c.contradiction_matrix?.competence) && (
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 bg-warning/20 text-warning uppercase">
+                    CM incomplete
+                  </span>
+                )}
               </div>
             </button>
           ))}
