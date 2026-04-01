@@ -82,7 +82,7 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
           continue;
         }
 
-        const record: CharacterRecord = {
+        const record: FullCharacterRecord = {
           id: c.id,
           project_id: projectId,
           name: c.name,
