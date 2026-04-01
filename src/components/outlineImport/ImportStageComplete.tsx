@@ -66,6 +66,13 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
       corpusStubsCreated: [],
     };
 
+    // Parse raw JSON to extract rich character data
+    let rawCharacters: Record<string, unknown>[] = [];
+    try {
+      const parsed = JSON.parse(rawJson);
+      rawCharacters = Array.isArray(parsed.characters) ? parsed.characters : [];
+    } catch { /* ignore */ }
+
     try {
       // 1. Save outline to GitHub
       if (result.chapters) {
@@ -82,20 +89,35 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
           continue;
         }
 
+        // Find rich data from raw JSON
+        const rawChar = rawCharacters.find(
+          (rc: Record<string, unknown>) => rc.name === c.name
+        ) as Record<string, unknown> | undefined;
+
+        const str = (key: string): string | null =>
+          rawChar && typeof rawChar[key] === "string" ? (rawChar[key] as string) : null;
+
         const record: FullCharacterRecord = {
           id: c.id,
           project_id: projectId,
           name: c.name,
           role: mapRole(c.role),
-          wound: null,
-          want: null,
-          need: null,
-          self_deception: null,
-          fear: null,
-          external_goal: null,
-          internal_desire: null,
-          goal_desire_gap: null,
-          compressed_voice_dna: null,
+          wound: str("wound"),
+          flaw: str("flaw"),
+          want: str("want"),
+          need: str("need"),
+          self_deception: str("self_deception"),
+          fear: str("fear"),
+          arc_entry_state: str("arc_entry_state") ?? "",
+          arc_exit_state: str("arc_exit_state") ?? "",
+          arc_start: str("arc_entry_state") ?? "",
+          arc_end: str("arc_exit_state") ?? "",
+          arc_lesson: str("karma_arc") ?? "",
+          karma_arc: str("karma_arc") ?? "",
+          external_goal: str("external_goal"),
+          internal_desire: str("internal_desire"),
+          goal_desire_gap: str("goal_desire_gap"),
+          compressed_voice_dna: str("compressed_voice_dna"),
           voice_corpus_status: "PENDING",
           voice_reliability: "MISSING",
           corpus_approved: false,
