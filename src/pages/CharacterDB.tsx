@@ -207,7 +207,7 @@ const CharacterDBPage = () => {
             Select a character or click + to create one
           </div>
         ) : (
-          <Tabs defaultValue="details" className="p-4 space-y-4">
+          <Tabs defaultValue="details" key={`${activeRecord.id}-${!!editing}`} className="p-4 space-y-4">
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
