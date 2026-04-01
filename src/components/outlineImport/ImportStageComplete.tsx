@@ -28,13 +28,12 @@ const ARC_PHASES: PressureState[] = ["ARC_START", "ARC_MID", "ARC_END"];
 
 function createCorpusStubs(characterId: string) {
   for (const phase of ARC_PHASES) {
-    addExchange(characterId, {
-      id: `stub_${characterId}_${phase.toLowerCase()}`,
-      pressure_state: phase,
-      prompt: `[STUB] ${phase} voice sample prompt — replace with actual corpus exchange`,
-      response: `[STUB] ${phase} voice sample response — replace with actual corpus exchange`,
-      created_at: new Date().toISOString(),
-    });
+    addExchange(
+      characterId,
+      phase,
+      `[STUB] ${phase} voice sample prompt — replace with actual corpus exchange`,
+      `[STUB] ${phase} voice sample response — replace with actual corpus exchange`,
+    );
   }
 }
 
