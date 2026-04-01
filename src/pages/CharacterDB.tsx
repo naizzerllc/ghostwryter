@@ -316,9 +316,52 @@ const CharacterDBPage = () => {
 
               {/* Contradiction Matrix (v2.0) */}
               <SectionHeader title="Contradiction Matrix (v2.0)" />
-              <p className="text-[10px] text-muted-foreground font-mono mb-2">
-                Two things that should not coexist — and do. What makes the reader feel they know a real person.
-              </p>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] text-muted-foreground font-mono">
+                  Two things that should not coexist — and do. What makes the reader feel they know a real person.
+                </p>
+                {editing && !activeRecord.contradiction_matrix?.behavioural?.stated_belief && (
+                  <button
+                    onClick={() => {
+                      const role = activeRecord.role;
+                      const isProtag = role === "protagonist";
+                      setEditing({
+                        ...editing,
+                        contradiction_matrix: {
+                          ...editing.contradiction_matrix,
+                          behavioural: {
+                            stated_belief: isProtag ? "I am in control" : "I follow the rules",
+                            actual_behaviour: isProtag ? "Compulsive rituals betray inner chaos" : "Breaks every rule when unobserved",
+                            blind_spot: true,
+                            ...(editing.contradiction_matrix?.behavioural ?? {}),
+                          },
+                          moral: {
+                            stated_principle: isProtag ? "Truth matters above all" : "Loyalty is everything",
+                            collapse_condition: isProtag ? "When truth threatens self-image" : "When loyalty conflicts with survival",
+                            guilt_residue: isProtag ? "The thing she cannot look at" : "The betrayal she justified",
+                            ...(editing.contradiction_matrix?.moral ?? {}),
+                          },
+                          historical: {
+                            past_action: isProtag ? "Left someone behind" : "Chose silence over justice",
+                            self_narrative: isProtag ? "I had no choice" : "It was for the greater good",
+                            gap: isProtag ? "She had other options" : "The greater good was self-interest",
+                            ...(editing.contradiction_matrix?.historical ?? {}),
+                          },
+                          competence: {
+                            exceptional_at: isProtag ? "Reading others" : "Anticipating threats",
+                            humiliated_by: isProtag ? "Her own blind spots" : "Emotional vulnerability",
+                            origin: isProtag ? "Professional training" : "Childhood survival instinct",
+                            ...(editing.contradiction_matrix?.competence ?? {}),
+                          },
+                        },
+                      });
+                    }}
+                    className="px-2 py-1 text-[9px] font-mono uppercase bg-warning/20 text-warning hover:bg-warning/30 flex items-center gap-1 shrink-0 ml-3"
+                  >
+                    <Zap className="w-3 h-3" />Quick-fill placeholders
+                  </button>
+                )}
+              </div>
 
               <CollapsibleSection title="Behavioural" defaultOpen={activeRecord.role === "protagonist" || activeRecord.role === "antagonist"}>
                 <div className="grid grid-cols-2 gap-4">
