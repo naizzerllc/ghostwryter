@@ -2,11 +2,12 @@
  * Stage 4 — Complete: save outline, auto-populate CharacterDB, create voice corpus stubs.
  */
 import { useState, useEffect } from "react";
-import { CheckCircle, Users, Mic, Save, Loader2 } from "lucide-react";
+import { CheckCircle, Users, Mic, Save, Loader2, BookOpen } from "lucide-react";
 import type { OutlineImportResult, ExtractedCharacter } from "@/lib/outlineImporter";
 import { saveImportedOutline } from "@/lib/outlineImporter";
 import { addCharacterFromImport, getCharacter, type FullCharacterRecord, type CharacterRole } from "@/lib/characterDatabase";
 import { addExchange, type PressureState } from "@/modules/voiceCorpusGate/corpusExchangeStore";
+import { populateFromImport } from "@/modules/outline/outlineSystem";
 
 type CommitStatus = "idle" | "saving" | "done" | "error";
 
