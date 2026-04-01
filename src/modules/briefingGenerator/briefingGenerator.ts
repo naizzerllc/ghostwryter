@@ -78,20 +78,20 @@ function buildContradictionCore(name: string, roleLabel: string, cm?: Contradict
   if (cm.behavioural?.stated_belief && cm.behavioural?.actual_behaviour) {
     lines.push(`${name} believes ${cm.behavioural.stated_belief} — ${cm.behavioural.actual_behaviour}.`);
     if (cm.behavioural.blind_spot) {
-      lines.push("She cannot see this contradiction. The reader will.");
+      lines.push(`${name} cannot see this contradiction. The reader will.`);
     }
   }
 
   if (cm.moral?.stated_principle && cm.moral?.collapse_condition) {
-    lines.push(`She holds: ${cm.moral.stated_principle} — it collapses when ${cm.moral.collapse_condition}.`);
+    lines.push(`${name} holds: ${cm.moral.stated_principle} — it collapses when ${cm.moral.collapse_condition}.`);
   }
   if (cm.moral?.guilt_residue) {
     lines.push(`Guilt residue: ${cm.moral.guilt_residue}`);
   }
 
   if (cm.historical?.past_action && cm.historical?.self_narrative) {
-    lines.push(`She did: ${cm.historical.past_action}`);
-    lines.push(`She tells herself: ${cm.historical.self_narrative}`);
+    lines.push(`${name} did: ${cm.historical.past_action}`);
+    lines.push(`${name} tells herself: ${cm.historical.self_narrative}`);
     if (cm.historical?.gap) {
       lines.push(`The gap: ${cm.historical.gap}`);
     }
