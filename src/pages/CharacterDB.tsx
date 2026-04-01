@@ -21,6 +21,8 @@ import ClinicalProfileTab from "@/components/character/ClinicalProfileTab";
 const ROLE_COLORS: Record<CharacterRole, string> = {
   protagonist: "bg-primary text-primary-foreground",
   antagonist: "bg-destructive text-destructive-foreground",
+  major_supporting: "bg-accent text-accent-foreground",
+  minor_supporting: "bg-muted text-muted-foreground",
   supporting: "bg-secondary text-secondary-foreground",
 };
 

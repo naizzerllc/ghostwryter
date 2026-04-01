@@ -1,6 +1,6 @@
 /**
  * Character DB — In-memory character store with GitHub persistence.
- * GHOSTLY v2.2 · Prompt 02
+ * GHOSTLY v2.2 · Aligned to 02C character_record schema.
  *
  * All characters stored as character_record per MIC v2.1.
  * Voice DNA lives on each record as compressed_voice_dna.
@@ -12,6 +12,7 @@ import {
   CharacterRecord,
   CharacterRole,
   CHARACTER_REQUIRED_FIELDS,
+  CHARACTER_RECOMMENDED_FIELDS,
 } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -47,8 +48,9 @@ export function validateCharacter(
     }
   }
 
-  // Role validation
-  if (record.role && !["protagonist", "antagonist", "supporting"].includes(record.role)) {
+  // Role validation — 02C subtypes
+  const validRoles: CharacterRole[] = ["protagonist", "antagonist", "major_supporting", "minor_supporting", "supporting"];
+  if (record.role && !validRoles.includes(record.role)) {
     errors.push({ field: "role", message: `Invalid role: ${record.role}` });
   }
 
@@ -75,12 +77,14 @@ export function addCharacter(record: CharacterRecord): { ok: boolean; errors?: V
     return { ok: false, errors: [{ field: "id", message: `Character "${record.id}" already exists` }] };
   }
 
-  // Default voice gate fields
+  const now = new Date().toISOString();
   const stored: CharacterRecord = {
     ...record,
     voice_corpus_status: record.voice_corpus_status ?? "PENDING",
     voice_reliability: record.voice_reliability ?? "MISSING",
     corpus_approved: record.corpus_approved ?? false,
+    created_at: record.created_at ?? now,
+    last_updated: record.last_updated ?? now,
   };
 
   characters.set(record.id, stored);
@@ -97,7 +101,7 @@ export function updateCharacter(
     return { ok: false, errors: [{ field: "id", message: `Character "${id}" not found` }] };
   }
 
-  const merged = { ...existing, ...updates, id }; // id immutable
+  const merged = { ...existing, ...updates, id, last_updated: new Date().toISOString() };
   const errors = validateCharacter(merged);
   if (errors.length > 0) return { ok: false, errors };
 
@@ -178,7 +182,7 @@ export async function loadFromStorage(): Promise<{ loaded: number; errors: strin
 export interface CharacterDBSnapshot {
   characters: CharacterRecord[];
   count: number;
-  byRole: { protagonist: number; antagonist: number; supporting: number };
+  byRole: { protagonist: number; antagonist: number; major_supporting: number; minor_supporting: number; supporting: number };
   voiceDnaComplete: number;
   voiceDnaMissing: number;
   _v: number;
@@ -203,6 +207,8 @@ export function getSnapshot(): CharacterDBSnapshot {
     byRole: {
       protagonist: all.filter((c) => c.role === "protagonist").length,
       antagonist: all.filter((c) => c.role === "antagonist").length,
+      major_supporting: all.filter((c) => c.role === "major_supporting").length,
+      minor_supporting: all.filter((c) => c.role === "minor_supporting").length,
       supporting: all.filter((c) => c.role === "supporting").length,
     },
     voiceDnaComplete: all.filter((c) => c.voice_reliability === "HIGH").length,
