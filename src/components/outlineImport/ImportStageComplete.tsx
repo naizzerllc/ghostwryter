@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { CheckCircle, Users, Mic, Save, Loader2 } from "lucide-react";
 import type { OutlineImportResult, ExtractedCharacter } from "@/lib/outlineImporter";
 import { saveImportedOutline } from "@/lib/outlineImporter";
-import { addCharacter, getCharacter, type FullCharacterRecord, type CharacterRole } from "@/lib/characterDatabase";
+import { addCharacterFromImport, getCharacter, type FullCharacterRecord, type CharacterRole } from "@/lib/characterDatabase";
 import { addExchange, type PressureState } from "@/modules/voiceCorpusGate/corpusExchangeStore";
 
 type CommitStatus = "idle" | "saving" | "done" | "error";
