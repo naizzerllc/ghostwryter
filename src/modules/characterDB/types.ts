@@ -6,7 +6,7 @@
 // 02C role subtypes: protagonist, antagonist, major_supporting, minor_supporting
 // Legacy "supporting" kept as alias for backward compatibility
 export type CharacterRole = "protagonist" | "antagonist" | "major_supporting" | "minor_supporting" | "supporting";
-export type VoiceCorpusStatus = "PENDING" | "APPROVED" | "REJECTED";
+export type VoiceCorpusStatus = "PENDING" | "APPROVED" | "REJECTED" | "COMPLETE" | "PARTIAL" | "MISSING";
 export type VoiceReliability = "HIGH" | "MISSING";
 
 export interface PsychologicalSliders {
