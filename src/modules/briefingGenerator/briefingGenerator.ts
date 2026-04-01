@@ -164,6 +164,22 @@ function buildTier1(chapterNumber: number, projectId: string, seriesBudget: numb
   const antContradiction = antagonist ? buildContradictionCore(antagonist.name, "ANTAGONIST", antagonist.contradiction_matrix as ContradictionMatrix | undefined) : null;
   if (antContradiction) parts.push(antContradiction);
 
+  // Antagonist Architecture (02C) — mirror_relationship + threat_arc injected at Tier 1
+  if (antagonist) {
+    const antArch: string[] = [];
+    const a = antagonist as Record<string, unknown>;
+    if (a.mirror_relationship) antArch.push(`MIRROR: ${a.mirror_relationship}`);
+    if (a.threat_arc) antArch.push(`THREAT ARC: ${a.threat_arc}`);
+    if (a.antagonist_self_deception) antArch.push(`ANTAGONIST SELF-DECEPTION: ${a.antagonist_self_deception}`);
+    if (a.antagonist_limit) antArch.push(`LIMIT: ${a.antagonist_limit}`);
+    if (typeof a.antagonist_inversion_chapter === "number") {
+      antArch.push(`INVERSION AT CH${a.antagonist_inversion_chapter}${a.antagonist_inversion_truth ? `: ${a.antagonist_inversion_truth}` : ""}`);
+    }
+    if (antArch.length > 0) {
+      parts.push(`ANTAGONIST ARCHITECTURE (02C):\n${antArch.join("\n")}`);
+    }
+  }
+
   return truncateToTokens(parts.join("\n\n"), seriesBudget);
 }
 
