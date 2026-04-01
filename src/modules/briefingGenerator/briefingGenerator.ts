@@ -91,7 +91,7 @@ function buildContradictionCore(name: string, roleLabel: string, cm?: Contradict
 
   if (cm.historical?.past_action && cm.historical?.self_narrative) {
     lines.push(`${name} did: ${cm.historical.past_action}`);
-    lines.push(`${name} tells herself: ${cm.historical.self_narrative}`);
+    lines.push(`${name} self-narrative: ${cm.historical.self_narrative}`);
     if (cm.historical?.gap) {
       lines.push(`The gap: ${cm.historical.gap}`);
     }
