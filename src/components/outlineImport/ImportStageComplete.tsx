@@ -2,16 +2,18 @@
  * Stage 4 — Complete: save outline, auto-populate CharacterDB, create voice corpus stubs.
  */
 import { useState, useEffect } from "react";
-import { CheckCircle, Users, Mic, Save, Loader2 } from "lucide-react";
+import { CheckCircle, Users, Mic, Save, Loader2, BookOpen } from "lucide-react";
 import type { OutlineImportResult, ExtractedCharacter } from "@/lib/outlineImporter";
 import { saveImportedOutline } from "@/lib/outlineImporter";
 import { addCharacterFromImport, getCharacter, type FullCharacterRecord, type CharacterRole } from "@/lib/characterDatabase";
 import { addExchange, type PressureState } from "@/modules/voiceCorpusGate/corpusExchangeStore";
+import { populateFromImport } from "@/modules/outline/outlineSystem";
 
 type CommitStatus = "idle" | "saving" | "done" | "error";
 
 interface CommitLog {
   outlineSaved: boolean;
+  outlineSystemPopulated: number;
   charactersAdded: string[];
   charactersSkipped: string[];
   corpusStubsCreated: string[];
@@ -46,6 +48,7 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
   const [status, setStatus] = useState<CommitStatus>("idle");
   const [log, setLog] = useState<CommitLog>({
     outlineSaved: false,
+    outlineSystemPopulated: 0,
     charactersAdded: [],
     charactersSkipped: [],
     corpusStubsCreated: [],
@@ -61,6 +64,7 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
     setStatus("saving");
     const commitLog: CommitLog = {
       outlineSaved: false,
+      outlineSystemPopulated: 0,
       charactersAdded: [],
       charactersSkipped: [],
       corpusStubsCreated: [],
@@ -79,6 +83,9 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
         await saveImportedOutline(projectId, result.chapters, rawJson);
         commitLog.outlineSaved = true;
       }
+
+      // 1b. Populate outline system (localStorage runtime)
+      commitLog.outlineSystemPopulated = populateFromImport(rawJson);
 
       // 2. Auto-populate CharacterDB
       const chars = result.characters_extracted ?? [];
@@ -174,6 +181,15 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
         <span className="text-xs font-mono text-foreground">Outline saved to GitHub</span>
         <span className={`ml-auto text-[10px] font-mono ${log.outlineSaved ? "text-success" : "text-destructive"}`}>
           {log.outlineSaved ? "OK" : "FAILED"}
+        </span>
+      </div>
+
+      {/* Outline system populated */}
+      <div className="px-4 py-3 border-b border-border flex items-center gap-3">
+        <BookOpen className="w-4 h-4 text-muted-foreground" />
+        <span className="text-xs font-mono text-foreground">Outline system populated</span>
+        <span className={`ml-auto text-[10px] font-mono ${log.outlineSystemPopulated > 0 ? "text-success" : "text-destructive"}`}>
+          {log.outlineSystemPopulated > 0 ? `${log.outlineSystemPopulated} chapters` : "EMPTY"}
         </span>
       </div>
 
