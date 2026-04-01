@@ -64,6 +64,7 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
     setStatus("saving");
     const commitLog: CommitLog = {
       outlineSaved: false,
+      outlineSystemPopulated: 0,
       charactersAdded: [],
       charactersSkipped: [],
       corpusStubsCreated: [],
