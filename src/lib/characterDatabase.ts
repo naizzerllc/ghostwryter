@@ -1,74 +1,91 @@
 /**
- * Character Database — full CRUD with MIC v2.0 fields, GitHub persistence.
+ * Character Database — full CRUD with 02C fields, GitHub persistence.
  * GHOSTLY v2.2 · S24
  *
- * Extends the Prompt 02 characterDB module with per-project storage,
+ * Extends the characterDB module with per-project storage,
  * 7-dimension psychological sliders, and contradiction matrix validation.
+ * Aligned to 02C character_record schema.
  */
 
 import { githubStorage } from "@/storage/githubStorage";
-import type { ContradictionMatrix } from "@/modules/characterDB/types";
+import type {
+  ContradictionMatrix,
+  CharacterRole,
+  VoiceCorpusStatus,
+  VoiceReliability,
+  PsychologicalSliders,
+} from "@/modules/characterDB/types";
 
-// ── Types ───────────────────────────────────────────────────────────────
+// Re-export types from canonical source
+export type { CharacterRole, VoiceCorpusStatus, VoiceReliability, PsychologicalSliders };
 
-export type CharacterRole = "protagonist" | "antagonist" | "supporting";
-export type VoiceCorpusStatus = "COMPLETE" | "PARTIAL" | "MISSING";
-export type VoiceReliability = "HIGH" | "MISSING";
+// ── Extended Types (adds 7-dim sliders + full 02C fields) ───────────────
 
-export interface PsychologicalSliders {
-  openness: number;            // -10 to +10
-  conscientiousness: number;
-  extraversion: number;
-  agreeableness: number;
-  neuroticism: number;
+export interface FullPsychologicalSliders extends PsychologicalSliders {
   machiavellianism: number;
   empathy: number;
 }
 
 export interface FullCharacterRecord {
   id: string;
+  project_id?: string;              // 02C
   name: string;
   role: CharacterRole;
   classification?: string;
 
   // Psychological core
-  wound: string;
-  flaw: string;
-  want: string;
-  need: string;
-  self_deception: string;
-  fear: string;
-
-  // Arc
-  arc_start: string;
-  arc_end: string;
-  arc_lesson: string;
-
-  // Voice DNA
-  compressed_voice_dna: string;  // max 150 tokens
+  wound: string | null;
+  flaw?: string | null;             // legacy compat
+  want: string | null;
+  need: string | null;
+  self_deception: string | null;
+  fear: string | null;
 
   // v1.9 additions
-  external_goal: string;
-  internal_desire: string;
-  goal_desire_gap: string;
+  external_goal: string | null;
+  internal_desire: string | null;
+  goal_desire_gap: string | null;
 
-  // v2.0 addition — contradiction matrix
+  // v2.0 — contradiction matrix
   contradiction_matrix?: ContradictionMatrix;
 
+  // Antagonist-specific fields (null for non-antagonists) — 02C
+  mirror_relationship?: string | null;
+  antagonist_self_deception?: string | null;
+  antagonist_limit?: string | null;
+  antagonist_inversion_chapter?: number | null;
+  antagonist_inversion_truth?: string | null;
+  threat_arc?: string | null;
+
+  // Arc tracking (02C)
+  arc_entry_state?: string | null;
+  arc_exit_state?: string | null;
+  karma_arc?: string | null;
+  // Legacy arc fields
+  arc_start?: string;
+  arc_end?: string;
+  arc_lesson?: string;
+
+  // Voice DNA
+  compressed_voice_dna: string | null;
+
   // Psychological sliders (7 dimensions, -10 to +10)
-  psychological_sliders?: PsychologicalSliders;
+  psychological_sliders?: FullPsychologicalSliders;
 
   // Voice corpus gate
   voice_corpus_status: VoiceCorpusStatus;
   voice_reliability: VoiceReliability;
   corpus_approved: boolean;
+  corpus_approval_date?: string | null;  // 02C
+
+  // Meta — 02C
+  created_at?: string;
+  last_updated?: string;
 }
 
-// Required fields for protagonist/antagonist
+// Required fields — only hard requirements
 const REQUIRED_FIELDS: (keyof FullCharacterRecord)[] = [
-  "id", "name", "role", "wound", "flaw", "want", "need",
-  "self_deception", "fear", "arc_start", "arc_end", "arc_lesson",
-  "compressed_voice_dna", "external_goal", "internal_desire", "goal_desire_gap",
+  "id", "name", "role",
 ];
 
 export interface CharacterValidationError {
@@ -99,7 +116,8 @@ export function validateCharacter(record: Partial<FullCharacterRecord>): Charact
     }
   }
 
-  if (record.role && !["protagonist", "antagonist", "supporting"].includes(record.role)) {
+  const validRoles: CharacterRole[] = ["protagonist", "antagonist", "major_supporting", "minor_supporting", "supporting"];
+  if (record.role && !validRoles.includes(record.role)) {
     errors.push({ field: "role", message: `Invalid role: ${record.role}` });
   }
 
@@ -156,8 +174,6 @@ export function validateContradictionMatrix(record: Partial<FullCharacterRecord>
     }
   }
 
-  // Supporting characters: no hard requirements via validator (warnings only in UI)
-
   return errors;
 }
 
@@ -169,11 +185,14 @@ export function addCharacter(record: FullCharacterRecord): { ok: boolean; errors
   if (characters.has(record.id)) {
     return { ok: false, errors: [{ field: "id", message: `Character "${record.id}" already exists` }] };
   }
+  const now = new Date().toISOString();
   characters.set(record.id, {
     ...record,
-    voice_corpus_status: record.voice_corpus_status ?? "MISSING",
+    voice_corpus_status: record.voice_corpus_status ?? "MISSING" as VoiceCorpusStatus,
     voice_reliability: record.voice_reliability ?? "MISSING",
     corpus_approved: record.corpus_approved ?? false,
+    created_at: record.created_at ?? now,
+    last_updated: record.last_updated ?? now,
   });
   notify();
   return { ok: true };
@@ -182,7 +201,7 @@ export function addCharacter(record: FullCharacterRecord): { ok: boolean; errors
 export function updateCharacter(id: string, updates: Partial<FullCharacterRecord>): { ok: boolean; errors?: CharacterValidationError[] } {
   const existing = characters.get(id);
   if (!existing) return { ok: false, errors: [{ field: "id", message: `Character "${id}" not found` }] };
-  const merged = { ...existing, ...updates, id };
+  const merged = { ...existing, ...updates, id, last_updated: new Date().toISOString() };
   const errors = validateCharacter(merged);
   if (errors.length > 0) return { ok: false, errors };
   characters.set(id, merged);
@@ -216,7 +235,6 @@ export async function saveCharacters(projectId: string): Promise<{ storage: stri
     `story-data/${projectId}/characters/character_db.json`,
     JSON.stringify(all, null, 2),
   );
-  // Also save individual files
   for (const c of all) {
     await githubStorage.saveFile(
       `story-data/${projectId}/characters/${c.id}.json`,
@@ -260,7 +278,7 @@ export async function loadCharacters(projectId: string): Promise<{ loaded: numbe
 export interface CharacterDBSnapshot {
   characters: FullCharacterRecord[];
   count: number;
-  byRole: { protagonist: number; antagonist: number; supporting: number };
+  byRole: { protagonist: number; antagonist: number; major_supporting: number; minor_supporting: number; supporting: number };
   corpusApproved: number;
   corpusBlocked: number;
   _v: number;
@@ -282,6 +300,8 @@ export function getSnapshot(): CharacterDBSnapshot {
     byRole: {
       protagonist: all.filter(c => c.role === "protagonist").length,
       antagonist: all.filter(c => c.role === "antagonist").length,
+      major_supporting: all.filter(c => c.role === "major_supporting").length,
+      minor_supporting: all.filter(c => c.role === "minor_supporting").length,
       supporting: all.filter(c => c.role === "supporting").length,
     },
     corpusApproved: all.filter(c => c.corpus_approved).length,
