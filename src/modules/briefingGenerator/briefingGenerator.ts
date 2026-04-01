@@ -209,11 +209,21 @@ function buildTier2(
   let usedTokens = 0;
 
   for (const { character, score } of scored) {
-    const entry = `[${character.role.toUpperCase()}] ${character.name} (relevance: ${score}/10)
+    let entry = `[${character.role.toUpperCase()}] ${character.name} (relevance: ${score}/10)
 Wound: ${character.wound} | Flaw: ${character.flaw}
 Want: ${character.want} | Need: ${character.need}
 Voice: ${character.compressed_voice_dna.slice(0, 200)}
 Goal: ${character.external_goal} | Desire: ${character.internal_desire}`;
+
+    // Antagonist 02C fields in Tier 2 entry
+    if (character.role === "antagonist") {
+      const a = character as unknown as Record<string, unknown>;
+      const antLines: string[] = [];
+      if (a.mirror_relationship) antLines.push(`Mirror: ${a.mirror_relationship}`);
+      if (a.threat_arc) antLines.push(`Threat arc: ${a.threat_arc}`);
+      if (a.antagonist_self_deception) antLines.push(`Ant. self-deception: ${a.antagonist_self_deception}`);
+      if (antLines.length > 0) entry += "\n" + antLines.join(" | ");
+    }
 
     const entryTokens = countTokens(entry);
 
