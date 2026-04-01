@@ -123,7 +123,7 @@ const ImportStageComplete = ({ result, projectId, rawJson }: Props) => {
           corpus_approved: false,
         };
 
-        const res = addCharacter(record);
+        const res = addCharacterFromImport(record);
         if (res.ok) {
           commitLog.charactersAdded.push(c.name);
         } else {
