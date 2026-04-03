@@ -333,25 +333,21 @@ const CharacterDBPage = () => {
                             stated_belief: isProtag ? "I am in control" : "I follow the rules",
                             actual_behaviour: isProtag ? "Compulsive rituals betray inner chaos" : "Breaks every rule when unobserved",
                             blind_spot: true,
-                            ...(editing.contradiction_matrix?.behavioural ?? {}),
                           },
                           moral: {
                             stated_principle: isProtag ? "Truth matters above all" : "Loyalty is everything",
                             collapse_condition: isProtag ? "When truth threatens self-image" : "When loyalty conflicts with survival",
                             guilt_residue: isProtag ? "The thing she cannot look at" : "The betrayal she justified",
-                            ...(editing.contradiction_matrix?.moral ?? {}),
                           },
                           historical: {
                             past_action: isProtag ? "Left someone behind" : "Chose silence over justice",
                             self_narrative: isProtag ? "I had no choice" : "It was for the greater good",
                             gap: isProtag ? "She had other options" : "The greater good was self-interest",
-                            ...(editing.contradiction_matrix?.historical ?? {}),
                           },
                           competence: {
                             exceptional_at: isProtag ? "Reading others" : "Anticipating threats",
                             humiliated_by: isProtag ? "Her own blind spots" : "Emotional vulnerability",
                             origin: isProtag ? "Professional training" : "Childhood survival instinct",
-                            ...(editing.contradiction_matrix?.competence ?? {}),
                           },
                         },
                       });
