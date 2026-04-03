@@ -320,7 +320,7 @@ const CharacterDBPage = () => {
                 <p className="text-[10px] text-muted-foreground font-mono">
                   Two things that should not coexist — and do. What makes the reader feel they know a real person.
                 </p>
-                {editing && !activeRecord.contradiction_matrix?.behavioural?.stated_belief && (
+                {editing && (
                   <button
                     onClick={() => {
                       const role = activeRecord.role;
