@@ -24,7 +24,7 @@ import {
   type FullCharacterRecord,
   type CharacterRole,
 } from "@/lib/characterDatabase";
-import { Plus, Save, Trash2, Zap } from "lucide-react";
+import { Plus, Save, Trash2, Zap, Undo2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ClinicalProfileTab from "@/components/character/ClinicalProfileTab";
 import {
