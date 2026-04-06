@@ -4,7 +4,9 @@ const PASS_HASH = "Andreas";
 const SESSION_KEY = "ghostly_auth";
 
 const PasswordGate = ({ children }: { children: React.ReactNode }) => {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_KEY) === "1");
+  const [authed, setAuthed] = useState(() =>
+    import.meta.env.DEV ? true : sessionStorage.getItem(SESSION_KEY) === "1"
+  );
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
 
