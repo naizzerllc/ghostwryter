@@ -355,6 +355,11 @@ const CharacterDBPage = () => {
                       moral: { stated_principle: "Loyalty is everything", collapse_condition: "When loyalty conflicts with survival", guilt_residue: "The betrayal she justified" },
                       historical: { past_action: "Chose silence over justice", self_narrative: "It was for the greater good", gap: "The greater good was self-interest" },
                       competence: { exceptional_at: "Anticipating threats", humiliated_by: "Emotional vulnerability", origin: "Childhood survival instinct" },
+                    } : role === "major_supporting" ? {
+                      behavioural: { stated_belief: "I know what's best for her", actual_behaviour: "Withholds key information", blind_spot: true },
+                      moral: { stated_principle: "Protect the people I love", collapse_condition: "When protection becomes control", guilt_residue: "The warning she swallowed" },
+                      historical: { past_action: "Covered for someone she shouldn't have", self_narrative: "I was being loyal", gap: "Loyalty was easier than confrontation" },
+                      competence: { exceptional_at: "Reading a room", humiliated_by: "Direct emotional confrontation", origin: "Years of navigating family dynamics" },
                     } : {
                       behavioural: { stated_belief: "I'm just here to help", actual_behaviour: "Helps only when it costs nothing", blind_spot: false },
                       moral: { stated_principle: "People deserve second chances", collapse_condition: "When forgiveness risks personal safety", guilt_residue: "The favour never returned" },
