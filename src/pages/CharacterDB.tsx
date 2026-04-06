@@ -125,6 +125,7 @@ const CharacterDBPage = () => {
     setEditing(null);
     setIsNew(false);
     setErrors([]);
+    setPreviousCM(null);
   };
 
   const updateField = (field: string, value: unknown) => {
