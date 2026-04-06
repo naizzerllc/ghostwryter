@@ -24,7 +24,7 @@ import {
   type FullCharacterRecord,
   type CharacterRole,
 } from "@/lib/characterDatabase";
-import { Plus, Save, Trash2, Zap } from "lucide-react";
+import { Plus, Save, Trash2, Zap, Undo2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ClinicalProfileTab from "@/components/character/ClinicalProfileTab";
 import {
@@ -69,6 +69,7 @@ const CharacterDBPage = () => {
   const [editing, setEditing] = useState<Partial<FullCharacterRecord> | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [previousCM, setPreviousCM] = useState<FullCharacterRecord["contradiction_matrix"] | null>(null);
 
   const selected = selectedId ? snap.characters.find(c => c.id === selectedId) ?? null : null;
 
@@ -108,6 +109,7 @@ const CharacterDBPage = () => {
       setEditing(null);
       setIsNew(false);
       setErrors([]);
+      setPreviousCM(null);
     } else {
       setErrors(result.errors?.map(e => `${e.field}: ${e.message}`) ?? []);
     }
@@ -124,6 +126,7 @@ const CharacterDBPage = () => {
     setEditing(null);
     setIsNew(false);
     setErrors([]);
+    setPreviousCM(null);
   };
 
   const updateField = (field: string, value: unknown) => {
@@ -339,6 +342,8 @@ const CharacterDBPage = () => {
                     activeRecord.contradiction_matrix?.competence?.exceptional_at
                   );
                   const doQuickFill = () => {
+                    // Save current CM for undo
+                    setPreviousCM(editing.contradiction_matrix ? JSON.parse(JSON.stringify(editing.contradiction_matrix)) : null);
                     const role = activeRecord.role;
                     const cm = role === "protagonist" ? {
                       behavioural: { stated_belief: "I am in control", actual_behaviour: "Compulsive rituals betray inner chaos", blind_spot: true },
@@ -362,41 +367,57 @@ const CharacterDBPage = () => {
                     });
                   };
 
-                  if (!hasExistingCM) {
-                    return (
-                      <button
-                        onClick={doQuickFill}
-                        className="px-2 py-1 text-[9px] font-mono uppercase bg-warning/20 text-warning hover:bg-warning/30 flex items-center gap-1 shrink-0 ml-3"
-                      >
-                        <Zap className="w-3 h-3" />Quick-fill placeholders
-                      </button>
-                    );
-                  }
+                  const doUndo = () => {
+                    setEditing({
+                      ...editing,
+                      contradiction_matrix: previousCM ?? undefined,
+                    });
+                    setPreviousCM(null);
+                  };
 
                   return (
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
+                    <div className="flex items-center gap-2 ml-3">
+                      {!hasExistingCM ? (
                         <button
-                          className="px-2 py-1 text-[9px] font-mono uppercase bg-warning/20 text-warning hover:bg-warning/30 flex items-center gap-1 shrink-0 ml-3"
+                          onClick={doQuickFill}
+                          className="px-2 py-1 text-[9px] font-mono uppercase bg-warning/20 text-warning hover:bg-warning/30 flex items-center gap-1 shrink-0"
                         >
                           <Zap className="w-3 h-3" />Quick-fill placeholders
                         </button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="border-warning/30 bg-background">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-foreground">Overwrite Contradiction Matrix?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will replace all existing CM fields with role-appropriate defaults. Your current values will be lost.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel className="border-muted-foreground/30">Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={doQuickFill} className="bg-warning text-warning-foreground hover:bg-warning/80">
-                            Overwrite
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      ) : (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button
+                              className="px-2 py-1 text-[9px] font-mono uppercase bg-warning/20 text-warning hover:bg-warning/30 flex items-center gap-1 shrink-0"
+                            >
+                              <Zap className="w-3 h-3" />Quick-fill placeholders
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent className="border-warning/30 bg-background">
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="text-foreground">Overwrite Contradiction Matrix?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will replace all existing CM fields with role-appropriate defaults. Your current values will be lost.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="border-muted-foreground/30">Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={doQuickFill} className="bg-warning text-warning-foreground hover:bg-warning/80">
+                                Overwrite
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+                      {previousCM !== null && (
+                        <button
+                          onClick={doUndo}
+                          className="px-2 py-1 text-[9px] font-mono uppercase bg-muted/30 text-muted-foreground hover:bg-muted/50 flex items-center gap-1 shrink-0"
+                        >
+                          <Undo2 className="w-3 h-3" />Undo
+                        </button>
+                      )}
+                    </div>
                   );
                 })()}
               </div>
