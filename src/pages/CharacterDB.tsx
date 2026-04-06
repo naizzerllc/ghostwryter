@@ -69,6 +69,7 @@ const CharacterDBPage = () => {
   const [editing, setEditing] = useState<Partial<FullCharacterRecord> | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [previousCM, setPreviousCM] = useState<FullCharacterRecord["contradiction_matrix"] | null>(null);
 
   const selected = selectedId ? snap.characters.find(c => c.id === selectedId) ?? null : null;
 
