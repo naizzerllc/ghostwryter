@@ -109,6 +109,7 @@ const CharacterDBPage = () => {
       setEditing(null);
       setIsNew(false);
       setErrors([]);
+      setPreviousCM(null);
     } else {
       setErrors(result.errors?.map(e => `${e.field}: ${e.message}`) ?? []);
     }
