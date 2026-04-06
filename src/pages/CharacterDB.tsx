@@ -340,32 +340,25 @@ const CharacterDBPage = () => {
                   );
                   const doQuickFill = () => {
                     const role = activeRecord.role;
-                    const isProtag = role === "protagonist";
+                    const cm = role === "protagonist" ? {
+                      behavioural: { stated_belief: "I am in control", actual_behaviour: "Compulsive rituals betray inner chaos", blind_spot: true },
+                      moral: { stated_principle: "Truth matters above all", collapse_condition: "When truth threatens self-image", guilt_residue: "The thing she cannot look at" },
+                      historical: { past_action: "Left someone behind", self_narrative: "I had no choice", gap: "She had other options" },
+                      competence: { exceptional_at: "Reading others", humiliated_by: "Her own blind spots", origin: "Professional training" },
+                    } : role === "antagonist" ? {
+                      behavioural: { stated_belief: "I follow the rules", actual_behaviour: "Breaks every rule when unobserved", blind_spot: true },
+                      moral: { stated_principle: "Loyalty is everything", collapse_condition: "When loyalty conflicts with survival", guilt_residue: "The betrayal she justified" },
+                      historical: { past_action: "Chose silence over justice", self_narrative: "It was for the greater good", gap: "The greater good was self-interest" },
+                      competence: { exceptional_at: "Anticipating threats", humiliated_by: "Emotional vulnerability", origin: "Childhood survival instinct" },
+                    } : {
+                      behavioural: { stated_belief: "I'm just here to help", actual_behaviour: "Helps only when it costs nothing", blind_spot: false },
+                      moral: { stated_principle: "People deserve second chances", collapse_condition: "When forgiveness risks personal safety", guilt_residue: "The favour never returned" },
+                      historical: { past_action: "Stayed silent when it mattered", self_narrative: "It wasn't my place", gap: "It was exactly her place" },
+                      competence: { exceptional_at: "Blending in", humiliated_by: "Being singled out", origin: "Learned invisibility early" },
+                    };
                     setEditing({
                       ...editing,
-                      contradiction_matrix: {
-                        ...editing.contradiction_matrix,
-                        behavioural: {
-                          stated_belief: isProtag ? "I am in control" : "I follow the rules",
-                          actual_behaviour: isProtag ? "Compulsive rituals betray inner chaos" : "Breaks every rule when unobserved",
-                          blind_spot: true,
-                        },
-                        moral: {
-                          stated_principle: isProtag ? "Truth matters above all" : "Loyalty is everything",
-                          collapse_condition: isProtag ? "When truth threatens self-image" : "When loyalty conflicts with survival",
-                          guilt_residue: isProtag ? "The thing she cannot look at" : "The betrayal she justified",
-                        },
-                        historical: {
-                          past_action: isProtag ? "Left someone behind" : "Chose silence over justice",
-                          self_narrative: isProtag ? "I had no choice" : "It was for the greater good",
-                          gap: isProtag ? "She had other options" : "The greater good was self-interest",
-                        },
-                        competence: {
-                          exceptional_at: isProtag ? "Reading others" : "Anticipating threats",
-                          humiliated_by: isProtag ? "Her own blind spots" : "Emotional vulnerability",
-                          origin: isProtag ? "Professional training" : "Childhood survival instinct",
-                        },
-                      },
+                      contradiction_matrix: { ...editing.contradiction_matrix, ...cm },
                     });
                   };
 
