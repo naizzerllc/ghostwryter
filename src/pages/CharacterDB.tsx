@@ -331,43 +331,81 @@ const CharacterDBPage = () => {
                 <p className="text-[10px] text-muted-foreground font-mono">
                   Two things that should not coexist — and do. What makes the reader feel they know a real person.
                 </p>
-                {editing && (
-                  <button
-                    onClick={() => {
-                      const role = activeRecord.role;
-                      const isProtag = role === "protagonist";
-                      setEditing({
-                        ...editing,
-                        contradiction_matrix: {
-                          ...editing.contradiction_matrix,
-                          behavioural: {
-                            stated_belief: isProtag ? "I am in control" : "I follow the rules",
-                            actual_behaviour: isProtag ? "Compulsive rituals betray inner chaos" : "Breaks every rule when unobserved",
-                            blind_spot: true,
-                          },
-                          moral: {
-                            stated_principle: isProtag ? "Truth matters above all" : "Loyalty is everything",
-                            collapse_condition: isProtag ? "When truth threatens self-image" : "When loyalty conflicts with survival",
-                            guilt_residue: isProtag ? "The thing she cannot look at" : "The betrayal she justified",
-                          },
-                          historical: {
-                            past_action: isProtag ? "Left someone behind" : "Chose silence over justice",
-                            self_narrative: isProtag ? "I had no choice" : "It was for the greater good",
-                            gap: isProtag ? "She had other options" : "The greater good was self-interest",
-                          },
-                          competence: {
-                            exceptional_at: isProtag ? "Reading others" : "Anticipating threats",
-                            humiliated_by: isProtag ? "Her own blind spots" : "Emotional vulnerability",
-                            origin: isProtag ? "Professional training" : "Childhood survival instinct",
-                          },
+                {editing && (() => {
+                  const hasExistingCM = !!(
+                    activeRecord.contradiction_matrix?.behavioural?.stated_belief ||
+                    activeRecord.contradiction_matrix?.moral?.stated_principle ||
+                    activeRecord.contradiction_matrix?.historical?.past_action ||
+                    activeRecord.contradiction_matrix?.competence?.exceptional_at
+                  );
+                  const doQuickFill = () => {
+                    const role = activeRecord.role;
+                    const isProtag = role === "protagonist";
+                    setEditing({
+                      ...editing,
+                      contradiction_matrix: {
+                        ...editing.contradiction_matrix,
+                        behavioural: {
+                          stated_belief: isProtag ? "I am in control" : "I follow the rules",
+                          actual_behaviour: isProtag ? "Compulsive rituals betray inner chaos" : "Breaks every rule when unobserved",
+                          blind_spot: true,
                         },
-                      });
-                    }}
-                    className="px-2 py-1 text-[9px] font-mono uppercase bg-warning/20 text-warning hover:bg-warning/30 flex items-center gap-1 shrink-0 ml-3"
-                  >
-                    <Zap className="w-3 h-3" />Quick-fill placeholders
-                  </button>
-                )}
+                        moral: {
+                          stated_principle: isProtag ? "Truth matters above all" : "Loyalty is everything",
+                          collapse_condition: isProtag ? "When truth threatens self-image" : "When loyalty conflicts with survival",
+                          guilt_residue: isProtag ? "The thing she cannot look at" : "The betrayal she justified",
+                        },
+                        historical: {
+                          past_action: isProtag ? "Left someone behind" : "Chose silence over justice",
+                          self_narrative: isProtag ? "I had no choice" : "It was for the greater good",
+                          gap: isProtag ? "She had other options" : "The greater good was self-interest",
+                        },
+                        competence: {
+                          exceptional_at: isProtag ? "Reading others" : "Anticipating threats",
+                          humiliated_by: isProtag ? "Her own blind spots" : "Emotional vulnerability",
+                          origin: isProtag ? "Professional training" : "Childhood survival instinct",
+                        },
+                      },
+                    });
+                  };
+
+                  if (!hasExistingCM) {
+                    return (
+                      <button
+                        onClick={doQuickFill}
+                        className="px-2 py-1 text-[9px] font-mono uppercase bg-warning/20 text-warning hover:bg-warning/30 flex items-center gap-1 shrink-0 ml-3"
+                      >
+                        <Zap className="w-3 h-3" />Quick-fill placeholders
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button
+                          className="px-2 py-1 text-[9px] font-mono uppercase bg-warning/20 text-warning hover:bg-warning/30 flex items-center gap-1 shrink-0 ml-3"
+                        >
+                          <Zap className="w-3 h-3" />Quick-fill placeholders
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="border-warning/30 bg-background">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-foreground">Overwrite Contradiction Matrix?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will replace all existing CM fields with role-appropriate defaults. Your current values will be lost.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="border-muted-foreground/30">Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={doQuickFill} className="bg-warning text-warning-foreground hover:bg-warning/80">
+                            Overwrite
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  );
+                })()}
               </div>
 
               <CollapsibleSection title="Behavioural" defaultOpen={activeRecord.role === "protagonist" || activeRecord.role === "antagonist"}>
